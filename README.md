@@ -53,12 +53,14 @@ The example is based on the following code:
 
 Let extend the requirements a bit: 
 
-> We do increment up to three. Then the button symbol changes to the the functionality decrements down to zero, when the button switches again to plus. It will be up to three down to zero.
+> We do increment up to three. Then the button symbol changes to 'minus'. The functionality decrements down to zero, when the button switches again to 'plus'. It's like ping-pong between zero and three.
 
 The required code changes look like this:
 
 ```dart
- int _counter = 0;
+class _MyHomePageState extends State<MyHomePage> 
+{
+  int _counter = 0;
   bool _canIncrement = true;  // initially we increment
   bool _canDecrement = false;
 
@@ -107,22 +109,26 @@ Crazy!I would never do something like this knowing this will kill the maintenanc
 Actually I was looking for something like this:
 
 ```dart
-MainViewModel _viewModel = new MainViewModel();
+import 'main.ViewModel.dart';
+...
+class _MyHomePageState extends State<MyHomePage> 
+{
+	MainViewModel _viewModel = new MainViewModel();
 
-void initState() {
-    _viewModel.subscribe((changedPropertyName) => setState(() {}));
-	super.initState();
-}
+    void initState() {
+        _viewModel.subscribe((changedPropertyName) => setState(() {}));
+        super.initState();
+    }
 
-floatingActionButton: FloatingActionButton(
-      child: _viewModel.canIncrement ? Icon(Icons.add) : Icon(Icons.remove),
-      onPressed: () => _viewModel.upDownCommand(),
-)
+    floatingActionButton: FloatingActionButton(
+          child: _viewModel.canIncrement ? Icon(Icons.add) : Icon(Icons.remove),
+          onPressed: () => _viewModel.upDownCommand(),
+    )
 ```
 
 Just four lines of code in the view, nothing about up and down logic! How can this work?
 
-The magic lies in the *ViewModel* 'behind' the view: `main.ViewModel.dart`. This class takes all the view logic without knowing *how* information is displayed!
+The magic lies in the *ViewModel* 'behind' the view: `main.ViewModel.dart`. This class takes all the view logic without knowing *how* information is displayed! 
 
 
 
