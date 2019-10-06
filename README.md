@@ -106,7 +106,7 @@ The app increments up to three, then the button changes and decrement starts:
 
 Crazy!I would never do something like this knowing this will kill the maintenance of my app quickly (RIP)!
 
-## Alternative using the ViewModel pattern
+## Alternative using the ViewModel pattern - Example 02
 
 Actually I was looking for something like this (see [Sample02](https://github.com/SchmidteServices/mvvm4flight/tree/master/src/upDown02)):
 
@@ -175,7 +175,7 @@ Think about the great designers who can create modern and fancy user-interfaces.
 
 Finally look at Sample3 where I tweaked the UI a bit without changing the logic much.
 
-### Sample 3
+### Example 03
 
 You can press plus or minus, the FloatingActionButton is gone.
 
