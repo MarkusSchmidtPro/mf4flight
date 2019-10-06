@@ -12,27 +12,13 @@ As some kind of natural evolution I started with Xamarin making my first mobile 
 
 ## Introduction
 
-When I started with Flutter I tried to understand its patterns and best practices. I found *bloc*, *streams* and many other useful things. What I haven't found so far is 
-
-> A pattern how to separate *presentation* logic from the view (aka screen)!
-
-### Bloc 
-
-[https://felangel.github.io/bloc/#/architecture](https://felangel.github.io/bloc/#/architecture) stands for <u>B</u>usiness <u>Lo</u>gic <u>C</u>omponent. This pattern is useful and necessary. Bloc is the component between Presentation and Backend:
-
-> Presentation Component (UI) - Bloc (Business Logic) - Backend (Data)
-
-In my world, I have learned to split the View from the View Logic, and Bloc was not made for this.
-
-## The up- and down example
+When I started with Flutter I tried to understand its patterns and best practices. I found *bloc*, *stream* and many other useful things. However, what confused me a lot
 
 
 
 
 
-
-
-
+## MVVM vs. Bloc 
 
 I got used to the MVVM model which was introduced many years ago, as a pattern to separate logic from the view. (Please notice, I said 'logic' not 'business logic' - more later.) 
 
@@ -67,7 +53,7 @@ But, what about *presentation logic*?
 
 You need to know, Microsoft uses a declarative (XAML) approach to design a UI. XAML simply defines how your UI looks like. For example: fancy UI, old fashioned, Material or not, green or red. 
 
-
+I am developer and I am really not good at building fancy, modern UIs - neither with XAML, nor with Widgets. Creating and using a (material) template, applying it on all controls, providing visual effects, swipe left/up/down etc. - this all is UI design!
 
 Looking at the sample above, `FloatingActionButton` together with all its designer properties is UI (aka. View). `_incrementCounter`  - or, to be more precise - `_counter++` is not view, this is *ViewModel* aka presentation logic!
 
