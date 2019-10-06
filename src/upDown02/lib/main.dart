@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.ViewModel.dart';
+import 'mainViewModel.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,11 +47,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   MainViewModel _viewModel = new MainViewModel();
 
-  void initState()
-	{
-		_viewModel.subscribe((changedPropertyName) => setState(() {}));
-		super.initState();
-	}
+  void initState() {
+    _viewModel.subscribe((changedPropertyName) => setState(() {}));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,20 +96,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-
         floatingActionButton: FloatingActionButton(
           child: _viewModel.canIncrement ? Icon(Icons.add) : Icon(Icons.remove),
           onPressed: () => _viewModel.upDownCommand(),
-        )
-        );
+        ));
   }
 
-
-
   @override
-	void dispose()
-	{
-		_viewModel.dispose();
-		super.dispose();
-	}
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
+  }
 }

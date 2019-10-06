@@ -106,7 +106,9 @@ The app increments up to three, then the button changes and decrement starts:
 
 Crazy!I would never do something like this knowing this will kill the maintenance of my app quickly (RIP)!
 
-Actually I was looking for something like this:
+## Alternative using the ViewModel pattern
+
+Actually I was looking for something like this (see [Sample02](https://github.com/SchmidteServices/mvvm4flight/tree/master/src/upDown02)):
 
 ```dart
 import 'main.ViewModel.dart';
@@ -116,6 +118,8 @@ class _MyHomePageState extends State<MyHomePage>
 	MainViewModel _viewModel = new MainViewModel();
 
     void initState() {
+        // The view gets notifications when the ViewModel changes,
+        // so that the View can rebuild --> setState().
         _viewModel.subscribe((changedPropertyName) => setState(() {}));
         super.initState();
     }
@@ -128,7 +132,64 @@ class _MyHomePageState extends State<MyHomePage>
 
 Just four lines of code in the view, nothing about up and down logic! How can this work?
 
-The magic lies in the *ViewModel* 'behind' the view: `main.ViewModel.dart`. This class takes all the view logic without knowing *how* information is displayed! 
+The magic lies in the *ViewModel* 'behind' the view. 
 
+![1570382130735](README.assets/1570382130735.png)
 
+`main.ViewModel.dart` contains all the view logic without knowing about the view or how information is displayed! 
+
+```dart
+class MainViewModel extends NotifyChanged<String> 
+{
+ ...
+    //
+    // region The public functionality that can be used in the view
+    //
+    int get counter => _counter;
+    bool get canIncrement => _canIncrement;
+    bool get canDecrement => _canDecrement;
+
+    void upDownCommand() => _canIncrement 
+    ? _incrementCommand() 
+    : _decrementCommand();
+
+    //
+    // endregion
+    //
+
+    void _incrementCommand() {
+      ..
+      notifyChanged("counter"); // send the changed properties name
+    }
+	...
+}
+```
+
+## Conclusion
+
+The *ViewModel* pattern has many advantages, no disadvantage, no drawback! For me, MVVM comes at no cost, and there are only *Pros* using it. 
+
+Think about testing! Just test the ViewModel without any Widget, UI dependency.
+
+Think about the great designers who can create modern and fancy user-interfaces. Give the your *View* files, tell them about the functionality they can expect from the ViewModel and let them design, without knowing how the application actually performs its functions.
+
+Finally look at Sample3 where I tweaked the UI a bit without changing the logic much.
+
+### Sample 3
+
+You can press plus or minus, the FloatingActionButton is gone.
+
+![1570384766003](README.assets/1570384766003.png)
+
+If you have a good designer, he / she will do it for you:
+
+![1570384840513](README.assets/1570384840513.png)
+
+and you can concentrate on the logic - presentation logic and business logic, continuing to use *bloc*.
+
+## Outlook
+
+The *ViewModel* pattern is only the beginning.  Many more ideas will arise once you start thinking about it. For example, view navigation, commands, error handling and visualization. I have created a small library called *MVVM4Flight* (<u>M</u>odel -<u>V</u>iew - <u>V</u>iew<u>M</u>odel <u>for</u> <u>F</u>lutter <u>Light</u>). 
+
+Please, let me know what you think and if you're interesting in more about *MVVM4Flight*.
 

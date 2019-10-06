@@ -12,32 +12,25 @@ class MainViewModel extends NotifyChanged<String> {
   bool get canIncrement => _canIncrement;
   bool get canDecrement => _canDecrement;
 
-  void upDownCommand() => _canIncrement 
-  ? _incrementCommand() 
-  : _decrementCommand();
-
   //
   // endregion
   //
 
-  void _incrementCommand() {
+  void incrementCommand() {
     _counter++;
-    if (_counter == 3) {
-      _canIncrement = false;
-      _canDecrement = true;
-    }
+    canDo();
+  }
+
+  void decrementCommand() {
+    --_counter;
+    canDo();
+  }
+
+  void canDo() {
+    _canIncrement = _counter < 3;
+    _canDecrement = _counter > 0;
     notifyChanged("counter"); // send the changed properties name
   }
-
-  void _decrementCommand() {
-    --_counter;
-    if (_counter == 0) {
-      _canIncrement = true;
-      _canDecrement = false;
-    }
-    notifyChanged("counter");
-  }
-
 
   dispose() => super.dispose();
 }
