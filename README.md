@@ -18,7 +18,7 @@ When I started with Flutter I tried to understand its patterns and best practice
 
 ### Bloc 
 
-[https://felangel.github.io/bloc/#/architecture](https://felangel.github.io/bloc/#/architecture) stands for <u>B</u>usiness <u>Lo</u>gic <u>C</u>omponent. This pattern is useful and necessary. Bloc is the component between Presentation and Backend:
+[Bloc](https://felangel.github.io/bloc/#/architecture) stands for <u>B</u>usiness <u>Lo</u>gic <u>C</u>omponent. This pattern is useful and necessary. Bloc is the component between Presentation and Backend:
 
 > Presentation Component (UI) - Bloc (Business Logic) - Backend (Data)
 
