@@ -22,69 +22,107 @@ When I started with Flutter I tried to understand its patterns and best practice
 
 > Presentation Component (UI) - Bloc (Business Logic) - Backend (Data)
 
-In my world, I have learned to split the View from the View Logic, and Bloc was not made for this.
+In my world, I have learned to split the View from the View Logic (aka ViewModel), and *Bloc* was not made for this. That's how it should look like:
+
+> View + ViewModel = Presentation Component 	- Bloc - Backend
 
 ## The up- and down example
 
+I just wanna give you an example. Forget about business logic and backend and data for a moment. Let's do a very simple app that does not anything with the entered data. Just UI and show me some numbers.
 
+### Example 01
 
+I have simply [created a new flutter application](https://github.com/SchmidteServices/mvvm4flight/tree/master/src/upDown01) using Visual Studio Code. You may know how it looks like:
 
+![1570378251718](README.assets/1570378251718.png)
 
-
-
-
-
-I got used to the MVVM model which was introduced many years ago, as a pattern to separate logic from the view. (Please notice, I said 'logic' not 'business logic' - more later.) 
-
-### Plain Flutter goes bloc
-
-When I started with *Flutter* I was very confused to see how everything is mixed within a single dart file:
+The example is based on the following code:
 
 ```dart
-... // UI = View - that's how it looks like
-floatingActionButton: FloatingActionButton(
+ ...
+ void _incrementCounter() {
+    setState(() => _counter++ );
+ }
+ ...
+ floatingActionButton: FloatingActionButton(
      onPressed: _incrementCounter,
      tooltip: 'Increment',
-     child: Icon(Icons.add),
-), 
-...
+     child: Icon(Icons.add),       
+ ),
 ```
 
-This is probably fine to demonstrate how *Hello Flutter!* works, but with your second view (or screen - however you may call it) the struggle will start and you will finally end up in a nightmare.
+Let extend the requirements a bit: 
+
+> We do increment up to three. Then the button symbol changes to the the functionality decrements down to zero, when the button switches again to plus. It will be up to three down to zero.
+
+The required code changes look like this:
 
 ```dart
-// ViewModel - that is what view logic is suppsed to do when a user clicks.
-void _incrementCounter() {
-	setState(() => _counter++ );
-}
+ int _counter = 0;
+  bool _canIncrement = true;  // initially we increment
+  bool _canDecrement = false;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+      if (_counter == 3) {
+        _canIncrement = false;
+        _canDecrement = true;
+      }
+    });
+  }
+
+  void _decrementCounter() {
+    setState(() {
+      --_counter;
+      if (_counter == 0) {
+        _canIncrement = true;
+        _canDecrement = false;
+      }
+    });
+  }
+...
+floatingActionButton: 
+	_canIncrement
+    ? FloatingActionButton(
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+        onPressed: _incrementCounter,
+      )
+    : _canDecrement
+      ? FloatingActionButton(
+            tooltip: 'Decrement',
+            child: Icon(Icons.remove),
+            onPressed: _decrementCounter,
+          )
+        : throw "Can't happen if logic is correct"
 ```
 
-I continued reading about how *Flutter* tackles architecture and I found the *[Bloc](https://felangel.github.io/bloc/#/architecture) (the business logic component)* pattern: *Presentation - Business Logic (bloc) - Data*. Well, a good idea to split *business logic* from *presentation*. 
+The app increments up to three, then the button changes and decrement starts:
 
-But, what about *presentation logic*?
+![1570379237546](README.assets/1570379237546.png)
 
-### Presentation logic
+Crazy!I would never do something like this knowing this will kill the maintenance of my app quickly (RIP)!
 
-You need to know, Microsoft uses a declarative (XAML) approach to design a UI. XAML simply defines how your UI looks like. For example: fancy UI, old fashioned, Material or not, green or red. 
+Actually I was looking for something like this:
+
+```dart
+MainViewModel _viewModel = new MainViewModel();
+
+void initState() {
+    _viewModel.subscribe((changedPropertyName) => setState(() {}));
+	super.initState();
+}
+
+floatingActionButton: FloatingActionButton(
+      child: _viewModel.canIncrement ? Icon(Icons.add) : Icon(Icons.remove),
+      onPressed: () => _viewModel.upDownCommand(),
+)
+```
+
+Just four lines of code in the view, nothing about up and down logic! How can this work?
+
+The magic lies in the *ViewModel* 'behind' the view: `main.ViewModel.dart`. This class takes all the view logic without knowing *how* information is displayed!
 
 
 
-Looking at the sample above, `FloatingActionButton` together with all its designer properties is UI (aka. View). `_incrementCounter`  - or, to be more precise - `_counter++` is not view, this is *ViewModel* aka presentation logic!
-
-### Presentation logic in Flutter
-
-Let's extend the sample from above a bit, and let's disable the button when counter is greater than three. What you Flutter folks do?  You would probably change a single line to 
-
-`.. floatingActionButton: (_counter>3) ? null : FloatingActionButton( ...`
-
-Well, this works, and you will see the button disappearing. However, you started adding presentation logic to the view: when this property has a certain value disable a widget. 
-
-In Flutter everything's a Widget - even a State is a Widget: `State<T extends StatefulWidget>`.  
-
-I would really prefer to say: 
-
-> A Widget *has a* State !
->
-> instead of reading extends (inheritance) as 'A Widget is a State'.
-
-<sub>Markus Schmidt, 2019-10-06</sub>

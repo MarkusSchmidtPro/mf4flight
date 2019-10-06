@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.ViewModel.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -44,29 +45,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  bool _canIncrement = true;  // initially we increment
-  bool _canDecrement = false;
+  MainViewModel _viewModel = new MainViewModel();
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      if (_counter == 3) {
-        _canIncrement = false;
-        _canDecrement = true;
-      }
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      --_counter;
-      if (_counter == 0) {
-        _canIncrement = true;
-        _canDecrement = false;
-      }
-    });
-  }
+  void initState()
+	{
+		_viewModel.subscribe((changedPropertyName) => setState(() {}));
+		super.initState();
+	}
 
   @override
   Widget build(BuildContext context) {
@@ -106,26 +91,26 @@ class _MyHomePageState extends State<MyHomePage> {
                 'You have pushed the button this many times:',
               ),
               Text(
-                '$_counter',
+                '${_viewModel.counter}',
                 style: Theme.of(context).textTheme.display1,
               ),
             ],
           ),
         ),
-        floatingActionButton: _canIncrement
-            ? FloatingActionButton(
-                tooltip: 'Increment',
-                child: Icon(Icons.add),
-                onPressed: _incrementCounter,
-              )
-            : _canDecrement
-                ? FloatingActionButton(
-                    tooltip: 'Decrement',
-                    child: Icon(Icons.remove),
-                    onPressed: _decrementCounter,
-                  )
-                : throw "Can't happen if logic is correct"
-        // This trailing comma makes auto-formatting nicer for build methods.
+
+        floatingActionButton: FloatingActionButton(
+          child: _viewModel.canIncrement ? Icon(Icons.add) : Icon(Icons.remove),
+          onPressed: () => _viewModel.upDownCommand(),
+        )
         );
   }
+
+
+
+  @override
+	void dispose()
+	{
+		_viewModel.dispose();
+		super.dispose();
+	}
 }
