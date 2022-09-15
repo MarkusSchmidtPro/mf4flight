@@ -28,7 +28,7 @@
 			softDelete
 			equals
 			
-			: IJsonObject
+			: IDataModel
 				copyTo
 				equal
 		

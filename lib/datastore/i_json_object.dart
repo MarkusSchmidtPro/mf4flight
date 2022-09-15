@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 
 /// Text
 ///
-/// [IJsonObjects] require an empty default constructor for `new ()`.
-abstract class IJsonObject {
+/// [IDataModels] require an empty default constructor for `new ()`.
+abstract class IDataModel {
   void load(Map<String, dynamic> json) => throw "@mustOverride";
 
   Map<String, dynamic> toJson()=> throw "@mustOverride";
@@ -13,7 +13,7 @@ abstract class IJsonObject {
   /// ```dart
   /// var proposedRecord = favoriteRecord.copyTo( new FavoriteRecord());
   /// ```
-  T clone<T extends IJsonObject>(T target) {
+  T clone<T extends IDataModel>(T target) {
     target.load(this.toJson());
     return target;
   }
@@ -24,7 +24,7 @@ abstract class IJsonObject {
   /// overridden classes if not explicitly implemented there.
   /// E.g. FavoriteRecord would be required to implement
   /// this method, if not static.
-  bool equal<T, U>(IJsonObject originalRecord) => _jEquals(originalRecord.toJson(), this.toJson());
+  bool equal<T, U>(IDataModel originalRecord) => _jEquals(originalRecord.toJson(), this.toJson());
 
   static bool _jEquals<T, U>(Map<T, U>? originalRecord, Map<T, U> currentRecord) {
     if (originalRecord == null) return false;
@@ -39,7 +39,7 @@ abstract class IJsonObject {
 
   // region Change Tracking
 
-  IJsonObject? _original;
+  IDataModel? _original;
 
   /// Begin editing (tracking changes) on the current record.
   /// A [newInstance] for the current record must be provided.
@@ -50,7 +50,7 @@ abstract class IJsonObject {
   /// See also dart:mirrors
   /// Calling [trackChanges] on an [isDirty] record that has already tracking enabled
   /// will throw an assertion.
-  void trackChanges(IJsonObject newInstance) {
+  void trackChanges(IDataModel newInstance) {
     assert(_original==null || !isDirty(),
     "Tracking is enabled and record is dirty! You must call acceptChanges() or discardChanges() before.");
     newInstance.load(this.toJson());

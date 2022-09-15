@@ -48,7 +48,7 @@ abstract class ModelAdapter<TContext> {
   /// Save the model's data back to its origin.
   ///
   /// The _origin_ is defined by the adapter itself, by its _seed_.
-  /// For example a database related adapter, may implement saveAsync
+  /// For example a data_model related adapter, may implement saveAsync
   /// like this (see [FavoriteDatabaseAdapter]):
   /// ```dart
   /// class FavoriteDatabaseAdapter extends ModelAdapter<FavoriteModel> {

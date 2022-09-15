@@ -14,9 +14,9 @@ class RecordStatus {
 }
 
 
-/// Represents a database record with the five standard columns,
-/// and serialization [toJson] and deserialization [fromJson] support.
-class DatabaseRecord extends IJsonObject{
+/// Represents a data_model record with the five standard columns,
+/// and serialization [toJson] and deserialization [init] support.
+class DatabaseRecord extends IDataModel{
   int? get id => _id;
   int? _id;
   setId( int value) {
@@ -60,7 +60,7 @@ class DatabaseRecord extends IJsonObject{
   
    /// Ensure a DatabaseRecord is active.
   ///
-  /// If you fetch records from the database you can include *deleted* records ([RecordState] == [RecordState.Deleted]).
+  /// If you fetch records from the data_model you can include *deleted* records ([RecordState] == [RecordState.Deleted]).
   /// To ensure you work with active records only, you may reactivate in case, using this method.
   void ensureActive() {
     if (this.recordState != RecordState.Active) this.recordState = RecordState.Active;

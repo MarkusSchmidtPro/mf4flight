@@ -122,7 +122,7 @@ abstract class ViewModelEdit extends ViewModelBase {
   /// valid (passed the [onViewValidateControls] checks).
   /// In case the view's data is a [DatabaseRecord] the record fields
   /// are updated with the data from the view and then the record is saved
-  /// to the database. To avoid updating the database with unchanged data use
+  /// to the data_model. To avoid updating the data_model with unchanged data use
   /// the [DatabaseRecord.trackChanges] pattern.
   ///
   /// ```dart

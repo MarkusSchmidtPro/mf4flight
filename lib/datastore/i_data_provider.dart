@@ -1,24 +1,22 @@
-import 'package:logging/logging.dart';
 import 'package:mf4flight/mf4flight.dart';
 
-/// Provides CRUD operations on a database table.
+/// Provides CRUD operations on a data_model table.
 abstract class IDataProvider<TRecord extends DatabaseRecord> {
-  late Logger logger;
 
   String get tableName;
   
   Future<int> getActiveCountAsync({String? criteria}) ;
 
   /// Fetch all record of the current table
-  /// from database no matter if active or deleted.
+  /// from data_model no matter if active or deleted.
   ///
   /// Returns: a List of TItem - never <i>null</i>
   Future<List<TRecord>> fetchAllAsync() ;
 
-  /// Fetch active OR inactive records from database.
+  /// Fetch active OR inactive records from data_model.
   Future<List<TRecord>> fetchAsync({String whereAndOrder = 'WHERE RecordState=${RecordState.Active}'});
   
-  /// Get active items from database by a where-criteria
+  /// Get active items from data_model by a where-criteria
   ///
   /// Returns: a List of TItem with count 0 to n. It never returns <i>null</i>
   Future<List<TRecord>> fetchActiveAsync({String? criteria}) ;
@@ -27,13 +25,13 @@ abstract class IDataProvider<TRecord extends DatabaseRecord> {
 
   Future<TRecord?> getBySyncId(String itemId, {bool activeOnly = true});
 
-  /// Saves a [DatabaseRecord] into the database.
+  /// Saves a [DatabaseRecord] into the data_model.
   ///
   /// Saving a record is: create, update or soft-delete.
   ///
   /// If [isTracking] is enabled on the record changes are written,
   /// only when the record [isDirty]. If tracking has not been enabled,
-  /// the record is unconditionally written to the database.
+  /// the record is unconditionally written to the data_model.
   /// In case the record is saved, [recordLastUpdateUtc] is set to utcNow, and
   /// changes are accepted by calling [acceptChanges].
   ///
@@ -42,7 +40,7 @@ abstract class IDataProvider<TRecord extends DatabaseRecord> {
   /// Return *true* when the record was saved to DB.
   Future<bool> saveChangesAsync(TRecord record) ;
 
-  /// Saves a [DatabaseRecord] as-is to the database.
+  /// Saves a [DatabaseRecord] as-is to the data_model.
   ///
   /// If `record.id == null`
   ///   Set recordCreatedDateUtc
@@ -54,7 +52,7 @@ abstract class IDataProvider<TRecord extends DatabaseRecord> {
   ///   [recordCreatedDateUtc] is set when the record instance is created.
   Future<void> rawSaveAsync(TRecord record) ;
 
-  /// Logically (soft) delete a record and update database.
+  /// Logically (soft) delete a record and update data_model.
   Future deleteAsync(TRecord record, {int recordStatus = RecordStatus.Default});
 
   Future deleteHardAsync(int id);
