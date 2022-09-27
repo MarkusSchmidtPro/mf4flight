@@ -9,7 +9,7 @@ class DBHelper {
     return d.toIso8601String().parseToUtc();
   }
 
-  static int getVersionFromNow() => utcNow().millisecondsSinceEpoch;
+  static int getVersionFromNow() => DateTime.now().toUtc().millisecondsSinceEpoch;
 
   // version to UTC
   // DateTime dt1 =   DateTime.fromMillisecondsSinceEpoch(1617726048990);

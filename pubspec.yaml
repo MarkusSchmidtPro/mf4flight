@@ -11,13 +11,18 @@ dependencies:
   flutter:
     sdk: flutter
 
-  logging: ^1.0.1
+  logging: ^1.0.2
   provider: ^6.0.0
   get_it: ^7.2.0
   event_bus: ^2.0.0
   json_annotation: ^4.0.1
   collection: ^1.15.0
   uuid: ^3.0.1
+  
+  # SQLite support
+  sqflite: ^2.0.2
+  sqflite_common_ffi:
+  path_provider: ^2.0.8
 
 dev_dependencies:
   flutter_test:

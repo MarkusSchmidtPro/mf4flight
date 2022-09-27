@@ -1,4 +1,5 @@
-import 'package:mf4flight/mf4flight.dart';
+
+import 'database_record.dart';
 
 /// Provides CRUD operations on a data_model table.
 abstract class IDataProvider<TRecord extends DatabaseRecord> {

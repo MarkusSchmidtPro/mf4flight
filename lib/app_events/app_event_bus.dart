@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:logging/logging.dart';
-import 'package:mf4flight/enums.dart';
 
 import '../view_model/viewmodel_base.dart';
 import 'app_event.dart';
@@ -16,7 +15,7 @@ class AppEventBus implements IAppEvents {
   @override
   void raise<TEvent extends AppEvent>( TEvent event) {
     _logger.finest("${event.sender.runtimeType} fired $TEvent");
-    assert( !((event.sender is ViewModelBase) && (event.sender as ViewModelBase).state != ViewModelState.ready),
+    assert( !((event.sender is ViewModelBase)/* && (event.sender as ViewModelBase).state != ViewModelState.ready*/),
             "Do not raise application events while view model is not ready, yet.");
     _eventBus.fire( event);
   }

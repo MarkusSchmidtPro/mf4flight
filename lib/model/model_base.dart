@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'model_adapter.dart';
 
 /// Represents the base class for model implementations.
@@ -29,7 +27,7 @@ import 'model_adapter.dart';
 abstract class ModelBase {
   late final String id;
 
-
+/*
   ModelBase();
 
   // region JSON Serialization
@@ -66,5 +64,5 @@ abstract class ModelBase {
       }
     }
     return true;
-  }
+  }*/
 }

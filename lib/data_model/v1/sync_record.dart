@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'database_record.dart';
-import 'database_helper.dart';
+import '../database_helper.dart';
 
 abstract class SyncRecord extends DatabaseRecord {
   late String syncId;

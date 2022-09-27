@@ -15,7 +15,7 @@ mixin ModelAdapterMixin on ModelBase {
 
   /// Shortcut to: [ModelAdapter.load].
   @protected
-  void init(ModelAdapter modelAdapter) {
+  void load(ModelAdapter modelAdapter) {
     _adapter = modelAdapter;
     adapter.load(this);
   }

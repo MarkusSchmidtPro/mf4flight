@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'database_helper.dart';
+import '../database_helper.dart';
 import 'i_json_object.dart';
 
 
@@ -15,7 +15,7 @@ class RecordStatus {
 
 
 /// Represents a data_model record with the five standard columns,
-/// and serialization [toJson] and deserialization [init] support.
+/// and serialization [toJson] and deserialization [load] support.
 class DatabaseRecord extends IDataModel{
   int? get id => _id;
   int? _id;
