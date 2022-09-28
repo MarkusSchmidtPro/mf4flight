@@ -5,51 +5,39 @@ import 'package:logging/logging.dart';
 
 import '../mf4flight.dart';
 
-
-/// A view model base class to support asynchronous completion.
-mixin ContextMixin<TContext> on LazyLoadMixin {
-
-  /// The Context specifies the root object 
-  /// on which the viewmodel is based. For example, a ListItem. 
-  /// If the Context of a view model can never change, for example,
-  /// the view model is simply based on a model as its root (edit form).
-  /// There is no need to use the Context.
-  /// 
-  /// Returns _true_ when the Context changed. In case the Context has not 
-  /// changed, [lazyLoad] is not executed.
-  void setContext(TContext context) {
-    if (_context != null && context == _context) return;
-    if (_context != null) onContextChanging( context);
-    _context = context;
-    _lazyLoadCount = 0;
-    lazyLoad();
+/// Extend a ViewModelBased to support data binding.
+///
+/// Data binging is used to pass data from a View to a ViewModel:
+/// pass or bing data to the ViewModel.
+mixin DataBinder<TData> on ViewModelBase {
+  void bindData(TData model) {
+    if (_data != null && model == _data) return;
+    if (_data != null) onContextChanging(model);
+    _data = model;
+    if ((this is LazyLoad)) (this as LazyLoad).startLazyLoad();
   }
 
-  TContext? _context;
+  TData? _data;
 
-  TContext get context => _context!;
+  TData get data => _data!;
 
   @protected
-  void onContextChanging( TContext newContext){}
+  void onContextChanging(TData newData) {}
 }
- 
-mixin LazyLoadMixin on ViewModelBase
-{
-  int _lazyLoadCount = 0;
-  void lazyLoad() {
-    logger.finest(">init($_lazyLoadCount)");
-    assert(++_lazyLoadCount == 1);
-    _setState( ViewModelState.busy);
+
+mixin LazyLoad on ViewModelBase {
+
+  void startLazyLoad() {
+    _setState(ViewModelState.busy);
     onLoadAsync().then((_) {
-      _setState( ViewModelState.ready);
+      _setState(ViewModelState.ready);
       notifyListeners();
     });
-    logger.finest("<init($_lazyLoadCount)");
   }
 
   /// Start asynchronous initialization of the ViewModel.
   /// Once this is completed the state is [ViewModelState.ready].
-  /// 
+  ///
   /// Call this method from the View:
   /// ```
   /// Widget build(BuildContext context) => ViewModelBuilder<ContactListViewModel>.reactive(
@@ -57,19 +45,17 @@ mixin LazyLoadMixin on ViewModelBase
   ///       onModelReady: (viewModel) => viewModel.lazyLoad(),
   ///       builder: _buildPage);
   /// ```
-  
 
   /// Provide an asynchronous initialisation functionality.
-  /// 
-  /// [onLoadAsync] is started during [lazyLoad] and 
-  /// no explicit call of asynchronous initialisation is necessary. 
+  ///
+  /// [onLoadAsync] is started during [startLazyLoad] and
+  /// no explicit call of asynchronous initialisation is necessary.
   @protected
-  Future<void> onLoadAsync() ;
+  Future<void> onLoadAsync();
 }
 
-
 /// The base class for view models whose context does not change.
-/// 
+///
 /// The view model's context is set once (usually in the constructor).
 /// While Context's content may change and update the view (notify())
 /// the context itself is fix and never changes.
@@ -79,10 +65,9 @@ abstract class ViewModelBase extends ChangeNotifier {
   // region ViewModel State
   late ViewModelState _state;
 
-  
   /// Get the ViewModel's state.
-  /// 
-  /// You can use this in the view to display a progress bar, 
+  ///
+  /// You can use this in the view to display a progress bar,
   /// for example, until the ViewModel is ready.
   /// ```
   /// body: pageVM.state != ViewModelState.ready
@@ -95,18 +80,18 @@ abstract class ViewModelBase extends ChangeNotifier {
     logger.finest("ViewModelState=$state");
     _state = state;
   }
-  
+
   bool get ready => _state == ViewModelState.ready;
+
   // endregion
 
   @protected
   @mustCallSuper
   ViewModelBase() : super() {
     logger = new Logger('$runtimeType');
-    _setState( ViewModelState.initializing);
+    _setState(ViewModelState.initializing);
   }
 
-  
   /// The source which request to close the view.
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 
