@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 /// Provides CRUD functionality for a Model.
-abstract class ModelAdapter<TContext> {
+abstract class ModelAdapter<TModel,TSource> {
   late final Logger logger;
 
   @protected
@@ -26,24 +26,7 @@ abstract class ModelAdapter<TContext> {
   ///     model.productName = seed.productName;
   ///     ...
   ///  }
-  void load(TContext model) => logger.finest(">Load( ModelType: ${TContext.runtimeType})");
-
-  /// Complete the model by executing an asynchronous load functionality.
-  ///
-  /// Normally, [loadAsync] is called in the
-  /// view model's [ViewModelBase.loadAsync]
-  /// method (see [FavoriteMessageAdapter]):
-  /// ```dart
-  /// @override
-  /// Future<void> loadDataAsync() async {
-  ///   await model.loadAsync();
-  ///   _modelToViewModel(model);
-  ///   notifyListeners();
-  /// }
-  /// ```
-  Future<void> loadAsync(TContext model) async {
-    assert(true, "$runtimeType does not support loadAsync for model ${TContext.runtimeType}");
-  }
+  TModel load(TModel model, TSource source) ;
 
   /// Save the model's data back to its origin.
   ///
@@ -80,11 +63,29 @@ abstract class ModelAdapter<TContext> {
   ///   logger.finest("<onViewSaveAsync()");
   /// }
   /// ```
-  Future<void> saveAsync(TContext model) async {
-    assert(true, "$runtimeType does not support saveAsync for model ${TContext.runtimeType}");
+  Future<void> saveAsync(TModel model) async {
+    assert(true, "$runtimeType does not support saveAsync for model ${TModel.runtimeType}");
   }
 
-  Future<void> deleteAsync(TContext model) async {
-    assert(true, "$runtimeType does not support deleteAsync for model ${TContext.runtimeType}");
+  Future<void> deleteAsync(TModel model) async {
+    assert(true, "$runtimeType does not support deleteAsync for model ${TModel.runtimeType}");
   }
+}
+
+
+mixin AsyncCompletionAdapter<TModel, TSource> on ModelAdapter<TModel, TSource>{
+  /// Complete the model by executing an asynchronous load functionality.
+  ///
+  /// Normally, [loadAsync] is called in the
+  /// view model's [ViewModelBase.loadAsync]
+  /// method (see [FavoriteMessageAdapter]):
+  /// ```dart
+  /// @override
+  /// Future<void> loadDataAsync() async {
+  ///   await model.loadAsync();
+  ///   _modelToViewModel(model);
+  ///   notifyListeners();
+  /// }
+  /// ```
+  Future<void> completeAsync(TModel model) ;
 }
