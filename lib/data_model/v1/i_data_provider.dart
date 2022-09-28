@@ -1,28 +1,29 @@
-
 import 'database_record.dart';
 
 /// Provides CRUD operations on a data_model table.
 abstract class IDataProvider<TRecord extends DatabaseRecord> {
-
   String get tableName;
-  
-  Future<int> getActiveCountAsync({String? criteria}) ;
+
+  Future<TRecord> getAsync(int id);
+
+  Future<int> getActiveCountAsync({String? criteria});
 
   /// Fetch all record of the current table
   /// from data_model no matter if active or deleted.
   ///
   /// Returns: a List of TItem - never <i>null</i>
-  Future<List<TRecord>> fetchAllAsync() ;
+  Future<List<TRecord>> fetchAllAsync();
 
   /// Fetch active OR inactive records from data_model.
-  Future<List<TRecord>> fetchAsync({String whereAndOrder = 'WHERE RecordState=${RecordState.Active}'});
-  
+  Future<List<TRecord>> fetchAsync(
+      {String whereAndOrder = 'WHERE RecordState=${RecordState.Active}'});
+
   /// Get active items from data_model by a where-criteria
   ///
   /// Returns: a List of TItem with count 0 to n. It never returns <i>null</i>
-  Future<List<TRecord>> fetchActiveAsync({String? criteria}) ;
+  Future<List<TRecord>> fetchActiveAsync({String? criteria});
 
-  Future<List<Map<String, dynamic>>> rawQueryAsync(String sql) ;
+  Future<List<Map<String, dynamic>>> rawQueryAsync(String sql);
 
   Future<TRecord?> getBySyncId(String itemId, {bool activeOnly = true});
 
@@ -39,7 +40,7 @@ abstract class IDataProvider<TRecord extends DatabaseRecord> {
   /// In case the record is of type [SyncRecord] the [recordVersion] is updated.
   ///
   /// Return *true* when the record was saved to DB.
-  Future<bool> saveChangesAsync(TRecord record) ;
+  Future<bool> saveChangesAsync(TRecord record);
 
   /// Saves a [DatabaseRecord] as-is to the data_model.
   ///
@@ -51,14 +52,16 @@ abstract class IDataProvider<TRecord extends DatabaseRecord> {
   ///   Note: Normally, this method is used during inbound sync only.
   ///   Any business logic should prefer using [saveChangesAsync].
   ///   [recordCreatedDateUtc] is set when the record instance is created.
-  Future<void> rawSaveAsync(TRecord record) ;
+  Future<void> rawSaveAsync(TRecord record);
 
   /// Logically (soft) delete a record and update data_model.
   Future deleteAsync(TRecord record, {int recordStatus = RecordStatus.Default});
+
+  Future deleteAsyncId(int id);
 
   Future deleteHardAsync(int id);
 
   /// Get all local records which require synchronization
   /// (client to service) incl. deleted ones.
-  Future<List<TRecord>> getLocalChangesAsync(int minVersion) ;
+  Future<List<TRecord>> getLocalChangesAsync(int minVersion);
 }

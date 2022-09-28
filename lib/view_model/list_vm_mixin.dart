@@ -19,6 +19,7 @@ class ListItem<TModel> {
 
 /// A [ListItem] state.
 class ItemState {
+  ItemState( {bool selected=false}) : _selected = selected;
   bool get selected => _selected;
   bool _selected = false;
 }

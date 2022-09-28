@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 /// Provides CRUD functionality for a Model.
-abstract class ModelAdapter<TContext> {
+abstract class ModelAdapter<TModel,TSource> {
   late final Logger logger;
 
   @protected
@@ -26,24 +26,7 @@ abstract class ModelAdapter<TContext> {
   ///     model.productName = seed.productName;
   ///     ...
   ///  }
-  void load(TContext model) => logger.finest(">Load( ModelType: ${TContext.runtimeType})");
-
-  /// Complete the model by executing an asynchronous load functionality.
-  ///
-  /// Normally, [loadAsync] is called in the
-  /// view model's [ViewModelBase.loadAsync]
-  /// method (see [FavoriteMessageAdapter]):
-  /// ```dart
-  /// @override
-  /// Future<void> loadDataAsync() async {
-  ///   await model.loadAsync();
-  ///   _modelToViewModel(model);
-  ///   notifyListeners();
-  /// }
-  /// ```
-  Future<void> loadAsync(TContext model) async {
-    assert(true, "$runtimeType does not support loadAsync for model ${TContext.runtimeType}");
-  }
+  TModel load(TModel model, TSource source) ;
 
   /// Save the model's data back to its origin.
   ///
@@ -80,15 +63,16 @@ abstract class ModelAdapter<TContext> {
   ///   logger.finest("<onSaveChangesAsync()");
   /// }
   /// ```
-  Future<void> saveAsync(TContext model) async {
-    assert(true, "$runtimeType does not support saveAsync for model ${TContext.runtimeType}");
+  Future<void> saveAsync(TModel model) async {
+    assert(true, "$runtimeType does not support saveAsync for model ${TModel.runtimeType}");
   }
 
-  Future<void> deleteAsync(TContext model) async {
-    assert(true, "$runtimeType does not support deleteAsync for model ${TContext.runtimeType}");
+  Future<void> deleteAsync(TModel model) async {
+    assert(true, "$runtimeType does not support deleteAsync for model ${TModel.runtimeType}");
   }
 }
 
+<<<<<<< HEAD
 abstract class ModelAdapter2<TContext> {
   late final Logger logger;
 
@@ -146,6 +130,10 @@ abstract class ModelAdapter2<TContext> {
 
 
 mixin AsyncCompletionAdapter<TContext> on ModelAdapter2<TContext>{
+=======
+
+mixin AsyncCompletionAdapter<TModel, TSource> on ModelAdapter<TModel, TSource>{
+>>>>>>> 0337ce6192c3a88d71ddccf66f6c316e9d053be9
   /// Complete the model by executing an asynchronous load functionality.
   ///
   /// Normally, [loadAsync] is called in the
@@ -159,5 +147,9 @@ mixin AsyncCompletionAdapter<TContext> on ModelAdapter2<TContext>{
   ///   notifyListeners();
   /// }
   /// ```
+<<<<<<< HEAD
   Future<void> completeAsync(TContext model) ;
+=======
+  Future<void> completeAsync(TModel model) ;
+>>>>>>> 0337ce6192c3a88d71ddccf66f6c316e9d053be9
 }
