@@ -88,4 +88,10 @@ mixin AsyncCompletion<TModel, TSource> on ModelAdapter<TModel, TSource>{
   /// }
   /// ```
   Future<void> completeAsync(TModel model) ;
+  
+  Future<TModel> loadCompleteAsync(TModel model, TSource source) async {
+    load( model, source);
+    await completeAsync( model);
+    return model;
+  }
 }

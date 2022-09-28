@@ -10,11 +10,11 @@ import '../mf4flight.dart';
 /// Data binging is used to pass data from a View to a ViewModel:
 /// pass or bing data to the ViewModel.
 mixin DataBinder<TData> on ViewModelBase {
-  void bindData(TData model) {
+  void init(TData model) {
     if (_data != null && model == _data) return;
     if (_data != null) onContextChanging(model);
     _data = model;
-    if ((this is LazyLoad)) (this as LazyLoad).startLazyLoad();
+    if ((this is LazyLoad)) (this as LazyLoad).init();
   }
 
   TData? _data;
@@ -27,7 +27,7 @@ mixin DataBinder<TData> on ViewModelBase {
 
 mixin LazyLoad on ViewModelBase {
 
-  void startLazyLoad() {
+  void init() {
     _setState(ViewModelState.busy);
     onLoadAsync().then((_) {
       _setState(ViewModelState.ready);
