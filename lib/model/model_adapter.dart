@@ -10,6 +10,8 @@ abstract class ModelAdapter<TModel,TSource> {
     logger = new Logger('$runtimeType');
   }
 
+  // static TModel fromSource( TSource source) => load( new TModel(), source);
+  
   /// Populate a model with the data that is available during
   /// adapter initialization - synchronous load.
   ///
