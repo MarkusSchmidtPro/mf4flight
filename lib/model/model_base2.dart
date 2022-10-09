@@ -30,7 +30,7 @@ import 'model_adapter.dart';
 abstract class ModelBase2 {
   /// Create a new model with a unique [modelKey]. 
   /// The [modelKey] is used to generate the unique [id]. 
-  ModelBase2(String modelKey) : id = "$modelKey#${++_id}";
+  ModelBase2(String modelKey) ;//: id = "$modelKey#${++_id}";
 
   /// The unique model id.
   late final String id;
