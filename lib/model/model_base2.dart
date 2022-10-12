@@ -58,7 +58,7 @@ abstract class ModelBase2 {
   ///   model.contactId = record.id!;
   ///   model.name = record.name;
   ///   ...
-  ///   model.applyChanges();
+  ///   model.saveState();
   ///   return model;
   /// }
   /// ```
@@ -68,7 +68,7 @@ abstract class ModelBase2 {
   /// Check if the current object has bee changed 
   /// since the last call to [saveState].
   bool isDirty() {
-    assert( _original!=null, "The model does not support changes. Ref. applyChanges()");
+    assert( _original!=null, "The model does not support changes. Ref. saveState()");
     return _original == null || !DeepCollectionEquality.unordered().equals(_original, toJson());
   }
 
