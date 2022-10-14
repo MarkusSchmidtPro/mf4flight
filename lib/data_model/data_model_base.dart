@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import 'database_helper.dart';
@@ -35,18 +34,11 @@ abstract class DataModelBase {
   ///
   /// This id is null until the DataModel is saved.
   int? id;
-
-  /// Get a millisecond-based version of the stored record.
-  ///
-  /// The [recordVersion] is updated every time the data model
-  /// is written to the store.
-  int recordVersion = 0;
-
+  
   /// Logical state of the data model.
   /// 0: active
   /// 1: logically deleted
   int recordState = RecordState.Active;
-  int recordStatus = 0;
 
   late DateTime recordLastUpdateUtc;
   late DateTime recordCreatedDateUtc;
@@ -63,13 +55,6 @@ abstract class DataModelBase {
     recordCreatedDateUtc = DBHelper.utcNow();
     recordLastUpdateUtc = recordCreatedDateUtc;
   }
-
-  /// Compare the current data model with another data model.
-  ///
-  /// In unordered mode, the order of elements in iterables and lists are not important.
-  /// See also [DeepCollectionEquality.unordered].
-  bool equals(Map<String, dynamic> other) =>
-      id != null && DeepCollectionEquality.unordered().equals(other, toJson());
 
   /// Serialize the current object to JSON (Map).
   ///

@@ -15,11 +15,8 @@ class ListProvider<TDataModel extends DataModelBase> implements IDataProvider2<T
   @protected
   final HashMap<int, TDataModel> items = new HashMap<int, TDataModel>();
 
-  /// region id
-  static int _id = 0;
-
-  static int newId() => ++_id; //"#${_f.format(++_id)}";
-  // endregion
+  static int _nextId = 0;
+  static int newId() => ++_nextId; 
   
   ListProvider( this.entityName) ;
 
@@ -28,11 +25,11 @@ class ListProvider<TDataModel extends DataModelBase> implements IDataProvider2<T
   
   /// Unsorted list of items.
   @override
-  Future<List<TDataModel>> fetchAsync({String? whereClause}) async => items.values.toList();
+  Future<List<TDataModel>> fetchAsync({String? criteria}) async => items.values.toList();
 
   @override
   Future<int> saveAsync(TDataModel dataModel) async {
-    dataModel.id ??= newId();
+    if( dataModel.id == null) dataModel.id= newId();
     items[ dataModel.id!] = dataModel;
     return dataModel.id!;
   }

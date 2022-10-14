@@ -5,7 +5,7 @@ import 'data_model_base.dart';
 abstract class IDataProvider2<TDataModel extends DataModelBase> {
   String get entityName => throw UnimplementedError();
 
-  Future<List<TDataModel>> fetchAsync({String? whereClause});
+  Future<List<TDataModel>> fetchAsync({String? criteria});
 
   Future<TDataModel> getAsync(int id);
 
@@ -21,7 +21,7 @@ abstract class IDataProvider2<TDataModel extends DataModelBase> {
   /// with the information returned by the store (SQLite behavior).
   /// 
   /// The function returns the [record.modelId] which is not null!
-  Future<int> saveAsync(TDataModel currentRecord);
+  Future<void> saveAsync(TDataModel currentRecord);
 
   Future deleteAsync(int id);
 }
