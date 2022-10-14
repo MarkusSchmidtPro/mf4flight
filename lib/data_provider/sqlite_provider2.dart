@@ -7,6 +7,7 @@ import '../data_model/data_model_base.dart';
 import '../data_model/database_helper.dart';
 import '../data_model/i_data_provider2.dart';
 import '../data_model/sync_record.dart';
+import '../data_model/tracked_object.dart';
 
 /// SQLite data model provider implementation.
 class SQLiteProvider2<TDataModel extends DataModelBase>
@@ -60,13 +61,14 @@ class SQLiteProvider2<TDataModel extends DataModelBase>
   /// If [currentRecord.id] is null a new record is inserted into the DB.
   /// Otherwise, the existing record is updated, when the provided [currentRecord] is different from the record in the DB.
   @override
-  Future<void> saveAsync(TDataModel currentRecord) async {
+  Future<void> saveAsync(TDataModel currentRecord, {bool updateRecordVersion = true}) async {
     // Check if the provided record matches the object in the database.
     if (currentRecord.id != null &&
         _equals(currentRecord, await _getAsync(currentRecord.id!))) return;
 
-    if (currentRecord is SyncRecord)
+    if (updateRecordVersion && currentRecord is SyncRecord){
       currentRecord.recordVersion = DBHelper.getVersionFromNow();
+    }
     currentRecord.recordLastUpdateUtc = DBHelper.utcNow();
 
     if (currentRecord.id == null) {
@@ -76,6 +78,9 @@ class SQLiteProvider2<TDataModel extends DataModelBase>
       await db.update(entityName, currentRecord.toJson(),
           where: 'id=${currentRecord.id}');
     }
+    
+    if( currentRecord is TrackedObject)
+      (currentRecord as TrackedObject).acceptChanges();
   }
 
   bool _equals(TDataModel currentRecord, Map<String, dynamic> other) =>
