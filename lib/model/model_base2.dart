@@ -35,9 +35,4 @@ abstract class ModelBase2 extends TrackedObject {
   /// The unique model id.
   @JsonKey(ignore: true)
   final String modelId = Uuid().v4();
-
-  /// The original (unchanged) version of the model.
-  /// Make store a reference to the data object that was used to create this model.
-  @JsonKey(ignore: true)
-  late final dynamic seed;
 }
