@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mf4flight/mf4flight.dart';
 import 'package:uuid/uuid.dart';
+
+import '../data_model/tracked_object.dart';
 
 /// Represents the base class for model implementations.
 ///
@@ -27,7 +28,7 @@ import 'package:uuid/uuid.dart';
 ///   }
 /// }
 /// ```
-abstract class ModelBase2 extends TrackedObjectBase {
+abstract class ModelBase2 extends TrackedObject {
   @protected
   ModelBase2();
 

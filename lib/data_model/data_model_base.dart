@@ -3,6 +3,11 @@ import 'package:flutter/foundation.dart';
 
 import 'database_helper.dart';
 
+class RecordState {
+  static const Active = 0;
+  static const Deleted = 1;
+}
+
 /// Represents the base class from which all data models inherit.
 ///
 /// Classes that inherit from [DataModelBase] must be @JsonSerializable()
@@ -40,7 +45,8 @@ abstract class DataModelBase {
   /// Logical state of the data model.
   /// 0: active
   /// 1: logically deleted
-  int recordState = 0;
+  int recordState = RecordState.Active;
+  int recordStatus = 0;
 
   late DateTime recordLastUpdateUtc;
   late DateTime recordCreatedDateUtc;

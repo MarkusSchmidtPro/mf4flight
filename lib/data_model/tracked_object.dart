@@ -1,7 +1,7 @@
-import 'package:collection/collection.dart';
+import 'package:collection/collection.dart' as tracked_object;
 import 'package:flutter/foundation.dart';
 
-abstract class TrackedObjectBase {
+abstract class TrackedObject {
 
   /// Serialize the current model to JSON.
   ///
@@ -23,6 +23,6 @@ abstract class TrackedObjectBase {
   bool isDirty() {
     assert(_original != null,
         "This model instance does not support changes. Ref. saveState()");
-    return !DeepCollectionEquality.unordered().equals(_original, toJson());
+    return !tracked_object.DeepCollectionEquality.unordered().equals(_original, toJson());
   }
 }

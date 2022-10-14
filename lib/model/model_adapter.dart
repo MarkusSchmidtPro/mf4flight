@@ -10,24 +10,6 @@ abstract class ModelAdapter<TModel,TSource> {
     logger = new Logger('$runtimeType');
   }
 
-  // static TModel fromSource( TSource source) => load( new TModel(), source);
-  
-  /// Populate a model with the data that is available during
-  /// adapter initialization - synchronous load.
-  ///
-  /// Normally, an adapter instance receives a _seed_ in its constructor
-  /// ```dart
-  ///  FavoriteDatabaseAdapter(this.seed);
-  /// ```
-  /// The [load] method should then _map_ the seed's information
-  /// the the model (see [FavoriteModel]):
-  /// ```dart
-  ///  @override
-  ///  void load(FavoriteModel model) {
-  ///     model.id = seed.syncId;
-  ///     model.productName = seed.productName;
-  ///     ...
-  ///  }
   TModel load(TModel model, TSource source) ;
 
   /// Save the model's data back to its origin.
@@ -48,7 +30,7 @@ abstract class ModelAdapter<TModel,TSource> {
   ///     seed.syncId = model.id;
   ///     seed.productName = model.productName;
   ///     ...
-  ///     await _c.favorites.saveChangesAsync(seed);
+  ///     await _c.favorites.saveAsync(seed);
   ///     assert(!seed.isTracking());
   ///   }
   /// }
@@ -57,12 +39,12 @@ abstract class ModelAdapter<TModel,TSource> {
   /// (see [FavoriteViewModelBase]):
   /// ```dart
   /// @override
-  /// Future onSaveChangesAsync() async {
-  ///   logger.finest(">onSaveChangesAsync()");
+  /// Future onsaveAsync() async {
+  ///   logger.finest(">onsaveAsync()");
   ///   _viewToModel(model);
   ///   await model.saveAsync();
   ///   await serviceProvider<SyncTimer>().triggerSyncRequestAsync();
-  ///   logger.finest("<onSaveChangesAsync()");
+  ///   logger.finest("<onsaveAsync()");
   /// }
   /// ```
   Future<void> saveAsync(TModel model) async {

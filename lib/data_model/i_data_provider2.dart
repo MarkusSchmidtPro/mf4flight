@@ -5,7 +5,7 @@ import 'data_model_base.dart';
 abstract class IDataProvider2<TDataModel extends DataModelBase> {
   String get entityName => throw UnimplementedError();
 
-  Future<List<TDataModel>> fetchAllAsync();
+  Future<List<TDataModel>> fetchAsync({String? whereClause});
 
   Future<TDataModel> getAsync(int id);
 

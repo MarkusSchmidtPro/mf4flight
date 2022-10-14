@@ -58,7 +58,7 @@ abstract class ViewModelEdit extends ViewModelBase {
                 canCloseView = false;
                 break;
               case ViewCloseBehaviour.saveDataClose:
-                canCloseView = await saveChangesAsync();
+                canCloseView = await saveAsync();
                 break;
             }
           } else {
@@ -74,7 +74,7 @@ abstract class ViewModelEdit extends ViewModelBase {
 
       case CloseViewRequestSource.pushView:
       case CloseViewRequestSource.saveAndCloseViewCommand:
-        canCloseView = await saveChangesAsync();
+        canCloseView = await saveAsync();
         break;
       default:
         throw "upps";
@@ -127,28 +127,28 @@ abstract class ViewModelEdit extends ViewModelBase {
   /// FriendRecord get _original => _args.item;
   ///
   /// @override
-  /// Future onSaveChangesAsync() async {
+  /// Future onsaveAsync() async {
   ///   // Track Changes Pattern
   ///   _original.trackChanges(new FriendRecord());
   ///   _viewToRecord(_original);
-  ///   await _c.friends.saveChangesAsync(_original);
+  ///   await _c.friends.saveAsync(_original);
   ///   showSnackBar('${_original.toString()} gespeichert!');
   ///   serviceProvider<SyncRequestService>().triggerSyncRequest();
   /// }
   /// ```
   @protected
-  Future<void> onSaveChangesAsync();
+  Future<void> onSaveAsync();
 
   /// Validate all controls [onValidateControls]
-  /// and save the view's data [onSaveChangesAsync].
-  Future<bool> saveChangesAsync() async {
-    logger.finest(">saveChangesAsync");
+  /// and save the view's data [onSaveAsync].
+  Future<bool> saveAsync() async {
+    logger.finest(">saveAsync");
     if (!validateControls()) return false;
 
     // Do not call isDirty before validating the controls.
     // IsDirty requires a valid DB record from the view,
     // and if validation fails, the record is not valid.
-    if (isDirty()) await onSaveChangesAsync();
+    if (isDirty()) await onSaveAsync();
     return true;
   }
 
@@ -166,14 +166,14 @@ abstract class ViewModelEdit extends ViewModelBase {
   /// Get the view's error or null.
   ///
   /// The viewError contains the exception message, when
-  /// the @viewModelEdit is saved (@onSaveChangesAsync).
+  /// the @viewModelEdit is saved (@onsaveAsync).
   String? getViewError() => _viewErrors.getFirst('view')?.errorMessage;
 
   void setViewError(String errorMessage) {
     logger.severe(errorMessage);
     _viewErrors.addError('view', errorMessage);
     // for now it is not expected the view has errors
-    assert(false, 'saveChangesAsync: $errorMessage');
+    assert(false, 'saveAsync: $errorMessage');
   }
 
   /// Get the error message for a specified field

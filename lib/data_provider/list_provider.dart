@@ -28,7 +28,7 @@ class ListProvider<TDataModel extends DataModelBase> implements IDataProvider2<T
   
   /// Unsorted list of items.
   @override
-  Future<List<TDataModel>> fetchAllAsync() async => items.values.toList();
+  Future<List<TDataModel>> fetchAsync({String? whereClause}) async => items.values.toList();
 
   @override
   Future<int> saveAsync(TDataModel dataModel) async {
