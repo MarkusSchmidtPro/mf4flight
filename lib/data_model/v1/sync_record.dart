@@ -4,14 +4,14 @@ import 'database_record.dart';
 import '../database_helper.dart';
 
 abstract class SyncRecord extends DatabaseRecord {
-  late String syncId;
+  late final String syncId;
   int recordVersion =0;
   bool get syncRequired => recordVersion > DBHelper.lastSyncVersion;
 
   @protected
   @mustCallSuper
   SyncRecord() : super() {
-    syncId = DBHelper.newGuid();
+    //syncId = DBHelper.newGuid();
   }
 
   @protected

@@ -9,7 +9,8 @@ class DBHelper {
     return d.toIso8601String().parseToUtc();
   }
 
-  static int getVersionFromNow() => DateTime.now().toUtc().millisecondsSinceEpoch;
+  static int getVersionFromNow() =>
+      DateTime.now().toUtc().millisecondsSinceEpoch;
 
   // version to UTC
   // DateTime dt1 =   DateTime.fromMillisecondsSinceEpoch(1617726048990);
@@ -22,6 +23,36 @@ class DBHelper {
   //static String? toNull(String? s) => isNullOrEmpty(s) ? null : s;
 
   static bool isNullOrEmpty(String? s) => s == null || s.isEmpty;
+
+  /// Build a SQL LIKE statement with multiple criteria, like an IN statement,
+  ///
+  /// [fieldNames] per filterTag: AND
+  /// (   lower( fieldName[0]) LIKE '%filterTags[j]%'
+  ///     OR lower( fieldName[1]) LIKE '%filterTags[j]%'
+  ///     OR ...
+  /// ) AND ... other filters
+  static String buildInLike(
+      List<String> fieldNames, List<String> filterTags) {
+    assert(fieldNames.length > 0);
+    assert(filterTags.length > 0);
+
+    String result = _buildFilterTagLike(filterTags[0], fieldNames);
+    for (int j = 1; j < filterTags.length; j++) {
+      result += " AND " + _buildFilterTagLike(filterTags[j], fieldNames);
+    }
+
+    return "($result)";
+  }
+
+  /// Build an OR-block for all fieldNames
+  /// on the current filterTag
+  static String _buildFilterTagLike(String filterTag, List<String> fieldNames) {
+    String filter = "lower( ${fieldNames[0]}) LIKE '%$filterTag%'";
+    for (int i = 1; i < fieldNames.length; i++) {
+      filter += " OR lower( ${fieldNames[i]}) LIKE '%$filterTag%'";
+    }
+    return "($filter)";
+  }
 }
 
 extension StringExtensions on String {
@@ -34,11 +65,11 @@ extension StringExtensions on String {
   DateTime parseToUtc() {
     var parsed = DateTime.parse(this);
     return parsed.isUtc
-        ? new DateTime.utc(
-        parsed.year, parsed.month, parsed.day, parsed.hour, parsed.minute, parsed.second, parsed.millisecond)
-        : new DateTime(
-        parsed.year, parsed.month, parsed.day, parsed.hour, parsed.minute, parsed.second, parsed.millisecond)
-        .toUtc();
+        ? new DateTime.utc(parsed.year, parsed.month, parsed.day, parsed.hour,
+            parsed.minute, parsed.second, parsed.millisecond)
+        : new DateTime(parsed.year, parsed.month, parsed.day, parsed.hour,
+                parsed.minute, parsed.second, parsed.millisecond)
+            .toUtc();
   }
 }
 

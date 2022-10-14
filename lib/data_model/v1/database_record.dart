@@ -16,7 +16,7 @@ class RecordStatus {
 
 /// Represents a data_model record with the five standard columns,
 /// and serialization [toJson] and deserialization [load] support.
-class DatabaseRecord extends IDataModel{
+class DatabaseRecord extends TrackedObjectBase{
   int? get id => _id;
   int? _id;
   setId( int value) {
@@ -52,9 +52,6 @@ class DatabaseRecord extends IDataModel{
   }
 
   @override
-  bool isTracking() => _id==null || super.isTracking();
-
-  @override
   bool isDirty() => _id == null || super.isDirty();
   
   
@@ -76,11 +73,4 @@ class DatabaseRecord extends IDataModel{
         'RecordState': recordState,
         'RecordStatus': recordStatus
       };
-
-  
-
-  /// If r1 and r2 are not null: compare both records.
-  /// If any of r1/r2 is null (or both) they are considered equal if
-  /// both are null.
-  static bool equals(DatabaseRecord? r1, DatabaseRecord? r2) => r1 != null && r2 != null ? r1.equal(r2) : (r1 == null && r2 == null);
 }

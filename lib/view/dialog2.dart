@@ -12,10 +12,15 @@ class Dialog2 {
   ///
   /// @Returns [DialogResult.ok] :YES, delete!
   /// @Returns [DialogResult.cancel] :NO, do not delete.
-  static Future<DialogResult> showDeleteDecisionDialogAsync() async => await showQueryDialogAsync(
-      'Daten unwiderruflich löschen?', 'Sollen die ausgewählten Daten\nunwiderruflich gelöscht werden?',
-      action1: TextButton(child: Text('ja'), onPressed: () => navigator.pop(DialogResult.ok)),
-      action2: ElevatedButton(child: Text('nein'), onPressed: () => navigator.pop(DialogResult.cancel)));
+  static Future<DialogResult> showDeleteDecisionDialogAsync() async =>
+      await showQueryDialogAsync('Daten unwiderruflich löschen?',
+          'Sollen die ausgewählten Daten\nunwiderruflich gelöscht werden?',
+          action1: TextButton(
+              child: Text('ja'),
+              onPressed: () => navigator.pop(DialogResult.ok)),
+          action2: ElevatedButton(
+              child: Text('nein'),
+              onPressed: () => navigator.pop(DialogResult.cancel)));
 
   /// Show a dialog and offer [actions] for selection.
   ///
@@ -33,8 +38,12 @@ class Dialog2 {
   ///             child: Text('nein'), onPressed: () => navigator.pop(DialogResult.action2)));
   ///     if (userDecision != DialogResult.action1) return;
   /// ```
-  static Future<DialogResult> showQueryDialogAsync(String titleText, String message,
-      {required Widget action1, Widget? action2, Widget? action3, VoidCallback? cancelAction}) async {
+  static Future<DialogResult> showQueryDialogAsync(
+      String titleText, String message,
+      {required Widget action1,
+      Widget? action2,
+      Widget? action3,
+      VoidCallback? cancelAction}) async {
     //
     /*  System showDialog requires a BuildContext
         var dialogResult = await showDialog<DialogResult>(
@@ -43,13 +52,14 @@ class Dialog2 {
         ); 
     */
 
-    var dialogResult =
-        await _showDialogAsync(_getDialogWidget(titleText, message, action1, action2, action3, cancelAction));
+    var dialogResult = await _showDialogAsync(_getDialogWidget(
+        titleText, message, action1, action2, action3, cancelAction));
     return dialogResult ?? DialogResult.dismissed;
   }
 
   /// Show a Dialog without a BuildContext.
-  static Future<DialogResult?> _showDialogAsync(Widget dialog) async => await navigator.push(
+  static Future<DialogResult?> _showDialogAsync(Widget dialog) async =>
+      await navigator.push(
         new MaterialPageRoute<DialogResult>(builder: (_) => dialog),
       );
 
@@ -63,14 +73,20 @@ class Dialog2 {
   ///                       the 'close' button, which is the 'X' on the title bar
   ///                       to the right.
   static AlertDialog _getDialogWidget(
-      String titleText, String message, Widget action1, Widget? action2, Widget? action3, VoidCallback? cancelAction) {
+      String titleText,
+      String message,
+      Widget action1,
+      Widget? action2,
+      Widget? action3,
+      VoidCallback? cancelAction) {
     final List<Widget> actions = [action1]; // mandatory action
     if (action2 != null) actions.add(action2);
     if (action3 != null) actions.add(action3);
 
     return AlertDialog(
       titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
       title: Row(children: [
         Expanded(child: Text(titleText)),
         (cancelAction == null) // X or Blank
@@ -83,22 +99,29 @@ class Dialog2 {
   }
 
   static Future<void> notYetImplementedMessage() async {
-    await Dialog2.showQueryDialogAsync('Es gibt etwas zu tun!', 'not yet implemented!',
-        action1: ElevatedButton(child: Text('ok'), onPressed: () => navigator.pop(DialogResult.action1)));
+    await Dialog2.showQueryDialogAsync(
+        'Es gibt etwas zu tun!', 'not yet implemented!',
+        action1: ElevatedButton(
+            child: Text('ok'),
+            onPressed: () => navigator.pop(DialogResult.action)));
   }
 
   /// Determine the behaviour when a view is closed with changed data.
   static Future<ViewCloseBehaviour> viewCloseDialogAsync() async {
     const Map<DialogResult, ViewCloseBehaviour> mapResult = {
-      DialogResult.action1: ViewCloseBehaviour.saveDataClose,
-      DialogResult.action2: ViewCloseBehaviour.discardDataClose,
+      DialogResult.action: ViewCloseBehaviour.saveDataClose,
+      DialogResult.discard: ViewCloseBehaviour.discardDataClose,
       DialogResult.dismissed: ViewCloseBehaviour.cancelClose,
     };
 
     DialogResult dialogResult = await Dialog2.showQueryDialogAsync(
         'Änderungen erkannt!', 'Sollen die Änderungen gespeichert werden?',
-        action1: ElevatedButton(child: Text('ja'), onPressed: () => navigator.pop(DialogResult.action1)),
-        action2: TextButton(child: Text('nein'), onPressed: () => navigator.pop(DialogResult.action2)));
+        action1: TextButton(
+            child: Text('nein'),
+            onPressed: () => navigator.pop(DialogResult.discard)),
+        action2: ElevatedButton(
+            child: Text('ja'),
+            onPressed: () => navigator.pop(DialogResult.action)));
 
     assert(mapResult.containsKey(dialogResult), "Result not mapped");
     return mapResult[dialogResult]!;
@@ -118,16 +141,16 @@ enum DialogResult {
   ///
   /// If the dialog displays cancel / ok decision,
   /// action1 should be cancel and displayed to the left.
-  action1,
+  action,
 
   /// The user has chosen action2 on the dialog.
   ///
   /// If the dialog displays cancel / ok decision,
   /// action2 should be ok and displayed to the right.
-  action2,
+  discard,
 
   /// The user has chosen action3 on the dialog.
   action3,
-
-  ok, cancel
+  ok,
+  cancel
 }

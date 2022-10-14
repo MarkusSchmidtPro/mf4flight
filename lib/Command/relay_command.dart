@@ -19,7 +19,7 @@ class RelayCommand implements ICommand {
 
   bool canExecute() => _canExecute != null ? _canExecute!() : true;
 
-  Future<void> execute(BuildContext context, [dynamic p]) async {
+  Future<void> executeAsync(BuildContext context, [dynamic p]) async {
     try {
       if (canExecute()) await _actionAsync(context);
     } on Exception catch (e) {

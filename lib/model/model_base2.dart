@@ -1,7 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-
-import 'model_adapter.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:mf4flight/mf4flight.dart';
+import 'package:uuid/uuid.dart';
 
 /// Represents the base class for model implementations.
 ///
@@ -27,69 +27,16 @@ import 'model_adapter.dart';
 ///   }
 /// }
 /// ```
-abstract class ModelBase2 {
-  /// Create a new model with a unique [modelKey]. 
-  /// The [modelKey] is used to generate the unique [id]. 
-  ModelBase2(String modelKey) ;//: id = "$modelKey#${++_id}";
+abstract class ModelBase2 extends TrackedObjectBase {
+  @protected
+  ModelBase2();
 
   /// The unique model id.
-  late final String id;
-  static int _id = 100;
+  @JsonKey(ignore: true)
+  final String modelId = Uuid().v4();
 
-  Map<String, dynamic>? _original;
-
-
-  /// Save the current state of the object.
-  /// 
-  /// Use this method after your have modified the current object 
-  /// and when you want to save its current state for reference.
-  /// 
-  /// This saved (original) object state is used, for example, to check 
-  /// whether the current object has been altered: [isDirty()].
-  /// 
-  /// If there is no plan to change (edit) a model (read/view-only), 
-  /// this method is not required.
-  /// 
-  /// Editable / changeable models call this method in their factory 
-  /// after the model has been initialized.
-  /// ```dart
-  /// factory ContactModel.fromRecord(ContactRecord record) {
-  ///   ContactModel model = new ContactModel();
-  ///   model.contactId = record.id!;
-  ///   model.name = record.name;
-  ///   ...
-  ///   model.saveState();
-  ///   return model;
-  /// }
-  /// ```
-  void saveState() => _original = toJson();
-  
-
-  /// Check if the current object has bee changed 
-  /// since the last call to [saveState].
-  bool isDirty() {
-    assert( _original!=null, "The model does not support changes. Ref. saveState()");
-    return _original == null || !DeepCollectionEquality.unordered().equals(_original, toJson());
-  }
-
-  // region JSON Serialization
-  //  flutter pub run build_runner build --delete-conflicting-outputs
-
-  /// Serialize the current model to JSON.
-  /// 
-  /// This method must be overridden. 
-  /// Otherwise an [UnimplementedError] is thrown.
-  @protected
-  Map<String, dynamic> toJson() => throw UnimplementedError( "@mustOverride: \$<ModelName>ToJson(this);");
-
-  /// Create a new instance of the overriding class,
-  /// based on a JSON Object (deserialize).
-  /// 
-  /// This method must be overridden. 
-  /// Otherwise an [UnimplementedError] is thrown.
-  @protected
-  factory ModelBase2.fromJson(Map<String, dynamic> json) =>
-      throw UnimplementedError("@mustOverride: \$<ModelName>FromJson(json)");
-
-// endregion
+  /// The original (unchanged) version of the model.
+  /// Make store a reference to the data object that was used to create this model.
+  @JsonKey(ignore: true)
+  late final dynamic seed;
 }

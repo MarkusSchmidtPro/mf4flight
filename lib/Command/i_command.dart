@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 ///   )
 /// ```
 abstract class ICommand {
-  Future<void> execute(BuildContext context, [dynamic args]);
+  Future<void> executeAsync(BuildContext context, [dynamic args]);
 
   bool canExecute();
 }
