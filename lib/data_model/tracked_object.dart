@@ -2,13 +2,12 @@ import 'package:collection/collection.dart' as tracked_object;
 import 'package:flutter/foundation.dart';
 
 abstract class TrackedObject {
-
   /// Serialize the current model to JSON.
   ///
   /// This method must be overridden.
   /// Otherwise an [UnimplementedError] is thrown.
   @protected
-  Map<String, dynamic> toJson() ;
+  Map<String, dynamic> toJson();
 
   Map<String, dynamic>? _original;
 
@@ -23,6 +22,7 @@ abstract class TrackedObject {
   bool isDirty() {
     assert(_original != null,
         "This model instance does not support changes. Ref. saveState()");
-    return !tracked_object.DeepCollectionEquality.unordered().equals(_original, toJson());
+    return !tracked_object.DeepCollectionEquality.unordered()
+        .equals(_original, toJson());
   }
 }
