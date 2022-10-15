@@ -1,8 +1,5 @@
-import 'package:uuid/uuid.dart';
 
 class DBHelper {
-  static String newGuid() => (new Uuid()).v4();
-
   /// UTC now without microseconds
   static DateTime utcNow() {
     DateTime d = DateTime.now().toUtc();

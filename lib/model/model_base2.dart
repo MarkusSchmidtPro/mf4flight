@@ -35,4 +35,15 @@ abstract class ModelBase2 extends TrackedObject {
   /// The unique model id.
   @JsonKey(ignore: true)
   final String modelId = Uuid().v4();
+
+  @JsonKey(ignore: true)
+  dynamic seed;
+
+  // region Generic functions: can be called for Models based on SyncRecords
+  
+  bool get syncRequired => (seed==null || (seed.syncRequired));
+
+  bool get isSaved => (seed?.id != null);
+  
+  // endregion
 }
