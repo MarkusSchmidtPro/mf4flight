@@ -5,7 +5,13 @@
 
   /// Returns *null* when [s] is blank.
   /// ref: ...returns `null` for invalid inputs instead of throwing.
-  double? znDouble(String s) => double.tryParse(s);  
+  double? znDouble(String s) => double.tryParse(s);
+  
+  // Parse source as a double literal using a '.'
+  double? znCurrency(String s) {
+    if( s.contains(",")) s= s.replaceAll(",", ".");
+    return double.tryParse(s);
+  }  
   
   DateTime? znDate(String? s) {
     if (s == null || s.isEmpty) return null;

@@ -135,6 +135,29 @@ abstract class ViewModelBase extends ChangeNotifier {
 
   // endregion
 
+  ICommand getDefaultDeleteCommand(
+      { required Function deleteAction, bool Function()? canExecuteAction}) =>
+      new RelayCommand((context) async {
+        switch (await askDelete()) {
+          case DialogResultYesNoCancel.cancel:
+            break;
+          case DialogResultYesNoCancel.yes:
+            deleteAction();
+            closeViewWithResult(ViewResult.Delete);
+            break;
+          case DialogResultYesNoCancel.no:
+            closeViewWithResult(ViewResult.None);
+            break;
+        }
+      }, canExecute: canExecuteAction ?? () => true);
+
+
+  Future<DialogResultYesNoCancel> askDelete() async {
+    return (await Dialog2.showQueryDialogAsync("Daten unwiderruflich löschen?",
+        "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
+        actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true));
+  }
+  
   @mustCallSuper
   @protected
   void dispose() {

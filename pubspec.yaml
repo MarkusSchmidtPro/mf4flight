@@ -18,7 +18,8 @@ dependencies:
   json_annotation: ^4.0.1
   collection: ^1.15.0
   uuid: ^3.0.1
-  
+  flutter_markdown: ^0.6.12
+
   # SQLite support
   sqflite: ^2.0.2
   sqflite_common_ffi:

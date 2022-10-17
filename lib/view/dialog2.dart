@@ -1,156 +1,97 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../mf4flight.dart';
 
-/// Dialog2 to avoid conflict with Material Dialog.
+enum DialogResultYesNoCancel { cancel, yes, no }
+
+enum DialogResultOkCancel { cancel, ok }
+
+/// Provides predefined dialog and user-interaction functionality.
+///
+/// 'Dialog2' to avoid conflict with Material Dialog.
+/// See also: https://api.flutter.dev/flutter/material/AlertDialog-class.html
+///
+/// https://balsamiq.com/learn/articles/button-design-best-practices/
+/// * In small windows, the primary action button should be placed at the bottom right
+///
 class Dialog2 {
+  static void closeDialog(Object result) => navigator.pop(result);
+
+  static Widget get yesButton => TextButton(
+      child: Text('ja'),
+      onPressed: () => navigator.pop(DialogResultYesNoCancel.yes));
+
+  static Widget get noButton => TextButton(
+      child: Text('no'),
+      onPressed: () => navigator.pop(DialogResultYesNoCancel.no));
+
+  static Widget get okButton => TextButton(
+      child: Text('ok'),
+      onPressed: () => navigator.pop(DialogResultOkCancel.ok));
+
   /// Shows a dialog to ask the uer if an item should be deleted.
-  ///
-  /// The dialog is based on [showQueryDialogAsync] and is does not
-  /// offer a cancel action. This means, there is no 'X' in the dialog
-  /// and the user must make a yes/no decision.
-  ///
-  /// @Returns [DialogResult.ok] :YES, delete!
-  /// @Returns [DialogResult.cancel] :NO, do not delete.
-  static Future<DialogResult> showDeleteDecisionDialogAsync() async =>
-      await showQueryDialogAsync('Daten unwiderruflich löschen?',
-          'Sollen die ausgewählten Daten\nunwiderruflich gelöscht werden?',
-          action1: TextButton(
-              child: Text('ja'),
-              onPressed: () => navigator.pop(DialogResult.ok)),
-          action2: ElevatedButton(
-              child: Text('nein'),
-              onPressed: () => navigator.pop(DialogResult.cancel)));
 
-  /// Show a dialog and offer [actions] for selection.
-  ///
-  /// If the user should have the option the *cancel* the dialog via an 'X'
-  /// in the title bar, simply provide a [cancelAction].
-  ///
-  /// @returns [DialogResult]
-  ///
-  /// ```dart
-  /// var userDecision = await Dialog2.showQueryDialogAsync('Daten unwiderruflich löschen?',
-  ///         'Sollen die ausgewählten Daten\nunwiderruflich gelöscht werden?',
-  ///         action1:
-  ///             TextButton(child: Text('ja'), onPressed: () => navigator.pop(DialogResult.action1)),
-  ///         action2: ElevatedButton(
-  ///             child: Text('nein'), onPressed: () => navigator.pop(DialogResult.action2)));
-  ///     if (userDecision != DialogResult.action1) return;
-  /// ```
-  static Future<DialogResult> showQueryDialogAsync(
+  static Future<DialogResultYesNoCancel> showQueryDialogAsync(
       String titleText, String message,
-      {required Widget action1,
-      Widget? action2,
-      Widget? action3,
-      VoidCallback? cancelAction}) async {
+      {List<Widget>? actions, bool cancelButton = false}) async {
     //
-    /*  System showDialog requires a BuildContext
-        var dialogResult = await showDialog<DialogResult>(
-          context: context,
-          builder: (BuildContext context) => _getDialogWidget(titleText, message, actions: actions),
-        ); 
-    */
+    Widget dialogView = new AlertDialog(
+        titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        //
+        title: !cancelButton
+            ? Text(titleText)
+            : Row(children: [
+                Expanded(child: Text(titleText)),
+                IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () =>
+                        closeDialog(DialogResultYesNoCancel.cancel)),
+              ]),
+        //
+        content: Text(message),
+        actions: actions ?? [yesButton, noButton]);
 
-    var dialogResult = await _showDialogAsync(_getDialogWidget(
-        titleText, message, action1, action2, action3, cancelAction));
-    return dialogResult ?? DialogResult.dismissed;
+    DialogResultYesNoCancel? result = await _showDialogAsync(dialogView);
+    // Turn dismissed (=null) into cancel
+    return result ?? DialogResultYesNoCancel.cancel;
+  }
+
+  static Future<DialogResultOkCancel> showMarkdownAsync(
+      BuildContext context, String md) async {
+    var dialogView = Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        child: Container(
+            padding: EdgeInsets.only(left: 16.0, top: 24.0, right: 16.0),
+            child: Column(mainAxisSize: MainAxisSize.min,crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              Container(
+                  // decoration: BoxDecoration(border: Border.all()), DEBUG make border visible
+                  child: MarkdownBody(data: md)),
+              Dialog2.okButton // Markdown(data: md),
+            ])));
+
+    DialogResultOkCancel? result =
+        await showDialog(context: context, builder: (context) => dialogView);
+    // Turn dismissed (=null) into cancel
+    return result ?? DialogResultOkCancel.cancel;
   }
 
   /// Show a Dialog without a BuildContext.
-  static Future<DialogResult?> _showDialogAsync(Widget dialog) async =>
-      await navigator.push(
-        new MaterialPageRoute<DialogResult>(builder: (_) => dialog),
-      );
-
-  /// Get an ActionDialog widget.
   ///
-  /// If [cancelAction] is null the title bar comes without an 'X' and
-  /// the user cannot cancel the dialog. However, the uer can dismiss [DialogResult.dismissed]
-  /// the dialog at any time.
-  ///
-  /// @param onCancelAction The action that is called when the user selects
-  ///                       the 'close' button, which is the 'X' on the title bar
-  ///                       to the right.
-  static AlertDialog _getDialogWidget(
-      String titleText,
-      String message,
-      Widget action1,
-      Widget? action2,
-      Widget? action3,
-      VoidCallback? cancelAction) {
-    final List<Widget> actions = [action1]; // mandatory action
-    if (action2 != null) actions.add(action2);
-    if (action3 != null) actions.add(action3);
-
-    return AlertDialog(
-      titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0))),
-      title: Row(children: [
-        Expanded(child: Text(titleText)),
-        (cancelAction == null) // X or Blank
-            ? Text('')
-            : IconButton(icon: Icon(Icons.close), onPressed: cancelAction)
-      ]),
-      content: Text(message),
-      actions: actions,
+  /// See also: showDialog<String>( context: context, builder: .. )
+  /// The System [showDialog] requires a BuildContext:
+  /// var dialogResult = await showDialog<DialogResult>(
+  ///   context: context,
+  ///   builder: (BuildContext context) => _getDialogWidget(titleText, message, actions: actions),
+  /// );
+  static Future<T> _showDialogAsync<T>(Widget dialog) async {
+    T? dialogResult = await navigator.push<T?>(
+      new MaterialPageRoute<T?>(builder: (_) => dialog),
     );
+    assert(dialogResult != null);
+    return dialogResult!;
   }
-
-  static Future<void> notYetImplementedMessage() async {
-    await Dialog2.showQueryDialogAsync(
-        'Es gibt etwas zu tun!', 'not yet implemented!',
-        action1: ElevatedButton(
-            child: Text('ok'),
-            onPressed: () => navigator.pop(DialogResult.action)));
-  }
-
-  /// Determine the behaviour when a view is closed with changed data.
-  static Future<ViewCloseBehaviour> viewCloseDialogAsync() async {
-    const Map<DialogResult, ViewCloseBehaviour> mapResult = {
-      DialogResult.action: ViewCloseBehaviour.saveDataClose,
-      DialogResult.discard: ViewCloseBehaviour.discardDataClose,
-      DialogResult.dismissed: ViewCloseBehaviour.cancelClose,
-    };
-
-    DialogResult dialogResult = await Dialog2.showQueryDialogAsync(
-        'Änderungen erkannt!', 'Sollen die Änderungen gespeichert werden?',
-        action1: TextButton(
-            child: Text('nein'),
-            onPressed: () => navigator.pop(DialogResult.discard)),
-        action2: ElevatedButton(
-            child: Text('ja'),
-            onPressed: () => navigator.pop(DialogResult.action)));
-
-    assert(mapResult.containsKey(dialogResult), "Result not mapped");
-    return mapResult[dialogResult]!;
-  }
-}
-
-enum DialogResult {
-  /// The user has clicked the 'X' in the dialog's title bar,
-  /// to cancel the dialog without making a decision.
-  canceled,
-
-  /// The user clicked on the 'back' button and
-  /// he did not make a decision about the dialog.
-  dismissed,
-
-  /// The user has chosen action1 on the dialog.
-  ///
-  /// If the dialog displays cancel / ok decision,
-  /// action1 should be cancel and displayed to the left.
-  action,
-
-  /// The user has chosen action2 on the dialog.
-  ///
-  /// If the dialog displays cancel / ok decision,
-  /// action2 should be ok and displayed to the right.
-  discard,
-
-  /// The user has chosen action3 on the dialog.
-  action3,
-  ok,
-  cancel
 }

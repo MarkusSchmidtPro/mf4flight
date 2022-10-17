@@ -15,6 +15,23 @@ abstract class ViewModelEdit extends ViewModelBase {
     _createCommands();
   }
 
+  Future<ViewCloseBehaviour> askSave() async {
+    DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
+        "Änderungen erkannt!", "Sollen die Änderungen gespeichert werden?",
+        actions: [Dialog2.noButton, Dialog2.yesButton], cancelButton: true);
+
+    switch (dialogResult) {
+      case DialogResultYesNoCancel.yes:
+        return ViewCloseBehaviour.saveDataClose;
+      case DialogResultYesNoCancel.no:
+        return ViewCloseBehaviour.discardDataClose;
+      case DialogResultYesNoCancel.cancel:
+        return ViewCloseBehaviour.cancelClose;
+      default:
+        throw "Result not mapped";
+    }
+  }
+
   /// Check whether the current view can be closed.
   ///
   /// There are three options how a view can be closed:
@@ -35,8 +52,7 @@ abstract class ViewModelEdit extends ViewModelBase {
   /// *cancelView Command*: The [cancelEditCloseViewCommand] closes the view without
   /// saving dirty data - discard data.
   Future<bool> viewCanCloseAsync(
-      {Future<ViewCloseBehaviour> Function() decisionIfDirtyAsync =
-          Dialog2.viewCloseDialogAsync}) async {
+      {Future<ViewCloseBehaviour> Function()? decisionIfDirtyAsync}) async {
     bool canCloseView;
     switch (closeViewRequestSource) {
       case CloseViewRequestSource.cancelAndCloseViewCommand:
@@ -49,7 +65,8 @@ abstract class ViewModelEdit extends ViewModelBase {
           if (validateControls()) {
             // Controls are ok to be saved
             // Data is dirty, the user has to make a decision
-            ViewCloseBehaviour decision = await decisionIfDirtyAsync();
+            ViewCloseBehaviour decision =
+                await (decisionIfDirtyAsync ?? askSave)();
             switch (decision) {
               case ViewCloseBehaviour.discardDataClose:
                 canCloseView = true;
@@ -181,7 +198,8 @@ abstract class ViewModelEdit extends ViewModelBase {
 
   // region Commands
 
-  String? getFieldError(String fieldKey) => _viewErrors.getFirst(fieldKey)?.errorMessage;
+  String? getFieldError(String fieldKey) =>
+      _viewErrors.getFirst(fieldKey)?.errorMessage;
 
   // endregion
   /// Request view close (navigator.maybePop()) with
