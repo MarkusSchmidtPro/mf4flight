@@ -15,9 +15,9 @@ abstract class ViewModelEdit extends ViewModelBase {
     _createCommands();
   }
 
-  Future<ViewCloseBehaviour> askSave() async {
+  Future<ViewCloseBehaviour> askSave(BuildContext context) async {
     DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
-        "Änderungen erkannt!", "Sollen die Änderungen gespeichert werden?",
+        context, "Änderungen erkannt!", "Sollen die Änderungen gespeichert werden?",
         actions: [Dialog2.noButton, Dialog2.yesButton], cancelButton: true);
 
     switch (dialogResult) {
@@ -60,7 +60,7 @@ abstract class ViewModelEdit extends ViewModelBase {
         break;
 
       case CloseViewRequestSource.backButton:
-        if (isDirty1()) {
+        if (isDirtyViewModel()) {
           // Back Button and data has changed!
           if (validateControls()) {
             // Controls are ok to be saved
@@ -103,7 +103,7 @@ abstract class ViewModelEdit extends ViewModelBase {
   }
 
   /// Checks if the current view is dirty (contains changes).
-  bool isDirty1() => this.state == ViewModelState.ready ? onIsDirty() : false;
+  bool isDirtyViewModel() => this.state == ViewModelState.ready ? onIsDirty() : false;
 
   @protected
   bool onIsDirty() => true;
@@ -166,7 +166,7 @@ abstract class ViewModelEdit extends ViewModelBase {
     // Do not call isDirty before validating the controls.
     // IsDirty requires a valid DB record from the view,
     // and if validation fails, the record is not valid.
-    if (isDirty1()) await onSaveAsync();
+    if (isDirtyViewModel()) await onSaveAsync();
     return true;
   }
 

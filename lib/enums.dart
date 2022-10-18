@@ -30,7 +30,7 @@ enum CloseViewRequestSource {
 }
 
 enum ViewCloseBehaviour {
-  /// If data [ViewModelBase.isDirty] it will be discarded and
+  /// If data [ViewModelBase.isDirtyViewModel] it will be discarded and
   /// the view will be closed.
   discardDataClose,
 

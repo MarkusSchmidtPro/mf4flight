@@ -16,30 +16,26 @@ enum DialogResultOkCancel { cancel, ok }
 /// * In small windows, the primary action button should be placed at the bottom right
 ///
 class Dialog2 {
-  static void closeDialog(Object result) => navigator.pop(result);
+  static void _close(Object result) => navigator.pop(result);
 
   static Widget get yesButton => TextButton(
-      child: Text('ja'),
-      onPressed: () => navigator.pop(DialogResultYesNoCancel.yes));
+      child: Text("yes"/*S.current.btn_yes*/), onPressed: () => _close(DialogResultYesNoCancel.yes));
 
   static Widget get noButton => TextButton(
-      child: Text('no'),
-      onPressed: () => navigator.pop(DialogResultYesNoCancel.no));
+      child: Text("no"/*S.current.btn_no*/), onPressed: () => _close(DialogResultYesNoCancel.no));
 
-  static Widget get okButton => TextButton(
-      child: Text('ok'),
-      onPressed: () => navigator.pop(DialogResultOkCancel.ok));
+  static Widget get okButton =>
+      TextButton(child: Text("ok"/*S.current.btn_ok*/), onPressed: () => _close(DialogResultOkCancel.ok));
 
   /// Shows a dialog to ask the uer if an item should be deleted.
 
   static Future<DialogResultYesNoCancel> showQueryDialogAsync(
-      String titleText, String message,
+      BuildContext? context, String titleText, String message,
       {List<Widget>? actions, bool cancelButton = false}) async {
     //
     Widget dialogView = new AlertDialog(
         titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
         //
         title: !cancelButton
             ? Text(titleText)
@@ -47,31 +43,35 @@ class Dialog2 {
                 Expanded(child: Text(titleText)),
                 IconButton(
                     icon: Icon(Icons.close),
-                    onPressed: () =>
-                        closeDialog(DialogResultYesNoCancel.cancel)),
+                    onPressed: () => _close(DialogResultYesNoCancel.cancel)),
               ]),
         //
         content: Text(message),
         actions: actions ?? [yesButton, noButton]);
 
-    DialogResultYesNoCancel? result = await _showDialogAsync(dialogView);
+    DialogResultYesNoCancel? result;
+    if (context != null)
+      await showDialog(context: context, builder: (context) => dialogView);
+    else // for dialogs in event handlers etc. which do not have a context
+      result = await _showDialogAsync(dialogView);
     // Turn dismissed (=null) into cancel
     return result ?? DialogResultYesNoCancel.cancel;
   }
 
-  static Future<DialogResultOkCancel> showMarkdownAsync(
-      BuildContext context, String md) async {
+  static Future<DialogResultOkCancel> showMarkdownAsync(BuildContext context, String md) async {
     var dialogView = Dialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
         child: Container(
             padding: EdgeInsets.only(left: 16.0, top: 24.0, right: 16.0),
-            child: Column(mainAxisSize: MainAxisSize.min,crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Container(
-                  // decoration: BoxDecoration(border: Border.all()), DEBUG make border visible
-                  child: MarkdownBody(data: md)),
-              Dialog2.okButton // Markdown(data: md),
-            ])));
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                      // decoration: BoxDecoration(border: Border.all()), DEBUG make border visible
+                      child: MarkdownBody(data: md)),
+                  Dialog2.okButton // Markdown(data: md),
+                ])));
 
     DialogResultOkCancel? result =
         await showDialog(context: context, builder: (context) => dialogView);

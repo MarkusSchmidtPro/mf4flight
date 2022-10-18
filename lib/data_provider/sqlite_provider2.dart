@@ -38,7 +38,7 @@ class SQLiteProvider2<TDataModel extends DataModelBase>
   }
 
   Future<List<TDataModel>> fetchActiveAsync({String? criteria}) async {
-    String whereClause = "RecordState=${RecordState.Active}";
+    String whereClause = "recordState=${RecordState.Active}";
     if (criteria != null) whereClause += " AND ($criteria)";
     return await fetchAsync(criteria: whereClause);
   }

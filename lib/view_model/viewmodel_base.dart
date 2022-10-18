@@ -26,7 +26,6 @@ mixin DataBinder<TData> on ViewModelBase {
 }
 
 mixin LazyLoad on ViewModelBase {
-
   void lazyLoad() {
     _setState(ViewModelState.busy);
     onLoadAsync().then((_) {
@@ -136,9 +135,9 @@ abstract class ViewModelBase extends ChangeNotifier {
   // endregion
 
   ICommand getDefaultDeleteCommand(
-      { required Function deleteAction, bool Function()? canExecuteAction}) =>
+          {required Function deleteAction, bool Function()? canExecuteAction}) =>
       new RelayCommand((context) async {
-        switch (await askDelete()) {
+        switch (await askDelete(context)) {
           case DialogResultYesNoCancel.cancel:
             break;
           case DialogResultYesNoCancel.yes:
@@ -151,13 +150,11 @@ abstract class ViewModelBase extends ChangeNotifier {
         }
       }, canExecute: canExecuteAction ?? () => true);
 
+  Future<DialogResultYesNoCancel> askDelete(BuildContext context) async =>
+      (await Dialog2.showQueryDialogAsync(context, "Daten unwiderruflich löschen?",
+          "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
+          actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true));
 
-  Future<DialogResultYesNoCancel> askDelete() async {
-    return (await Dialog2.showQueryDialogAsync("Daten unwiderruflich löschen?",
-        "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
-        actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true));
-  }
-  
   @mustCallSuper
   @protected
   void dispose() {
