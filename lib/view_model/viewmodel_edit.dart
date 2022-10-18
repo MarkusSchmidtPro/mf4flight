@@ -144,7 +144,7 @@ abstract class ViewModelEdit extends ViewModelBase {
   /// FriendRecord get _original => _args.item;
   ///
   /// @override
-  /// Future onsaveAsync() async {
+  /// Future onSaveAsync() async {
   ///   // Track Changes Pattern
   ///   _original.trackChanges(new FriendRecord());
   ///   _viewToRecord(_original);

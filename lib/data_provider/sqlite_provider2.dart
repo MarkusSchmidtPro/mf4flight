@@ -48,7 +48,7 @@ class SQLiteProvider2<TDataModel extends DataModelBase>
 
   Future<TDataModel?> getBySyncId(String itemId,
       {bool activeOnly = true}) async {
-    String where = "SyncId=\'$itemId\'";
+    String where = "syncId=\'$itemId\'";
     List<TDataModel> records = activeOnly
         ? await fetchActiveAsync(criteria: where)
         : await fetchAsync(criteria: where);

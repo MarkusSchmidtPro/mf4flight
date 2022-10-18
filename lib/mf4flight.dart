@@ -25,6 +25,7 @@ export 'event_handler.dart';
 export 'locator.dart';
 export 'model/model_adapter.dart';
 export 'model/model_base2.dart';
+export 'view/bottombar_actions.dart';
 export 'view/dialog2.dart';
 export 'view/view_errors.dart';
 export 'view_model/list_vm_mixin.dart';

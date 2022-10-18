@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 import '../data_model/tracked_object.dart';
 
@@ -29,12 +28,13 @@ import '../data_model/tracked_object.dart';
 /// }
 /// ```
 abstract class ModelBase2 extends TrackedObject {
+  static int modelSeqNo=0;
   @protected
   ModelBase2();
 
   /// The unique model id.
   @JsonKey(ignore: true)
-  final String modelId = Uuid().v4();
+  final String modelId = (++modelSeqNo).toString();
 
   @JsonKey(ignore: true)
   dynamic seed;
