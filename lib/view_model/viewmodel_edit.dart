@@ -60,13 +60,12 @@ abstract class ViewModelEdit extends ViewModelBase {
         break;
 
       case CloseViewRequestSource.backButton:
-        if (isDirty()) {
+        if (isDirty1()) {
           // Back Button and data has changed!
           if (validateControls()) {
             // Controls are ok to be saved
             // Data is dirty, the user has to make a decision
-            ViewCloseBehaviour decision =
-                await (decisionIfDirtyAsync ?? askSave)();
+            ViewCloseBehaviour decision = await (decisionIfDirtyAsync ?? askSave)();
             switch (decision) {
               case ViewCloseBehaviour.discardDataClose:
                 canCloseView = true;
@@ -104,8 +103,10 @@ abstract class ViewModelEdit extends ViewModelBase {
   }
 
   /// Checks if the current view is dirty (contains changes).
+  bool isDirty1() => this.state == ViewModelState.ready ? onIsDirty() : false;
+
   @protected
-  bool isDirty();
+  bool onIsDirty() => true;
 
   /// Validate the view controls to ensure the view's data can be saved.
   ///
@@ -165,7 +166,7 @@ abstract class ViewModelEdit extends ViewModelBase {
     // Do not call isDirty before validating the controls.
     // IsDirty requires a valid DB record from the view,
     // and if validation fails, the record is not valid.
-    if (isDirty()) await onSaveAsync();
+    if (isDirty1()) await onSaveAsync();
     return true;
   }
 
@@ -198,8 +199,7 @@ abstract class ViewModelEdit extends ViewModelBase {
 
   // region Commands
 
-  String? getFieldError(String fieldKey) =>
-      _viewErrors.getFirst(fieldKey)?.errorMessage;
+  String? getFieldError(String fieldKey) => _viewErrors.getFirst(fieldKey)?.errorMessage;
 
   // endregion
   /// Request view close (navigator.maybePop()) with
