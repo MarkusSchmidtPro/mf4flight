@@ -15,7 +15,7 @@ abstract class ViewModelEdit extends ViewModelBase {
     _createCommands();
   }
 
-  Future<ViewCloseBehaviour> askSave(BuildContext context) async {
+  Future<ViewCloseBehaviour> askSaveAsync(BuildContext context) async {
     DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
         context, "Änderungen erkannt!", "Sollen die Änderungen gespeichert werden?",
         actions: [Dialog2.noButton, Dialog2.yesButton], cancelButton: true);
@@ -51,7 +51,7 @@ abstract class ViewModelEdit extends ViewModelBase {
   ///
   /// *cancelView Command*: The [cancelEditCloseViewCommand] closes the view without
   /// saving dirty data - discard data.
-  Future<bool> viewCanCloseAsync(
+  Future<bool> viewCanCloseAsync(BuildContext context,
       {Future<ViewCloseBehaviour> Function()? decisionIfDirtyAsync}) async {
     bool canCloseView;
     switch (closeViewRequestSource) {
@@ -65,7 +65,11 @@ abstract class ViewModelEdit extends ViewModelBase {
           if (validateControls()) {
             // Controls are ok to be saved
             // Data is dirty, the user has to make a decision
-            ViewCloseBehaviour decision = await (decisionIfDirtyAsync ?? askSave)();
+            ViewCloseBehaviour decision;
+            if (decisionIfDirtyAsync != null)
+              decision = await decisionIfDirtyAsync();
+            else
+              decision = await askSaveAsync(context);
             switch (decision) {
               case ViewCloseBehaviour.discardDataClose:
                 canCloseView = true;

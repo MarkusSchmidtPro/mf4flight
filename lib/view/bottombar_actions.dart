@@ -9,33 +9,77 @@ class BottomBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme _colors =
+        Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
+
     return BottomAppBar(
       child: Container(
+        color: _colors.surface,
         padding: EdgeInsets.only(top: 8, bottom: 8),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: _actions),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children:
+              _actions.where((element) => element.style != BottomBarActionStyle.disabled).toList(),
+        ),
       ),
     );
   }
 }
 
-class BottomBarAction extends StatelessWidget {
-  final ICommand _command;
-  final Icon _icon;
-  final String _label;
+enum BottomBarActionStyle { normal, highlighted, disabled }
 
-  BottomBarAction({required String label, required Icon icon, required ICommand command})
+class BottomBarAction extends StatelessWidget {
+  final ICommand? _command;
+  final IconData _icon;
+  final String _label;
+  late final BottomBarActionStyle _style;
+
+  BottomBarAction(
+      {required String label,
+      required IconData icon,
+      required ICommand? command,
+      BottomBarActionStyle style = BottomBarActionStyle.normal})
       : _label = label,
         _icon = icon,
-        _command = command;
+        _command = command {
+    if (_command == null || !_command!.canExecute()) style = BottomBarActionStyle.disabled;
+    _style = style;
+  }
+
+  BottomBarActionStyle get style => _style;
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> content = !_command.canExecute() ? [Container()] : [_icon, Text(_label)];
-    return InkWell(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: content),
-        onTap: () async => await _command.executeAsync(context));
+    var colorScheme = Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
+
+    final List<Widget> content;
+    switch (_style) {
+      case BottomBarActionStyle.normal:
+        content = [
+          Icon(_icon, color: colorScheme.onSurfaceVariant),
+          Text(_label, style: Theme.of(context).textTheme.button),
+        ];
+        break;
+      case BottomBarActionStyle.disabled:
+        content = [];
+        break;
+      case BottomBarActionStyle.highlighted:
+        content = [
+          Icon(_icon, color: colorScheme.primary),
+          Text(_label, style: Theme.of(context).textTheme.button),
+        ];
+        break;
+    }
+
+    return content.length == 0
+        ? SizedBox(width: 1, height: 1)
+        : InkWell(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: content),
+            onTap: () async {
+              if (_command != null) await _command!.executeAsync(context);
+            });
   }
 }

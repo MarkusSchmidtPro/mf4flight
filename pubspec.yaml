@@ -1,6 +1,6 @@
 name: mf4flight
 description: Markus' Framework 4 Flutter Light
-version: 1.22.1017
+version: 1.22.1019
 homepage: https://www.MarkusSchmidt.pro
 
 environment:
@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
+#  flutter_localizations:
+#    sdk: flutter
   
   intl: ^0.17.0 
   
