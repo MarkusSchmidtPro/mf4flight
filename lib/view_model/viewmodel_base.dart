@@ -155,6 +155,10 @@ abstract class ViewModelBase extends ChangeNotifier {
           "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
           actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true));
 
+  late ICommand showHelpCommand = new RelayPCommand((context, helpContext) async {
+    await showViewAsync(HelpPage(new HelpPageArgs(helpContext)));
+  });
+
   @mustCallSuper
   @protected
   void dispose() {
