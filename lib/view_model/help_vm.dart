@@ -29,7 +29,15 @@ class HelpViewModel extends ViewModelBase with LazyLoad {
   String markDown = "---";
 
   @override
-  Future<void> onLoadAsync() async => markDown = await getHelpTextAsync(_args.helpContext);
+  Future<void> onLoadAsync() async {
+    String md = await getHelpTextAsync(_args.helpContext);
+    if( _args.values != null && _args.values!.isNotEmpty ){
+      for( MapEntry<String, String> item in _args.values!.entries ){
+        md = md.replaceAll("{${item.key}}", item.value);
+      }
+    }
+    markDown = md;
+  }
 
   Future<String> getHelpTextAsync(String helpContext) async {
     try {

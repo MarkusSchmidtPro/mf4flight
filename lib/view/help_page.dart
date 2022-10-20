@@ -8,9 +8,10 @@ import '../command/i_command.dart';
 import '../view_model/help_vm.dart';
 
 class HelpPageArgs {
-  HelpPageArgs(this.helpContext);
+  HelpPageArgs(this.helpContext, {this.values});
 
   final String helpContext;
+  final Map<String,String>? values;
 }
 
 class HelpIcon extends StatelessWidget {
