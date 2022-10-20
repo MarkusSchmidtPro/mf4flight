@@ -51,21 +51,41 @@ class BottomBarAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
+    double dimFactor = 100;
 
     final List<Widget> content;
     switch (_style) {
+      case BottomBarActionStyle.disabled:
+        dimFactor = 50;
+        content = [
+          Opacity(
+              opacity: dimFactor,
+              child:Icon(_icon, color: colorScheme.onSurfaceVariant)),
+          Text(_label, style: Theme.of(context).textTheme.button),
+        ];
+        break;
+
       case BottomBarActionStyle.normal:
         content = [
           Icon(_icon, color: colorScheme.onSurfaceVariant),
           Text(_label, style: Theme.of(context).textTheme.button),
         ];
         break;
+/*
       case BottomBarActionStyle.disabled:
+        [
+          Icon(_icon, color: colorScheme.onSurfaceVariant),
+          Text(_label, style: Theme.of(context).textTheme.button),
+        ]
+        Opacity(opacity: dimFactor, child: Icon(icon))
         content = [];
         break;
+*/
       case BottomBarActionStyle.highlighted:
         content = [
-          Icon(_icon, color: colorScheme.primary),
+    Opacity(
+    opacity: 50,
+    child:Icon(_icon, color: colorScheme.primary)),
           Text(_label, style: Theme.of(context).textTheme.button),
         ];
         break;
