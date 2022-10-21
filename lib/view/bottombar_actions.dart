@@ -19,14 +19,14 @@ class BottomBarActions extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children:
-              _actions.where((element) => element.style != BottomBarActionStyle.disabled).toList(),
+              _actions.where((element) => element.style != BottomBarActionStyle.missing).toList(),
         ),
       ),
     );
   }
 }
 
-enum BottomBarActionStyle { normal, highlighted, disabled }
+enum BottomBarActionStyle { normal, highlighted, disabled, missing }
 
 class BottomBarAction extends StatelessWidget {
   final ICommand? _command;
@@ -42,7 +42,9 @@ class BottomBarAction extends StatelessWidget {
       : _label = label,
         _icon = icon,
         _command = command {
-    if (_command == null || !_command!.canExecute()) style = BottomBarActionStyle.disabled;
+    if (_command == null)
+      style = BottomBarActionStyle.missing;
+    else if (!_command!.canExecute()) style = BottomBarActionStyle.disabled;
     _style = style;
   }
 
@@ -51,55 +53,47 @@ class BottomBarAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
-    double dimFactor = 100;
+    double dimFactor = 1;
 
     final List<Widget> content;
     switch (_style) {
       case BottomBarActionStyle.disabled:
-        dimFactor = 50;
+        dimFactor = 0.15;
         content = [
-          Opacity(
-              opacity: dimFactor,
-              child:Icon(_icon, color: colorScheme.onSurfaceVariant)),
-          Text(_label, style: Theme.of(context).textTheme.button),
+          Icon(_icon, color: colorScheme.onSurfaceVariant),
+          Text(_label, style: Theme.of(context).textTheme.button)
         ];
         break;
 
       case BottomBarActionStyle.normal:
         content = [
           Icon(_icon, color: colorScheme.onSurfaceVariant),
-          Text(_label, style: Theme.of(context).textTheme.button),
+          Text(_label, style: Theme.of(context).textTheme.button)
         ];
         break;
-/*
-      case BottomBarActionStyle.disabled:
-        [
-          Icon(_icon, color: colorScheme.onSurfaceVariant),
-          Text(_label, style: Theme.of(context).textTheme.button),
-        ]
-        Opacity(opacity: dimFactor, child: Icon(icon))
-        content = [];
-        break;
-*/
+
       case BottomBarActionStyle.highlighted:
         content = [
-    Opacity(
-    opacity: 50,
-    child:Icon(_icon, color: colorScheme.primary)),
-          Text(_label, style: Theme.of(context).textTheme.button),
+          Icon(_icon, color: colorScheme.primary),
+          Text(_label, style: Theme.of(context).textTheme.button)
         ];
+        break;
+      case BottomBarActionStyle.missing:
+        content = [];
         break;
     }
 
     return content.length == 0
         ? SizedBox(width: 1, height: 1)
         : InkWell(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: content),
+            child: Opacity(
+                opacity: dimFactor,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: content)),
             onTap: () async {
-              if (_command != null) await _command!.executeAsync(context);
+              if (_command != null && _command!.canExecute()) await _command!.executeAsync(context);
             });
   }
 }

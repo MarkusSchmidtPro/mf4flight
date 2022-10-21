@@ -76,7 +76,7 @@ abstract class ViewModelBase extends ChangeNotifier {
   ViewModelState get state => _state;
 
   _setState(ViewModelState state) {
-    logger.finest("ViewModelState=$state");
+    logger.fine("ViewModelState=$state");
     _state = state;
   }
 
