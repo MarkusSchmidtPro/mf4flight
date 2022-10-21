@@ -35,7 +35,7 @@ class DBHelper {
 
     String result = _buildFilterTagLike(filterTags[0], fieldNames);
     for (int j = 1; j < filterTags.length; j++) {
-      result += " AND " + _buildFilterTagLike(filterTags[j], fieldNames);
+      result += " OR " + _buildFilterTagLike(filterTags[j], fieldNames);
     }
 
     return "($result)";

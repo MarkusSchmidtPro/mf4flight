@@ -42,6 +42,8 @@ class SQLiteProvider2<TDataModel extends DataModelBase>
     if (criteria != null) whereClause += " AND ($criteria)";
     return await fetchAsync(criteria: whereClause);
   }
+  
+  
 
   Future<List<Map<String, dynamic>>> rawQueryAsync(String sql) async =>
       await db.rawQuery(sql);

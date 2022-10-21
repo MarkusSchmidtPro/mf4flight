@@ -51,7 +51,7 @@ class Dialog2 {
 
     DialogResultYesNoCancel? result;
     if (context != null)
-      await showDialog(context: context, builder: (context) => dialogView);
+      result = await showDialog(context: context, builder: (context) => dialogView);
     else // for dialogs in event handlers etc. which do not have a context
       result = await _showDialogAsync(dialogView);
     // Turn dismissed (=null) into cancel
