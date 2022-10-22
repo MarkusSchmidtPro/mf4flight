@@ -9,44 +9,50 @@ import 'viewmodel_base.dart';
 class HelpViewModel extends ViewModelBase with LazyLoad {
   final HelpPageArgs _args;
 
-  static const String resourcePath = "assets/help";
-  static const String imgPath = "(resource:$resourcePath/img/";
-  static final String languageCode = Platform.localeName.split('_')[0];
-
-  static Map<String, dynamic>? manifestMap;
-
-  Future<bool> resourceExists(String resourcePath) async {
-    if (manifestMap == null) {
-      // AssetManifest.json contains all data about all assets that you add in pubspec.yaml
-      final manifestContent = await rootBundle.loadString('AssetManifest.json');
-      manifestMap = json.decode(manifestContent);
-    }
-    return manifestMap!.containsKey(resourcePath);
-  }
-
-  HelpViewModel(HelpPageArgs args) : _args = args ;
+  HelpViewModel(HelpPageArgs args) : _args = args;
 
   String markDown = "---";
 
   @override
-  Future<void> onLoadAsync() async {
-    String md = await getHelpTextAsync(_args.helpContext);
-    if( _args.values != null && _args.values!.isNotEmpty ){
-      for( MapEntry<String, String> item in _args.values!.entries ){
+  Future<void> onLoadAsync() async => markDown = await loadMarkdownAsync2(_args);
+
+  static Future<String> loadMarkdownAsync(String helpContext) async =>
+      loadMarkdownAsync2(new HelpPageArgs(helpContext));
+
+  static Future<String> loadMarkdownAsync2(HelpPageArgs args) async {
+    String md = await _getFromResourceAsync(args.helpContext);
+    if (args.values != null && args.values!.isNotEmpty) {
+      for (MapEntry<String, String> item in args.values!.entries) {
         md = md.replaceAll("{${item.key}}", item.value);
       }
     }
-    markDown = md;
+    return md;
   }
 
-  Future<String> getHelpTextAsync(String helpContext) async {
+  static const String _resourcePath = "assets/help";
+  static const String _imgPath = "(resource:$_resourcePath/img/";
+  static final String _languageCode = Platform.localeName.split('_')[0];
+
+  static Map<String, dynamic>? _manifestMap;
+
+  static Future<bool> _resourceExists(String resourcePath) async {
+    if (_manifestMap == null) {
+      // AssetManifest.json contains all data about all assets that you add in pubspec.yaml
+      final manifestContent = await rootBundle.loadString('AssetManifest.json');
+      _manifestMap = json.decode(manifestContent);
+    }
+    return _manifestMap!.containsKey(resourcePath);
+  }
+
+  static Future<String> _getFromResourceAsync(String helpContext) async {
     try {
-      String path = "$resourcePath/${helpContext}_$languageCode.md";
-      if (!await resourceExists(path)) path = "$resourcePath/${helpContext}_de.md";
+      String path = "$_resourcePath/${helpContext}_$_languageCode.md";
+      if (!await _resourceExists(path))
+        path = "$_resourcePath/${helpContext}_de.md";
 
       String md = await rootBundle.loadString(path);
-      md = md.replaceAll("(img\\", imgPath);
-      return md.replaceAll("(img/", imgPath);
+      md = md.replaceAll("(img\\", _imgPath);
+      return md.replaceAll("(img/", _imgPath);
     } catch (e) {
       return e.toString();
     }

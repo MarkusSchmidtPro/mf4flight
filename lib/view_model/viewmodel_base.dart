@@ -92,7 +92,8 @@ abstract class ViewModelBase extends ChangeNotifier {
   }
 
   /// The source which request to close the view.
-  CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
+  CloseViewRequestSource closeViewRequestSource =
+      CloseViewRequestSource.backButton;
 
   final List<StreamSubscription> _appEventSubscriptions = [];
 
@@ -106,15 +107,18 @@ abstract class ViewModelBase extends ChangeNotifier {
   }
 
   @protected
-  void showSnackBar(String message) => messenger.showSnackBar(SnackBar(content: Text(message)));
+  void showSnackBar(String message) =>
+      messenger.showSnackBar(SnackBar(content: Text(message)));
 
   // region Navigation: Show and Close
 
   /// Navigator to a view
   /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
-  Future<TResult?> showViewNamedAsync<TResult>(String routeName, {Object? args}) async {
+  Future<TResult?> showViewNamedAsync<TResult>(String routeName,
+      {Object? args}) async {
     logger.finer(">$routeName show");
-    TResult? result = await navigator.pushNamed<TResult?>(routeName, arguments: args);
+    TResult? result =
+        await navigator.pushNamed<TResult?>(routeName, arguments: args);
     logger.finer("<$routeName closed, result=$result");
     return result;
   }
@@ -122,7 +126,8 @@ abstract class ViewModelBase extends ChangeNotifier {
   /// Navigator to a view
   /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
   Future<TResult?> showViewAsync<TResult>(StatelessWidget view) async {
-    TResult? result = await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
+    TResult? result =
+        await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
     logger.finest("$runtimeType closed, result=$result");
     return result;
   }
@@ -134,14 +139,15 @@ abstract class ViewModelBase extends ChangeNotifier {
 
   // endregion
 
-  ICommand getDefaultDeleteCommand(
-          {required Function deleteAction, bool Function()? canExecuteAction}) =>
+  ICommand deleteCloseViewCommand(
+          {required Future<void> Function() deleteActionAsync,
+          bool Function()? canExecuteAction}) =>
       new RelayCommand((context) async {
-        switch (await askDelete(context)) {
+        switch (await showDeleteDialogAsync(context)) {
           case DialogResultYesNoCancel.cancel:
             break;
           case DialogResultYesNoCancel.yes:
-            deleteAction();
+            await deleteActionAsync();
             closeViewWithResult(ViewResult.Delete);
             break;
           case DialogResultYesNoCancel.no:
@@ -150,19 +156,25 @@ abstract class ViewModelBase extends ChangeNotifier {
         }
       }, canExecute: canExecuteAction ?? () => true);
 
-  Future<DialogResultYesNoCancel> askDelete(BuildContext context) async =>
-      (await Dialog2.showQueryDialogAsync(context, "Daten unwiderruflich löschen?",
+  Future<DialogResultYesNoCancel>  showDeleteDialogAsync(BuildContext context) async =>
+      await Dialog2.showQueryDialogAsync(
+          context,
+          "Daten unwiderruflich löschen?",
           "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
-          actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true));
+          actions: [Dialog2.yesButton, Dialog2.noButton],
+          cancelButton: true);
 
-  late ICommand showHelpCommand = new RelayPCommand((context, helpContext) async {
+
+  late ICommand showHelpCommand =
+      new RelayPCommand((context, helpContext) async {
     await showViewAsync(HelpPage(new HelpPageArgs(helpContext)));
   });
 
   @mustCallSuper
   @protected
   void dispose() {
-    logger.finest("Dispose Instance( Event Subscription Count=${_appEventSubscriptions.length} )");
+    logger.finest(
+        "Dispose Instance( Event Subscription Count=${_appEventSubscriptions.length} )");
     for (var s in _appEventSubscriptions) appEvents.unsubscribe(s);
     super.dispose();
   }

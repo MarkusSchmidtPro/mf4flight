@@ -58,6 +58,34 @@ class Dialog2 {
     return result ?? DialogResultYesNoCancel.cancel;
   }
 
+  /*static Future<TResult> showQueryDialogAsync3<TResult>(
+      BuildContext? context, String titleText, String message,
+      {required List<Dialog3Action> dialogActions, bool cancelButton = false}) async {
+    //
+    Widget dialogView = new AlertDialog(
+        titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        //
+        title: !cancelButton
+            ? Text(titleText)
+            : Row(children: [
+          Expanded(child: Text(titleText)),
+          IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => _close(DialogResultYesNoCancel.cancel)),
+        ]),
+        content: Text(message),
+        actions: dialogActions.map( (e) => e.widget).toList()) ; //?? [yesButton, noButton]);
+
+    TResult? result;
+    if (context != null)
+      result = await showDialog(context: context, builder: (context) => dialogView);
+    else // for dialogs in event handlers etc. which do not have a context
+      result = await _showDialogAsync(dialogView);
+    // Turn dismissed (=null) into cancel
+    return result ?? DialogResultYesNoCancel.cancel;
+  }*/
+
   static Future<DialogResultOkCancel> showMarkdownAsync(BuildContext context, String md) async {
     var dialogView = Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -95,3 +123,14 @@ class Dialog2 {
     return dialogResult!;
   }
 }
+
+
+
+class Dialog3Action<TResult> {
+  Dialog3Action(this.widget, {required this.result, this.actionAsync});
+
+  Widget widget;
+  TResult result;
+  Future<void> Function()? actionAsync;
+}
+
