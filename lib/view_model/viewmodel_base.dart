@@ -88,7 +88,7 @@ abstract class ViewModelBase extends ChangeNotifier {
   @mustCallSuper
   ViewModelBase() : super() {
     logger = new Logger('$runtimeType');
-    _setState(ViewModelState.initializing);
+    _setState(ViewModelState.ready);
   }
 
   /// The source which request to close the view.

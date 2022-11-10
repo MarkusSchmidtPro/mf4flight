@@ -9,8 +9,6 @@ class ViewResult {
 
 /// Represents the state of a [ViewModel].
 enum ViewModelState {
-  /// The ViewModel is initializing, normally data is loaded in this state.
-  initializing,
   /// The ViewModel is complete and ready to be used.
   ready,
   busy,
