@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 /// Provides CRUD functionality for a Model.
-abstract class ModelAdapter<TModel,TSource> {
+abstract class ModelAdapter<TModel, TSource> {
   late final Logger logger;
 
   @protected
@@ -10,7 +10,9 @@ abstract class ModelAdapter<TModel,TSource> {
     logger = new Logger('$runtimeType');
   }
 
-  TModel load(TModel model, TSource source) ;
+  TModel load(TModel model, TSource source) {
+    return model;
+  } // Todo
 
   /// Save the model's data back to its origin.
   ///
@@ -48,16 +50,17 @@ abstract class ModelAdapter<TModel,TSource> {
   /// }
   /// ```
   Future<void> saveAsync(TModel model) async {
-    assert(true, "$runtimeType does not support saveAsync for model ${TModel.runtimeType}");
+    assert(true,
+        "$runtimeType does not support saveAsync for model ${TModel.runtimeType}");
   }
 
   Future<void> deleteAsync(TModel model) async {
-    assert(true, "$runtimeType does not support deleteAsync for model ${TModel.runtimeType}");
+    assert(true,
+        "$runtimeType does not support deleteAsync for model ${TModel.runtimeType}");
   }
 }
 
-
-mixin AsyncCompletion<TModel, TSource> on ModelAdapter<TModel, TSource>{
+mixin AsyncCompletion<TModel, TSource> on ModelAdapter<TModel, TSource> {
   /// Complete the model by executing an asynchronous load functionality.
   ///
   /// Normally, [loadAsync] is called in the
@@ -71,11 +74,11 @@ mixin AsyncCompletion<TModel, TSource> on ModelAdapter<TModel, TSource>{
   ///   notifyListeners();
   /// }
   /// ```
-  Future<void> completeAsync(TModel model) ;
-  
+  Future<void> completeAsync(TModel model);
+
   Future<TModel> loadCompleteAsync(TModel model, TSource source) async {
-    load( model, source);
-    await completeAsync( model);
+    load(model, source);
+    await completeAsync(model);
     return model;
   }
 }
