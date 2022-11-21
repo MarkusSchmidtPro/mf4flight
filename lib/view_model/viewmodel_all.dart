@@ -10,8 +10,10 @@
   // Parse source as a double literal using a '.'
   double? znCurrency(String s) {
     if( s.contains(",")) s= s.replaceAll(",", ".");
-    return double.tryParse(s);
+    return twoDigits( double.tryParse(s));
   }  
+  
+  double? twoDigits( double? d)=> d== null ? null : (d*100+0.5).toInt()/100 ;
   
   DateTime? znDate(String? s) {
     if (s == null || s.isEmpty) return null;
