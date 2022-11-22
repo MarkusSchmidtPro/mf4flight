@@ -14,7 +14,7 @@ class HelpViewModel extends ViewModelBase with DataLoader {
   String markDown = "---";
 
   @override
-  Future<void> onLoadAsync() async => markDown = await loadMarkdownAsync2(_args);
+  Future<void> initAsync(noArgs) async => markDown = await loadMarkdownAsync2(_args);
 
   static Future<String> loadMarkdownAsync(String helpContext) async =>
       loadMarkdownAsync2(new HelpPageArgs(helpContext));

@@ -2,7 +2,7 @@ import 'package:mf4flight/mf4flight.dart';
 
 /// Represents a list item in a grid and list view.
 class SelectableItem {
-  /// Create new new instance with a unique [id], a [model] and a [state]
+  /// Create new new instance with a unique [id], a [_viewModelData] and a [state]
   SelectableItem(this.id, {ItemState? initialState})
       : state = initialState ?? new ItemState();
 
@@ -92,10 +92,6 @@ class SelectableItemList {
   void clearSelection() {
     for (var i in items) i.state._selected = false;
     _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.selectionChanged));
-  }
-
-  void bind(int index, DataBinder2 itemVM) {
-    itemVM.bindData(items[index].id);
   }
 }
 

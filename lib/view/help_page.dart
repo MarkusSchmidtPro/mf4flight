@@ -35,7 +35,7 @@ class HelpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ViewModelBuilder<HelpViewModel>.reactive(
         viewModelBuilder: () => new HelpViewModel(_viewArgs),
-        onModelReady: (pageVM) => pageVM.loadData(),
+        onModelReady: (pageVM) => pageVM.init(),
         builder: (BuildContext context, HelpViewModel pageVM, _) => _buildPage(context, pageVM),
       );
 

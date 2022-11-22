@@ -5,77 +5,31 @@ import 'package:logging/logging.dart';
 
 import '../mf4flight.dart';
 
-/// Extend a ViewModelBased to support data binding.
-///
-/// Data binging is used to pass data from a View to a ViewModel:
-/// pass or bing data to the ViewModel.
-mixin DataBinder<TData> on ViewModelBase {
-  void bindData(TData model) {
-    if (_data != null && model == _data) return;
-    if (_data != null) onContextChanging(model);
-    _data = model;
-    if ((this is DataLoader)) (this as DataLoader).loadData();
-  }
 
-  TData? _data;
 
-  TData get data => _data!;
-
-  @protected
-  void onContextChanging(TData newData) {}
-}
-
-mixin DataBinder2<TArgs, TModel> on ViewModelBase {
-  void bindData(TArgs args) {
-    if (_args != null && _args == args) return;
+mixin DataLoader<TArgs> on ViewModelBase {
+  void init({TArgs? args}) {
+    if (_args != null && _args == args) {
+      logger.finest("DataBinder2 args not changed!");
+      return;
+    }
 
     _setState(ViewModelState.busy);
-    onBindData(args).then((newModel) {
+    initAsync(args).then((_) {
       _args = args;
-      _model = newModel;
       _setState(ViewModelState.ready);
       notifyListeners();
     });
   }
 
   TArgs? _args;
-  TModel? _model;
-
   TArgs? get args => _args;
-  TModel get model => _model!;
-
 
   @protected
-  Future<TModel> onBindData(TArgs args);
+  Future<void> initAsync(TArgs? newArgs); 
 }
 
-mixin DataLoader on ViewModelBase {
-  void loadData() {
-    _setState(ViewModelState.busy);
-    onLoadAsync().then((_) {
-      _setState(ViewModelState.ready);
-      notifyListeners();
-    });
-  }
 
-  /// Start asynchronous initialization of the ViewModel.
-  /// Once this is completed the state is [ViewModelState.ready].
-  ///
-  /// Call this method from the View:
-  /// ```
-  /// Widget build(BuildContext context) => ViewModelBuilder<ContactListViewModel>.reactive(
-  ///       viewModelBuilder: () => new ContactListViewModel(),
-  ///       onModelReady: (viewModel) => viewModel.lazyLoad(),
-  ///       builder: _buildPage);
-  /// ```
-
-  /// Provide an asynchronous initialisation functionality.
-  ///
-  /// [onLoadAsync] is started during [startLazyLoad] and
-  /// no explicit call of asynchronous initialisation is necessary.
-  @protected
-  Future<void> onLoadAsync();
-}
 
 /// The base class for view models whose context does not change.
 ///
@@ -99,9 +53,8 @@ abstract class ViewModelBase extends ChangeNotifier {
   /// ```
   ViewModelState get state => _state;
 
-  
   _setState(ViewModelState state) {
-    logger.fine("ViewModelState=$state");
+    logger.finest("ViewModelState=$state");
     _state = state;
   }
 
@@ -117,7 +70,8 @@ abstract class ViewModelBase extends ChangeNotifier {
   }
 
   /// The source which request to close the view.
-  CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
+  CloseViewRequestSource closeViewRequestSource =
+      CloseViewRequestSource.backButton;
 
   final List<StreamSubscription> _appEventSubscriptions = [];
 
@@ -131,23 +85,27 @@ abstract class ViewModelBase extends ChangeNotifier {
   }
 
   @protected
-  void showSnackBar(String message) => messenger.showSnackBar(SnackBar(content: Text(message)));
+  void showSnackBar(String message) =>
+      messenger.showSnackBar(SnackBar(content: Text(message)));
 
   // region Navigation: Show and Close
 
   /// Navigator to a view
   /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
-  Future<TResult?> showViewNamedAsync<TResult>(String routeName, {Object? args}) async {
-    logger.finer(">$routeName show");
-    TResult? result = await navigator.pushNamed<TResult?>(routeName, arguments: args);
-    logger.finer("<$routeName closed, result=$result");
+  Future<TResult?> showViewNamedAsync<TResult>(String routeName,
+      {Object? args}) async {
+    logger.finest(">$routeName show");
+    TResult? result =
+        await navigator.pushNamed<TResult?>(routeName, arguments: args);
+    logger.finest("<$routeName closed, result=$result");
     return result;
   }
 
   /// Navigator to a view
   /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
   Future<TResult?> showViewAsync<TResult>(StatelessWidget view) async {
-    TResult? result = await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
+    TResult? result =
+        await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
     logger.finest("$runtimeType closed, result=$result");
     return result;
   }
@@ -176,19 +134,25 @@ abstract class ViewModelBase extends ChangeNotifier {
         }
       }, canExecute: canExecuteAction ?? () => true);
 
-  Future<DialogResultYesNoCancel> showDeleteDialogAsync(BuildContext context) async =>
-      await Dialog2.showQueryDialogAsync(context, "Daten unwiderruflich löschen?",
+  Future<DialogResultYesNoCancel> showDeleteDialogAsync(
+          BuildContext context) async =>
+      await Dialog2.showQueryDialogAsync(
+          context,
+          "Daten unwiderruflich löschen?",
           "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
-          actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true);
+          actions: [Dialog2.yesButton, Dialog2.noButton],
+          cancelButton: true);
 
-  late ICommand showHelpCommand = new RelayPCommand((context, helpContext) async {
+  late ICommand showHelpCommand =
+      new RelayPCommand((context, helpContext) async {
     await showViewAsync(HelpPage(new HelpPageArgs(helpContext)));
   });
 
   @mustCallSuper
   @protected
   void dispose() {
-    logger.finest("Dispose Instance( Event Subscription Count=${_appEventSubscriptions.length} )");
+    logger.finest(
+        "Dispose Instance( Event Subscription Count=${_appEventSubscriptions.length} )");
     for (var s in _appEventSubscriptions) appEvents.unsubscribe(s);
     super.dispose();
   }
