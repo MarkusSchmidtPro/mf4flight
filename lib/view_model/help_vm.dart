@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import '../view/help_page.dart';
 import 'viewmodel_base.dart';
 
-class HelpViewModel extends ViewModelBase with LazyLoad {
+class HelpViewModel extends ViewModelBase with DataLoader {
   final HelpPageArgs _args;
 
   HelpViewModel(HelpPageArgs args) : _args = args;
