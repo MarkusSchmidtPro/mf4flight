@@ -5,32 +5,6 @@ import 'package:logging/logging.dart';
 
 import '../mf4flight.dart';
 
-
-
-mixin DataLoader<TArgs> on ViewModelBase {
-  void init({TArgs? args}) {
-    if (_args != null && _args == args) {
-      logger.finest("DataBinder2 args not changed!");
-      return;
-    }
-
-    _setState(ViewModelState.busy);
-    initAsync(args).then((_) {
-      _args = args;
-      _setState(ViewModelState.ready);
-      notifyListeners();
-    });
-  }
-
-  TArgs? _args;
-  TArgs? get args => _args;
-
-  @protected
-  Future<void> initAsync(TArgs? newArgs); 
-}
-
-
-
 /// The base class for view models whose context does not change.
 ///
 /// The view model's context is set once (usually in the constructor).
@@ -53,7 +27,8 @@ abstract class ViewModelBase extends ChangeNotifier {
   /// ```
   ViewModelState get state => _state;
 
-  _setState(ViewModelState state) {
+  @protected
+  void setState(ViewModelState state) {
     logger.finest("ViewModelState=$state");
     _state = state;
   }
@@ -66,7 +41,7 @@ abstract class ViewModelBase extends ChangeNotifier {
   @mustCallSuper
   ViewModelBase() : super() {
     logger = new Logger('$runtimeType');
-    _setState(ViewModelState.ready);
+    setState(ViewModelState.ready);
   }
 
   /// The source which request to close the view.

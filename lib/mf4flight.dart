@@ -33,6 +33,7 @@ export 'view/view_errors.dart';
 export 'view_model/list2_vm_mixin.dart';
 export 'view_model/viewmodel_all.dart';
 export 'view_model/viewmodel_base.dart';
+export 'view_model/viewmodel_base.mixin.dart';
 export 'view_model/viewmodel_edit.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();

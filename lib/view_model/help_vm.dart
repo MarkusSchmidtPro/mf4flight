@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import '../view/help_page.dart';
 import 'viewmodel_base.dart';
+import 'viewmodel_base.mixin.dart';
 
 class HelpViewModel extends ViewModelBase with DataLoader {
   final HelpPageArgs _args;

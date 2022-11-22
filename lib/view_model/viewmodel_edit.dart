@@ -174,7 +174,7 @@ abstract class ViewModelEdit extends ViewModelBase {
     return true;
   }
 
-  // region Error view.Messages
+  // region Error messages
 
   /// Get a list with the view model's errors.
   final ViewErrors _viewErrors = new ViewErrors();

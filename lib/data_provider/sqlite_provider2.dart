@@ -42,8 +42,6 @@ class SQLiteProvider2<TDataModel extends DataModelBase>
     if (criteria != null) whereClause += " AND ($criteria)";
     return await fetchAsync(criteria: whereClause);
   }
-  
-  
 
   Future<List<Map<String, dynamic>>> rawQueryAsync(String sql) async =>
       await db.rawQuery(sql);
@@ -63,26 +61,30 @@ class SQLiteProvider2<TDataModel extends DataModelBase>
   /// If [currentRecord.id] is null a new record is inserted into the DB.
   /// Otherwise, the existing record is updated, when the provided [currentRecord] is different from the record in the DB.
   @override
-  Future<void> saveAsync(TDataModel currentRecord, {bool updateRecordVersion = true}) async {
+  Future<int> saveAsync(TDataModel currentRecord,
+      {bool updateRecordVersion = true}) async {
     // Check if the provided record matches the object in the database.
     if (currentRecord.id != null &&
-        _equals(currentRecord, await _getAsync(currentRecord.id!))) return;
+        _equals(currentRecord, await _getAsync(currentRecord.id!))) return currentRecord.id!;
 
-    if (updateRecordVersion && currentRecord is SyncRecord){
+    if (updateRecordVersion && currentRecord is SyncRecord) {
       currentRecord.recordVersion = DBHelper.getVersionFromNow();
     }
     currentRecord.recordLastUpdateUtc = DBHelper.utcNow();
 
     if (currentRecord.id == null) {
       currentRecord.recordCreatedDateUtc = DBHelper.utcNow();
-      await db.insert(entityName, currentRecord.toJson());
+      int id = await db.insert(entityName, currentRecord.toJson());
+      currentRecord.id = id;
     } else {
       await db.update(entityName, currentRecord.toJson(),
           where: 'id=${currentRecord.id}');
     }
-    
-    if( currentRecord is TrackedObject)
+
+    if (currentRecord is TrackedObject)
       (currentRecord as TrackedObject).acceptChanges();
+    
+    return currentRecord.id!;
   }
 
   bool _equals(TDataModel currentRecord, Map<String, dynamic> other) =>

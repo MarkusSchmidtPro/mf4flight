@@ -20,8 +20,8 @@ abstract class IDataProvider2<TDataModel extends DataModelBase> {
   /// properties are updated, and in case of a new record, the [currentRecord.modelId] property is updated
   /// with the information returned by the store (SQLite behavior).
   /// 
-  /// The function returns the [record.modelId] which is not null!
-  Future<void> saveAsync(TDataModel currentRecord);
+  /// The function returns the [record.id] which is not null!
+  Future<int> saveAsync(TDataModel currentRecord);
 
   Future deleteAsync(int id);
 }
