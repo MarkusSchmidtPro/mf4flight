@@ -33,7 +33,8 @@ abstract class ViewModelBase extends ChangeNotifier {
     _state = state;
   }
 
-  bool get ready => _state == ViewModelState.ready;
+  /// If _true_ initialisation has been completed and all data is ready for use.
+  bool get isReady => _state == ViewModelState.ready;
 
   // endregion
 

@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'i_command.dart';
 
-
 class RelayCommand implements ICommand {
   final void Function(Exception e)? _onError;
   final bool Function()? _canExecute;
-  final Future<void> Function(BuildContext context)  _actionAsync;
+  final Future<void> Function(BuildContext context) _actionAsync;
 
   RelayCommand(
-    this._actionAsync ,  {
+    this._actionAsync, {
     bool Function()? canExecute,
     void Function(Exception e)? onError,
   })  : _canExecute = canExecute,

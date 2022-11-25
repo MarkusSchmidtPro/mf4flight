@@ -1,6 +1,7 @@
 import 'package:mf4flight/mf4flight.dart';
 
 /// Represents a list item in a grid and list view.
+@deprecated
 class ListItem<TModel> {
   /// Create new new instance with a unique [id], a [model] and a [state]
   ListItem(this.id, this.model, {ItemState? initialState})
@@ -17,26 +18,6 @@ class ListItem<TModel> {
   void toggleSelection() => list.toggleSelection(this);
 }
 
-/// A [ListItem] state.
-class ItemState {
-  ItemState( {bool selected=false}) : _selected = selected;
-  bool get selected => _selected;
-  bool _selected = false;
-}
-
-enum ListChangedType {
-  selectionChanged,
-
-  /// One or more List items has been added or removed.
-  listChanged,
-  bindData
-}
-
-class ListChangedEventArgs extends EventArgs {
-  ListChangedEventArgs(this.change);
-
-  final ListChangedType change;
-}
 
 /// Provides functionality to manage a lists in a view model.
 class ListVM<TModel> {
@@ -88,7 +69,7 @@ class ListVM<TModel> {
   /// Set the selected state and [notifyListeners] when state changed.
   void setSelectionState(ListItem item, bool value) {
     if (value != item.state.selected) {
-      item.state._selected = value;
+      item.state.selected = value;
       _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.selectionChanged));
     }
   }
@@ -98,7 +79,7 @@ class ListVM<TModel> {
 
   /// Clear all selections and [notifyListeners].
   void clearSelection() {
-    for (var i in items) i.state._selected = false;
+    for (var i in items) i.state.selected = false;
     _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.selectionChanged));
   }
 }
