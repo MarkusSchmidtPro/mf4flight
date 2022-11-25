@@ -2,7 +2,7 @@
 import 'data_model_base.dart';
 
 /// Provides CRUD operations on a data store.
-abstract class IDataProvider2<TDataModel extends DataModelBase> {
+abstract class IDataModelProvider<TDataModel extends DataModelBase> {
   String get entityName => throw UnimplementedError();
 
   Future<List<TDataModel>> fetchAsync({String? criteria});

@@ -7,7 +7,7 @@ import '../view/help_page.dart';
 import 'viewmodel_base.dart';
 import 'viewmodel_base.mixin.dart';
 
-class HelpViewModel extends ViewModelBase with DataLoader {
+class HelpViewModel extends ViewModelBase with DataLoaderN {
   final HelpPageArgs _args;
 
   HelpViewModel(HelpPageArgs args) : _args = args;
@@ -15,7 +15,7 @@ class HelpViewModel extends ViewModelBase with DataLoader {
   String markDown = "---";
 
   @override
-  Future<void> initAsync(noArgs) async => markDown = await loadMarkdownAsync2(_args);
+  Future<void> initAsync() async => markDown = await loadMarkdownAsync2(_args);
 
   static Future<String> loadMarkdownAsync(String helpContext) async =>
       loadMarkdownAsync2(new HelpPageArgs(helpContext));

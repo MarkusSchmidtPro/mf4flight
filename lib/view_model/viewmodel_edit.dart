@@ -217,7 +217,7 @@ abstract class ViewModelEdit extends ViewModelBase {
       closeViewRequestSource = CloseViewRequestSource.saveAndCloseViewCommand;
       await navigator.maybePop();
       notifyListeners();
-    });
+    },canExecute: () => isReady && isDirtyViewModel());
   }
 
 // endregion
