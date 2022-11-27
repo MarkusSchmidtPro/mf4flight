@@ -107,7 +107,7 @@ abstract class ViewModelEdit extends ViewModelBase {
   }
 
   /// Checks if the current view is dirty (contains changes).
-  bool isDirtyViewModel() => this.state == ViewModelState.ready ? onIsDirty() : false;
+  bool isDirtyViewModel() => this.dataLoaded ? onIsDirty() : false;
 
   @protected
   bool onIsDirty() => true;
