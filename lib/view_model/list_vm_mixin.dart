@@ -2,8 +2,6 @@ import 'package:mf4flight/mf4flight.dart';
 
 import 'list2_vm_mixin.dart';
 
-
-
 /// Provides functionality to manage a lists in a view model.
 class SelectableList {
   EventHandler<ListChangedEventArgs>? _listChangedEvent;
@@ -11,7 +9,8 @@ class SelectableList {
 
   /// Register a handler to handle [ListChangedType] events.
   /// Do call this function once for each handler in the ViewModel constructor.
-  void registerChangedHandler(EventHandler<ListChangedEventArgs>? listChangedHandler) =>
+  void registerChangedHandler(
+          EventHandler<ListChangedEventArgs>? listChangedHandler) =>
       _listChangedEvent = listChangedHandler;
 
   /// Bind a list as the new list [items].
@@ -32,13 +31,15 @@ class SelectableList {
       //item.list = this;
       items.add(item);
     }
-    _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.bindData));
+    _listChangedEvent?.call(
+        this, new ListChangedEventArgs(ListChangedType.bindData));
   }
 
   /// Remove and item and its state from the list.
   void remove(SelectableItem item) {
     items.remove(item);
-    _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.listChanged));
+    _listChangedEvent?.call(
+        this, new ListChangedEventArgs(ListChangedType.listChanged));
   }
 
   int get length => items.length;
@@ -49,13 +50,15 @@ class SelectableList {
 
   /// Toggle the selected state of a given item.
   /// See also [setSelectionState] ans [isSelected].
-  void toggleSelection(SelectableItem item) => setSelectionState(item, !item.state.selected);
+  void toggleSelection(SelectableItem item) =>
+      setSelectionState(item, !item.state.selected);
 
   /// Set the selected state and [notifyListeners] when state changed.
   void setSelectionState(SelectableItem item, bool value) {
     if (value != item.state.selected) {
       item.state.selected = value;
-      _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.selectionChanged));
+      _listChangedEvent?.call(
+          this, new ListChangedEventArgs(ListChangedType.selectionChanged));
     }
   }
 
@@ -65,6 +68,7 @@ class SelectableList {
   /// Clear all selections and [notifyListeners].
   void clearSelection() {
     for (var i in items) i.state.selected = false;
-    _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.selectionChanged));
+    _listChangedEvent?.call(
+        this, new ListChangedEventArgs(ListChangedType.selectionChanged));
   }
 }

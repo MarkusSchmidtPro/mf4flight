@@ -36,10 +36,12 @@ export 'view_model/viewmodel_base.dart';
 export 'view_model/viewmodel_base.mixin.dart';
 export 'view_model/viewmodel_edit.dart';
 
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-ScaffoldMessengerState get messenger => scaffoldMessengerKey.currentState as ScaffoldMessengerState;
+ScaffoldMessengerState get messenger =>
+    scaffoldMessengerKey.currentState as ScaffoldMessengerState;
 
 NavigatorState get navigator => navigatorKey.currentState as NavigatorState;
 
