@@ -30,6 +30,7 @@ export 'view/bottombar_actions.dart';
 export 'view/dialog2.dart';
 export 'view/help_page.dart';
 export 'view/view_errors.dart';
+export 'view_model/help_vm.dart';
 export 'view_model/list_vm_mixin.dart';
 export 'view_model/viewmodel_all.dart';
 export 'view_model/viewmodel_base.dart';
