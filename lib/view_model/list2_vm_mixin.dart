@@ -8,13 +8,13 @@ class SelectableItem {
 
   final int id;
   final ItemState state;
+  void toggleSelection() => state.selected=!state.selected;
 }
 
 /// A [ListItem] state.
 class ItemState {
-  ItemState( {bool selected=false}) : _selected = selected;
-  bool get selected => _selected;
-  bool _selected = false;
+  ItemState( {this.selected=false});
+  bool selected;
 }
 
 enum ListChangedType {
@@ -31,10 +31,20 @@ class ListChangedEventArgs extends EventArgs {
   final ListChangedType change;
 }
 
-/// Provides functionality to manage a lists in a view model.
-class SelectableItemList {
+class ListItem2<TModel> extends SelectableItem{
+  ListItem2( this.id) : super(id);
+  final int id;
+  TModel? model;
+}
+
+/// Provides functionality to manage lists on a view.
+/// 
+///  A list on a view is a _index_ to list-item viewmodel [ListItemViewModel] relationship.
+///  The to list-item viewmodel takes a model as data and it may support 
+///  additional viewmodel properties, like _selected_. 
+class ListViewModel2<TItem extends ListItem2>  {
   EventHandler<ListChangedEventArgs>? _listChangedEvent;
-  final List<SelectableItem> items = [];
+  final List<TItem> items = [];
 
   /// Register a handler to handle [ListChangedType] events.
   /// Do call this function once for each handler in the ViewModel constructor.
@@ -53,10 +63,10 @@ class SelectableItemList {
   /// If [itemState] is _not_ provided, no explicit initialisation takes place.
   /// All existing states will remain as-is, and new item's state is initialised
   /// with `new ItemState()`.
-  void bindData(Iterable<SelectableItem> source) {
+  void init(Iterable<TItem> source) {
     items.clear();
     for (var item in source) {
-      items.add(item);
+      items.add( item);
     }
     _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.bindData));
   }
@@ -80,7 +90,7 @@ class SelectableItemList {
   /// Set the selected state and [notifyListeners] when state changed.
   void setSelectionState(SelectableItem item, bool value) {
     if (value != item.state.selected) {
-      item.state._selected = value;
+      item.state.selected = value;
       _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.selectionChanged));
     }
   }
@@ -90,7 +100,7 @@ class SelectableItemList {
 
   /// Clear all selections and [notifyListeners].
   void clearSelection() {
-    for (var i in items) i.state._selected = false;
+    for (var i in items) i.state.selected = false;
     _listChangedEvent?.call(this, new ListChangedEventArgs(ListChangedType.selectionChanged));
   }
 }

@@ -10,14 +10,14 @@ import 'migration_manager.dart';
 import 'migration_set.dart';
 
 /// SQLite file database management functionality.
-class SQLiteStore2 {
+class SQLiteStore {
   final Logger _log = new Logger('DBService');
 
   /// Create a new SQLite instance based on [filename],
   /// which is stored under [databaseFactoryFfi.getDatabasesPath()].
   /// While opening is is made sure all provided [migrationSteps] are executed
   /// so that the database has the latest, provided in the list of migrations.
-  SQLiteStore2( String filename, Iterable<MigrationStep> migrationSteps)
+  SQLiteStore( String filename, Iterable<MigrationStep> migrationSteps)
       : _filename = filename,
         _migrationSets = migrationSteps.toList() {
     sqfliteFfiInit();
