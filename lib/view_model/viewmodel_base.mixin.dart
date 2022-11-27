@@ -4,7 +4,7 @@ import '../enums.dart';
 import 'viewmodel_base.dart';
 
 mixin DataLoader<TArgs> on ViewModelBase {
-  void init({TArgs? args}) {
+  void init({required TArgs args}) {
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
       initAsync(args).then((_) {
@@ -29,9 +29,9 @@ mixin DataLoader<TArgs> on ViewModelBase {
 
 mixin DataLoaderN on ViewModelBase {
   void init() {
-    setState(ViewModelState.busy);
+    state =ViewModelState.loading;
     initAsync().then((_) {
-      setState(ViewModelState.ready);
+    state =ViewModelState.ready;
       notifyListeners();
     });
   }
@@ -64,9 +64,9 @@ mixin DataBinder<TData> on ViewModelBase {
 @deprecated
 mixin LazyLoad on ViewModelBase {
   void lazyLoad() {
-    setState(ViewModelState.busy);
+    state = ViewModelState.loading;
     onLoadAsync().then((_) {
-      setState(ViewModelState.ready);
+    state = ViewModelState.ready;
       notifyListeners();
     });
   }
