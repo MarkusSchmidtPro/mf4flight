@@ -25,16 +25,16 @@ abstract class ViewModelBase extends ChangeNotifier {
   ///             ? const Center(child: CircularProgressIndicator())
   ///             : _pageBody(context, pageVM),
   /// ```
+  @protected
   ViewModelState get state => _state;
 
   @protected
-  void setState(ViewModelState state) {
+  set state(ViewModelState state) {
     logger.finest("ViewModelState=$state");
     _state = state;
   }
 
-  /// If _true_ initialisation has been completed and all data is ready for use.
-  bool get isReady => _state == ViewModelState.ready;
+  bool get dataLoaded => _state != ViewModelState.loading;
 
   // endregion
 
@@ -42,7 +42,7 @@ abstract class ViewModelBase extends ChangeNotifier {
   @mustCallSuper
   ViewModelBase() : super() {
     logger = new Logger('$runtimeType');
-    setState(ViewModelState.ready);
+    state = ViewModelState.ready;
   }
 
   /// The source which request to close the view.

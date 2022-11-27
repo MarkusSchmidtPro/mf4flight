@@ -4,26 +4,25 @@ import '../enums.dart';
 import 'viewmodel_base.dart';
 
 mixin DataLoader<TArgs> on ViewModelBase {
-  void init(TArgs args) {
-    if (_lastArgs != null && _lastArgs == args) {
-      logger.finest("DataBinderA arguments have not changed!");
+  void init({TArgs? args}) {
+    if (state == ViewModelState.ready) {
+      state = ViewModelState.loading;
+      initAsync(args).then((_) {
+        _args = args;
+        state = ViewModelState.asyncLoadCompleted;
+        notifyListeners();
+      });
+    } else if (state == ViewModelState.asyncLoadCompleted) {
+      state = ViewModelState.ready;
+    } else if (state == ViewModelState.loading) {
       return;
     }
-
-    setState(ViewModelState.busy);
-    initAsync(args).then((_) {
-      _lastArgs = args;
-      setState(ViewModelState.ready);
-      notifyListeners();
-    });
   }
 
-  /// The last arguments are stored to recognize changes.
-  /// [_lastArgs] are compared with a new set of arguments to see
-  /// if arguments have been changed and if [initAsync] is required.
-  TArgs? _lastArgs;
+  TArgs? _args;
 
-  
+  TArgs? get args => _args;
+
   @protected
   Future<void> initAsync(TArgs args);
 }
