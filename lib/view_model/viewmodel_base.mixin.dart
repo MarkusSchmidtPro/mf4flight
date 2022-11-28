@@ -15,7 +15,7 @@ mixin DataLoader<TArgs> on ViewModelBase {
     } else if (state == ViewModelState.asyncLoadCompleted) {
       state = ViewModelState.ready;
     } else if (state == ViewModelState.loading) {
-      return;
+      //return;
     }
   }
 

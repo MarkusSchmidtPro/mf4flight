@@ -71,6 +71,19 @@ class SelectableList {
   }
 }
 
+enum ListChangedType {
+  selectionChanged,
+  listChanged,
+  bindData
+}
+
+class ListChangedEventArgs extends EventArgs {
+  ListChangedEventArgs(this.change);
+
+  final ListChangedType change;
+}
+
+
 
 /// Represents a list item in a grid and list view.
 class SelectableItem {
@@ -87,19 +100,5 @@ class SelectableItem {
 class ItemState {
   ItemState( {this.selected=false});
   bool selected;
-}
-
-enum ListChangedType {
-  selectionChanged,
-
-  /// One or more List items has been added or removed.
-  listChanged,
-  bindData
-}
-
-class ListChangedEventArgs extends EventArgs {
-  ListChangedEventArgs(this.change);
-
-  final ListChangedType change;
 }
 
