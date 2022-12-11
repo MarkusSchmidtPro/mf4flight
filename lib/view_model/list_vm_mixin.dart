@@ -1,9 +1,9 @@
 import 'package:mf4flight/mf4flight.dart';
 
 /// Provides functionality to manage a lists in a view model.
-class SelectableList {
+class SelectableList<TModel> {
   EventHandler<ListChangedEventArgs>? _listChangedEvent;
-  final List<SelectableItem> items = [];
+  final List<SelectableItem<TModel>> items = [];
 
   /// Register a handler to handle [ListChangedType] events.
   /// Do call this function once for each handler in the ViewModel constructor.
@@ -23,7 +23,7 @@ class SelectableList {
   /// If [itemState] is _not_ provided, no explicit initialisation takes place.
   /// All existing states will remain as-is, and new item's state is initialised
   /// with `new ItemState()`.
-  void bindData(Iterable<SelectableItem> source) {
+  void bindData(Iterable<SelectableItem<TModel>> source) {
     items.clear();
     for (var item in source) {
       //item.list = this;
@@ -33,6 +33,8 @@ class SelectableList {
         this, new ListChangedEventArgs(ListChangedType.bindData));
   }
 
+  void removeAt(int index) => remove(items[index]);
+  
   /// Remove and item and its state from the list.
   void remove(SelectableItem item) {
     items.remove(item);
@@ -86,12 +88,13 @@ class ListChangedEventArgs extends EventArgs {
 
 
 /// Represents a list item in a grid and list view.
-class SelectableItem {
+class SelectableItem<TModel> {
   /// Create new new instance with a unique [id], a [_viewModelData] and a [state]
-  SelectableItem(this.id, {ItemState? initialState})
+  SelectableItem(this.id, {this.model, ItemState? initialState})
       : state = initialState ?? new ItemState();
 
-  final int id;
+  final TModel? model;
+  final String id;
   final ItemState state;
   void toggleSelection() => state.selected=!state.selected;
 }

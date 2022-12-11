@@ -22,11 +22,11 @@ dependencies:
   event_bus: ^2.0.0
   json_annotation: ^4.0.1
   collection: ^1.15.0
-  uuid: ^3.0.1
+  uuid: ^3.0.7
   flutter_markdown: ^0.6.12
 
   # SQLite support
-  sqflite: ^2.0.2
+  sqflite: ^2.2.1
   sqflite_common_ffi:
   path_provider: ^2.0.8
   

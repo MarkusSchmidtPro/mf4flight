@@ -29,11 +29,15 @@ mixin DataLoader<TArgs> on ViewModelBase {
 
 mixin DataLoaderN on ViewModelBase {
   void init() {
-    state =ViewModelState.loading;
-    initAsync().then((_) {
-    state =ViewModelState.ready;
-      notifyListeners();
-    });
+    if (state == ViewModelState.ready) {
+      state = ViewModelState.loading;
+      initAsync().then((_) {
+        state = ViewModelState.asyncLoadCompleted;
+        notifyListeners();
+      });
+    } else if (state == ViewModelState.asyncLoadCompleted) {
+      state = ViewModelState.ready;
+    } else if (state == ViewModelState.loading) {}
   }
 
   @protected
@@ -66,7 +70,7 @@ mixin LazyLoad on ViewModelBase {
   void lazyLoad() {
     state = ViewModelState.loading;
     onLoadAsync().then((_) {
-    state = ViewModelState.ready;
+      state = ViewModelState.ready;
       notifyListeners();
     });
   }
