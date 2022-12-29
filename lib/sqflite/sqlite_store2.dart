@@ -17,7 +17,7 @@ class SQLiteStore {
   /// which is stored under [databaseFactoryFfi.getDatabasesPath()].
   /// While opening is is made sure all provided [migrationSteps] are executed
   /// so that the database has the latest, provided in the list of migrations.
-  SQLiteStore( String filename, Iterable<MigrationStep> migrationSteps)
+  SQLiteStore(String filename, Iterable<MigrationStep> migrationSteps)
       : _filename = filename,
         _migrationSets = migrationSteps.toList() {
     sqfliteFfiInit();
@@ -46,11 +46,10 @@ class SQLiteStore {
       // Change the default factory
       databaseFactory = databaseFactoryFfi;
       databasesPath = (await getApplicationDocumentsDirectory()).path;
-    }
-    else {
+    } else {
       databasesPath = await getDatabasesPath();
     }
-    
+
     _filePath = join(databasesPath, _filename);
     _log.info('Database filepath: $_filePath');
 
@@ -86,9 +85,11 @@ class SQLiteStore {
             onUpgrade: (db, oldVersion, newVersion) async {
               var migrationManager = new MigrationManager(db, _migrationSets);
               await migrationManager.upgradeDatabaseAsync(oldVersion, newVersion);
-            }
-            //onOpen: _configuration.openAsync,
-            ));
+            },
+            onConfigure: (Database db) async {
+              // Add support for cascade delete
+              await db.execute("PRAGMA foreign_keys = ON");
+            }));
 
     var v = await _database.getVersion();
     _log.info('Current Database Version $v');
