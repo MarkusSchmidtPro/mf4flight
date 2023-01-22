@@ -12,7 +12,8 @@ import '../mf4flight.dart';
 /// the context itself is fix and never changes.
 abstract class ViewModelBase extends ChangeNotifier {
   late final Logger logger;
-
+  static int _instanceID =0;
+  int instanceID =0;
   // region ViewModel State
   late ViewModelState _state;
 
@@ -41,7 +42,8 @@ abstract class ViewModelBase extends ChangeNotifier {
   @protected
   @mustCallSuper
   ViewModelBase() : super() {
-    logger = new Logger('$runtimeType');
+    instanceID = _instanceID++;
+    logger = new Logger('$runtimeType($instanceID)');
     state = ViewModelState.ready;
   }
 

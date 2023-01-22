@@ -87,8 +87,7 @@ class SQLiteStore {
               await migrationManager.upgradeDatabaseAsync(oldVersion, newVersion);
             },
             onConfigure: (Database db) async {
-              // Add support for cascade delete
-              await db.execute("PRAGMA foreign_keys = ON");
+ 
             }));
 
     var v = await _database.getVersion();

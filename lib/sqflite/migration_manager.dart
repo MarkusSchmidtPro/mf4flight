@@ -20,7 +20,7 @@ class MigrationManager {
     int currentVersion = oldVersion;
 
     _migrationSets.sort( (a,b) => a.targetVersion.compareTo(b.targetVersion));
-    for( var migrationSet in _migrationSets) {
+    for( var migrationSet in _migrationSets.where((s) => s.targetVersion>currentVersion)) {
       if (currentVersion >= newVersion) break;
         
         try {
