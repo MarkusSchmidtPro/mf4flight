@@ -43,10 +43,10 @@ class DBHelper {
 
   /// Build an OR-block for all fieldNames
   /// on the current filterTag
-  static String _buildFilterTagLike(String filterTag, List<String> fieldNames) {
+  static String _buildFilterTagLike(String filterTag, List<String> fieldNames, {String logic="OR"}) {
     String filter = "lower( ${fieldNames[0]}) LIKE '%$filterTag%'";
     for (int i = 1; i < fieldNames.length; i++) {
-      filter += " OR lower( ${fieldNames[i]}) LIKE '%$filterTag%'";
+      filter += " $logic lower( ${fieldNames[i]}) LIKE '%$filterTag%'";
     }
     return "($filter)";
   }

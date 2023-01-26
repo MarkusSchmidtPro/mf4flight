@@ -129,9 +129,10 @@ abstract class ViewModelBase extends ChangeNotifier {
   @mustCallSuper
   @protected
   void dispose() {
-    logger.finest(
-        "Dispose Instance( Event Subscription Count=${_appEventSubscriptions.length} )");
-    for (var s in _appEventSubscriptions) appEvents.unsubscribe(s);
+    _state = ViewModelState.disposed;
     super.dispose();
+    logger.finest(
+        "Dispose Instance($instanceID, Event Subscription Count=${_appEventSubscriptions.length} )");
+    for (var s in _appEventSubscriptions) appEvents.unsubscribe(s);
   }
 }

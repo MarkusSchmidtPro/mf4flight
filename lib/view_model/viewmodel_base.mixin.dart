@@ -8,6 +8,9 @@ mixin DataLoader<TArgs> on ViewModelBase {
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
       initAsync(args).then((_) {
+        if( state== ViewModelState.disposed ){ 
+          logger.warning("DataLoader.asyncCompletion after dispose($instanceID");
+          return;}
         _args = args;
         state = ViewModelState.asyncLoadCompleted;
         notifyListeners();
@@ -25,6 +28,10 @@ mixin DataLoader<TArgs> on ViewModelBase {
 
   @protected
   Future<void> initAsync(TArgs args);
+
+  @override
+  @mustCallSuper
+  void dispose() => super.dispose();
 }
 
 mixin DataLoaderN on ViewModelBase {
@@ -54,7 +61,6 @@ mixin DataBinder<TData> on ViewModelBase {
     if (_data != null && model == _data) return;
     if (_data != null) onContextChanging(model);
     _data = model;
-    if ((this is LazyLoad)) (this as LazyLoad).lazyLoad();
   }
 
   TData? _data;
@@ -63,33 +69,8 @@ mixin DataBinder<TData> on ViewModelBase {
 
   @protected
   void onContextChanging(TData newData) {}
-}
 
-@deprecated
-mixin LazyLoad on ViewModelBase {
-  void lazyLoad() {
-    state = ViewModelState.loading;
-    onLoadAsync().then((_) {
-      state = ViewModelState.ready;
-      notifyListeners();
-    });
-  }
-
-  /// Start asynchronous initialization of the ViewModel.
-  /// Once this is completed the state is [ViewModelState.ready].
-  ///
-  /// Call this method from the View:
-  /// ```
-  /// Widget build(BuildContext context) => ViewModelBuilder<ContactListViewModel>.reactive(
-  ///       viewModelBuilder: () => new ContactListViewModel(),
-  ///       onModelReady: (viewModel) => viewModel.lazyLoad(),
-  ///       builder: _buildPage);
-  /// ```
-
-  /// Provide an asynchronous initialisation functionality.
-  ///
-  /// [onLoadAsync] is started during [startLazyLoad] and
-  /// no explicit call of asynchronous initialisation is necessary.
-  @protected
-  Future<void> onLoadAsync();
+  @override
+  @mustCallSuper
+  void dispose() => super.dispose();
 }

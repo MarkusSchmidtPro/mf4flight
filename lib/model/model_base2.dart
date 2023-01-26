@@ -33,10 +33,10 @@ abstract class ModelBase2 extends TrackedObject {
   ModelBase2();
 
   /// The unique model id.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String modelId = (++modelSeqNo).toString();
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   dynamic seed;
 
   // region Generic functions: can be called for Models based on SyncRecords
