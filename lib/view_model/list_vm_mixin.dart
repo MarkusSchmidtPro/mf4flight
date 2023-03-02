@@ -45,7 +45,7 @@ class SelectableList<TModel> {
   int get length => items.length;
 
   /// Get all selected or unselected ([selected] = false) items .
-  Iterable<SelectableItem> getSelectedItems({selected: true}) =>
+  Iterable<SelectableItem> getSelectedItems({selected= true}) =>
       items.where((item) => item.state.selected == selected);
 
   /// Toggle the selected state of a given item.

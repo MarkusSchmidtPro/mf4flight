@@ -1,4 +1,3 @@
-library mf4flight;
 
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,7 @@ export 'command/inactive_command.dart';
 export 'command/relay_command.dart';
 export 'command/relay_p_command.dart';
 export 'data_model/data_model_base.dart';
-export 'data_model/database_helper.dart';
+export 'data_model/db_util.dart';
 export 'data_model/i_data_provider2.dart';
 export 'data_model/sync_record.dart';
 export 'data_provider/list_provider.dart';
@@ -23,6 +22,7 @@ export 'data_provider/sqlite_provider2.dart';
 export 'enums.dart';
 export 'event_handler.dart';
 export 'locator.dart';
+export 'extensions.dart';
 export 'model/model_adapter.dart';
 export 'model/i_model_adapter2.dart';
 export 'model/model_base2.dart';

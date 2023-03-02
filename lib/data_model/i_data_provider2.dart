@@ -1,13 +1,12 @@
-
 import 'data_model_base.dart';
 
 /// Provides CRUD operations on a data store.
-abstract class IDataModelProvider<TDataModel extends DataModelBase> {
+abstract class IRecordProvider<TRecord extends DataModelBase> {
   String get entityName => throw UnimplementedError();
 
-  Future<List<TDataModel>> fetchAsync({String? criteria});
+  Future<List<TRecord>> fetchAsync({String? criteria});
 
-  Future<TDataModel> getAsync(int id);
+  Future<TRecord> getAsync(int id);
 
   /// Save a data model in its store.
   /// 
@@ -21,7 +20,7 @@ abstract class IDataModelProvider<TDataModel extends DataModelBase> {
   /// with the information returned by the store (SQLite behavior).
   /// 
   /// The function returns the [record.id] which is not null!
-  Future<int> saveAsync(TDataModel currentRecord);
+  Future<int> saveAsync(TRecord currentRecord);
 
-  Future deleteAsync(int id);
+  Future deleteSoftAsync(TRecord currentRecord);
 }

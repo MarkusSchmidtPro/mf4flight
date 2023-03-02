@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../enums.dart';
 import 'viewmodel_base.dart';
 
+/// Asynchronous data loader with arguments
 mixin DataLoader<TArgs> on ViewModelBase {
   void init({required TArgs args}) {
     if (state == ViewModelState.ready) {
@@ -34,11 +35,15 @@ mixin DataLoader<TArgs> on ViewModelBase {
   void dispose() => super.dispose();
 }
 
+/// Asynchronous data loader without arguments
 mixin DataLoaderN on ViewModelBase {
   void init() {
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
       initAsync().then((_) {
+        if( state== ViewModelState.disposed ){
+          logger.warning("DataLoader.asyncCompletion after dispose($instanceID");
+          return;}
         state = ViewModelState.asyncLoadCompleted;
         notifyListeners();
       });
@@ -49,6 +54,10 @@ mixin DataLoaderN on ViewModelBase {
 
   @protected
   Future<void> initAsync();
+
+  @override
+  @mustCallSuper
+  void dispose() => super.dispose();
 }
 
 /// Extend a ViewModelBased to support data binding.

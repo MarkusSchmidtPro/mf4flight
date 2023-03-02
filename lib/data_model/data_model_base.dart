@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:mf4flight/mf4flight.dart';
 
-import 'database_helper.dart';
 
 class RecordState {
   static const Active = 0;
   static const Deleted = 1;
 }
+
 
 /// Represents the base class from which all data models inherit.
 ///
@@ -34,7 +35,7 @@ abstract class DataModelBase {
   ///
   /// This id is null until the DataModel is saved.
   int? id;
-  
+
   /// Logical state of the data model.
   /// 0: active
   /// 1: logically deleted
@@ -52,7 +53,7 @@ abstract class DataModelBase {
   @mustCallSuper
   @protected
   DataModelBase() {
-    recordCreatedDateUtc = DBHelper.utcNow();
+    recordCreatedDateUtc = Util.utcNow();
     recordLastUpdateUtc = recordCreatedDateUtc;
   }
 

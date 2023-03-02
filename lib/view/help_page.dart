@@ -22,7 +22,7 @@ class HelpIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.help, color: Theme.of(context).colorScheme.primary),
+        icon: Icon(Icons.help, color: Theme.of(context).colorScheme.secondary),
         onPressed: () async => await _command.executeAsync(context, _helpContext));
   }
 }

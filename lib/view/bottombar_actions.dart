@@ -9,17 +9,17 @@ class BottomBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme _colors =
-        Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
+    // ColorScheme _colors =
+    //     Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
 
     return BottomAppBar(
       child: Container(
-        color: _colors.surface,
-        padding: EdgeInsets.only(top: 8, bottom: 8),
+        //color: _colors.surface,
+        //padding: EdgeInsets.only(top: 4, bottom: 4),  // 8 caused overflow on Pixel 5
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children:
-              _actions.where((element) => element.style != BottomBarActionStyle.missing).toList(),
+          _actions.where((element) => element.style != BottomBarActionStyle.missing).toList(),
         ),
       ),
     );
@@ -36,9 +36,9 @@ class BottomBarAction extends StatelessWidget {
 
   BottomBarAction(
       {required String label,
-      required IconData icon,
-      required ICommand? command,
-      BottomBarActionStyle style = BottomBarActionStyle.normal})
+        required IconData icon,
+        required ICommand? command,
+        BottomBarActionStyle style = BottomBarActionStyle.normal})
       : _label = label,
         _icon = icon,
         _command = command {
@@ -61,21 +61,21 @@ class BottomBarAction extends StatelessWidget {
         dimFactor = 0.15;
         content = [
           Icon(_icon, color: colorScheme.onSurfaceVariant),
-          Text(_label, style: Theme.of(context).textTheme.button)
+          Text(_label, style: Theme.of(context).textTheme.labelLarge)
         ];
         break;
 
       case BottomBarActionStyle.normal:
         content = [
           Icon(_icon, color: colorScheme.onSurfaceVariant),
-          Text(_label, style: Theme.of(context).textTheme.button)
+          Text(_label, style: Theme.of(context).textTheme.labelLarge)
         ];
         break;
 
       case BottomBarActionStyle.highlighted:
         content = [
           Icon(_icon, color: colorScheme.primary),
-          Text(_label, style: Theme.of(context).textTheme.button)
+          Text(_label, style: Theme.of(context).textTheme.labelLarge)
         ];
         break;
       case BottomBarActionStyle.missing:
@@ -86,14 +86,14 @@ class BottomBarAction extends StatelessWidget {
     return content.length == 0
         ? SizedBox(width: 1, height: 1)
         : InkWell(
-            child: Opacity(
-                opacity: dimFactor,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: content)),
-            onTap: () async {
-              if (_command != null && _command!.canExecute()) await _command!.executeAsync(context);
-            });
+        child: Opacity(
+            opacity: dimFactor,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: content)),
+        onTap: () async {
+          if (_command != null && _command!.canExecute()) await _command!.executeAsync(context);
+        });
   }
 }
