@@ -48,6 +48,23 @@ abstract class ViewModelBase extends ChangeNotifier {
     state = ViewModelState.ready;
   }
 
+  
+  int _lastRefreshTime=0;
+  bool _refreshingView=false;
+  
+  @protected void refreshView(){
+    assert( !_refreshingView, "Recursive refreshView()");
+    _refreshingView = true;
+    final int now = DateTime.now().millisecondsSinceEpoch;
+    final int delta = now - _lastRefreshTime;
+    _lastRefreshTime = now;
+    
+    if( delta < 500) logger.warning("View refresh within $delta milliseconds");
+    notifyListeners();
+    _refreshingView = false;
+  } 
+  
+  
   /// The source which request to close the view.
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 

@@ -71,7 +71,7 @@ mixin AsyncCompletion<TModel, TSource> on ModelAdapter<TModel, TSource> {
   /// Future<void> loadDataAsync() async {
   ///   await model.loadAsync();
   ///   _modelToViewModel(model);
-  ///   notifyListeners();
+  ///   refreshView();
   /// }
   /// ```
   Future<void> completeAsync(TModel model);

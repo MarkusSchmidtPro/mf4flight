@@ -14,7 +14,7 @@ mixin DataLoader<TArgs> on ViewModelBase {
           return;}
         _args = args;
         state = ViewModelState.asyncLoadCompleted;
-        notifyListeners();
+        refreshView();
       });
     } else if (state == ViewModelState.asyncLoadCompleted) {
       state = ViewModelState.ready;
@@ -45,7 +45,7 @@ mixin DataLoaderN on ViewModelBase {
           logger.warning("DataLoader.asyncCompletion after dispose($instanceID");
           return;}
         state = ViewModelState.asyncLoadCompleted;
-        notifyListeners();
+        refreshView();
       });
     } else if (state == ViewModelState.asyncLoadCompleted) {
       state = ViewModelState.ready;

@@ -216,7 +216,7 @@ abstract class ViewModelEdit extends ViewModelBase {
     saveAndCloseViewCommand = new RelayCommand((context) async {
       closeViewRequestSource = CloseViewRequestSource.saveAndCloseViewCommand;
       await navigator.maybePop();
-      notifyListeners();
+      refreshView();
     }/*,canExecute: () => dataLoaded && isDirtyViewModel()*/);
   }
 
