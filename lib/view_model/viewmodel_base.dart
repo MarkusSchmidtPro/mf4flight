@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 import '../mf4flight.dart';
+import '../view/textWithCountdown.dart';
 
 /// The base class for view models whose context does not change.
 ///
@@ -48,23 +49,22 @@ abstract class ViewModelBase extends ChangeNotifier {
     state = ViewModelState.ready;
   }
 
-  
-  int _lastRefreshTime=0;
-  bool _refreshingView=false;
-  
-  @protected void refreshView(){
-    assert( !_refreshingView, "Recursive refreshView()");
+  int _lastRefreshTime = 0;
+  bool _refreshingView = false;
+
+  @protected
+  void refreshView() {
+    assert(!_refreshingView, "Recursive refreshView()");
     _refreshingView = true;
     final int now = DateTime.now().millisecondsSinceEpoch;
     final int delta = now - _lastRefreshTime;
     _lastRefreshTime = now;
-    
-    if( delta < 500) logger.warning("View refresh within $delta milliseconds");
+
+    if (delta < 400) logger.warning("View refresh within $delta milliseconds");
     notifyListeners();
     _refreshingView = false;
-  } 
-  
-  
+  }
+
   /// The source which request to close the view.
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 
@@ -82,6 +82,7 @@ abstract class ViewModelBase extends ChangeNotifier {
   //@protected
   void showSnackBar(String message,
       {Future<void> Function()? commitFuncAsync,
+        int commitDelay = 5,
       VoidCallback? rollbackFunc,
       String? rollbackLabel}) {
     SnackBarAction? rollbackAction;
@@ -95,10 +96,16 @@ abstract class ViewModelBase extends ChangeNotifier {
       See: https://api.flutter.dev/flutter/material/SnackBarClosedReason.html
      */
     messenger
-        .showSnackBar(SnackBar(content: Text(message), action: rollbackAction))
+        .showSnackBar(SnackBar(
+          content: TextWithCountdown( text: message, countValue: commitDelay,),
+          action: rollbackAction,
+          duration: Duration(seconds: commitDelay),
+        ))
         .closed
         .then((SnackBarClosedReason reason) async {
-      if (reason != SnackBarClosedReason.action && commitFuncAsync != null) await commitFuncAsync();
+      if (reason != SnackBarClosedReason.action && commitFuncAsync != null) {
+        await commitFuncAsync();
+      }
     });
   }
 
