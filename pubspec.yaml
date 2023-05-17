@@ -4,7 +4,7 @@ version: 1.23.0309
 homepage: https://www.MarkusSchmidt.pro
 
 environment:
-  sdk: '>=2.16.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
   flutter: ">=3.3.0"
 
 dependencies:
@@ -13,12 +13,12 @@ dependencies:
 #  flutter_localizations:
 #    sdk: flutter
   
-  intl: ^0.17.0 
+  intl: ^0.18.0 
   
   logging: ^1.0.2
   provider: ^6.0.0
   get_it: ^7.2.0
-  stacked: ^3.0.0
+  stacked: ^3.2.6
   event_bus: ^2.0.0
   json_annotation: ^4.0.1
   collection: ^1.15.0
