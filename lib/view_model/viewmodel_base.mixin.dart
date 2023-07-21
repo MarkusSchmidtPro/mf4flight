@@ -62,7 +62,7 @@ mixin DataLoaderN on ViewModelBase {
 
 /// Extend a ViewModelBased to support data binding.
 ///
-/// Data binging is used to pass data from a View to a ViewModel:
+/// Data binging is used to pass data from a view to a ViewModel:
 /// pass or bing data to the ViewModel.
 @deprecated
 mixin DataBinder<TData> on ViewModelBase {

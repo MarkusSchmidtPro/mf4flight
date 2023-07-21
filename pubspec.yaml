@@ -1,6 +1,6 @@
 name: mf4flight
 description: Markus' Framework 4 Flutter Light
-version: 1.23.0309
+version: 1.23.0516
 homepage: https://www.MarkusSchmidt.pro
 
 environment:
@@ -26,7 +26,7 @@ dependencies:
   flutter_markdown: ^0.6.12
 
   # SQLite support
-  sqflite: ^2.2.1
+  sqflite: ^2.2.8+3
   sqflite_common_ffi:
   path_provider: ^2.0.8
   

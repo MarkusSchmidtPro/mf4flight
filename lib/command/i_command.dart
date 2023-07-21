@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Represent a Command.
 ///
-/// A Command represents an action that is triggered by a View.
+/// A Command represents an action that is triggered by a view.
 /// A Command is always bound to a visual element.
 /// ```dart
 /// CommonWidgets.iconButton(  icon: new Icon(Icons.delete_outline),

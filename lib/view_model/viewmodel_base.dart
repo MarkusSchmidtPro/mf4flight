@@ -42,7 +42,6 @@ abstract class ViewModelBase extends ChangeNotifier {
   // endregion
 
   @protected
-  @mustCallSuper
   ViewModelBase() : super() {
     instanceID = _instanceID++;
     logger = new Logger('$runtimeType($instanceID)');
@@ -60,7 +59,7 @@ abstract class ViewModelBase extends ChangeNotifier {
     final int delta = now - _lastRefreshTime;
     _lastRefreshTime = now;
 
-    if (delta < 400) logger.warning("View refresh within $delta milliseconds");
+    if (delta < 400) logger.warning("view refresh within $delta milliseconds");
     notifyListeners();
     _refreshingView = false;
   }
@@ -128,7 +127,7 @@ abstract class ViewModelBase extends ChangeNotifier {
     return result;
   }
 
-  /// Close the current view and return to the previous View, returning [result].
+  /// Close the current view and return to the previous view, returning [result].
   void closeView<TResult>([TResult? result]) => navigator.pop(result);
 
   void closeViewWithResult<TResult>(TResult? result) => navigator.pop(result);

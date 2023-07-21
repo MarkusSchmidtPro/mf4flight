@@ -50,7 +50,6 @@ abstract class DataModelBase {
   /// [recordState] = 0
   /// [recordCreatedDateUtc] = utcNow()
   /// [recordLastUpdateUtc] = utcNow()
-  @mustCallSuper
   @protected
   DataModelBase() {
     recordCreatedDateUtc = Util.utcNow();

@@ -10,7 +10,6 @@ import '../mf4flight.dart';
 /// on-methods should be implemented in the inheriting class but not called directly.
 /// You may place them in a "// region ViewModel implementation"
 abstract class ViewModelEdit extends ViewModelBase {
-  @mustCallSuper
   ViewModelEdit() : super() {
     _createCommands();
   }
@@ -87,7 +86,7 @@ abstract class ViewModelEdit extends ViewModelBase {
             canCloseView = true;
           }
         } else {
-          // Data not dirty and we can close the View
+          // Data not dirty and we can close the view
           canCloseView = true;
         }
         break;
