@@ -10,9 +10,7 @@ abstract class ModelAdapter<TModel, TSource> {
     logger = new Logger('$runtimeType');
   }
 
-  TModel load(TModel model, TSource source) {
-    return model;
-  } // Todo
+  TModel load(TModel model, TSource source) => model; 
 
   /// Save the model's data back to its origin.
   ///

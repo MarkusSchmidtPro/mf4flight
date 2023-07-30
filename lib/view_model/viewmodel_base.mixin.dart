@@ -51,9 +51,10 @@ mixin DataLoaderN on ViewModelBase {
       state = ViewModelState.ready;
     } else if (state == ViewModelState.loading) {}
   }
-
+  
+  
   @protected
-  Future<void> initAsync();
+  Future<void> initAsync() ;
 
   @override
   @mustCallSuper
