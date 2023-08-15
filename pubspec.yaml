@@ -14,11 +14,11 @@ dependencies:
 #    sdk: flutter
   
   intl: ^0.18.0 
-  
-  logging: ^1.0.2
-  provider: ^6.0.0
-  get_it: ^7.2.0
+  logging: ^1.2.0
+  provider: ^6.0.5
+  get_it: ^7.6.0
   stacked: ^3.2.6
+  
   event_bus: ^2.0.0
   json_annotation: ^4.0.1
   collection: ^1.15.0
@@ -26,10 +26,9 @@ dependencies:
   flutter_markdown: ^0.6.12
 
   # SQLite support
-  sqflite: ^2.2.8+3
+  sqflite: ^2.3.0
   sqflite_common_ffi:
-  path_provider: ^2.0.8
-  
+  path_provider: ^2.0.11
   
     
 dev_dependencies:
