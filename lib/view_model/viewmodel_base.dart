@@ -59,7 +59,9 @@ abstract class ViewModelBase extends ChangeNotifier {
     final int delta = now - _lastRefreshTime;
     _lastRefreshTime = now;
 
-    if (delta < 400) logger.warning("view refresh within $delta milliseconds");
+    if (delta < 400) 
+      logger.warning("view refresh within $delta milliseconds");
+    
     notifyListeners();
     _refreshingView = false;
   }

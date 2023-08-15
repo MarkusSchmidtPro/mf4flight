@@ -38,6 +38,7 @@ mixin DataLoader<TArgs> on ViewModelBase {
 /// Asynchronous data loader without arguments
 mixin DataLoaderN on ViewModelBase {
   void init() {
+    logger.finer("init(state=$state)");
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
       initAsync().then((_) {

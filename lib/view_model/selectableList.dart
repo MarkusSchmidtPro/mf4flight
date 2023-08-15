@@ -1,7 +1,10 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 /// Provides functionality to manage a lists in a view model.
 class SelectableList<TData> {
+  var logger = Logger('SelectableList');
   /* ViewState and Data lists must be two different lists, 
       so that we can keep existing view states when data changes.
    */
@@ -15,6 +18,7 @@ class SelectableList<TData> {
   /// * Remove existing items which are no longer part of [newItems].
   /// * Add [newItems] which do not yet exist in [items]
   void bindData(Iterable<ViewItem<TData>> newItems) {
+    logger.finer( "Bind Data new-len=${newItems.length}, old-len=${_items.length}");
     for (var item in _items) item.viewState.obsolete = true;
     _bindDataAppend(newItems);
     _items.removeWhere((item) => item.viewState.obsolete);
@@ -73,7 +77,7 @@ class ItemViewState {
 
 /// Represents an item in a list view that has a [ViewState]
 /// and no data - only an [id]].
-class ViewItem<TData> {
+class ViewItem<TData>  {
   /// Create new new instance with a unique [id],
   ViewItem({required this.id, this.data});
 
