@@ -10,17 +10,11 @@ class Util {
       DateTime d = DateTime.now().toUtc();
       return d.toIso8601String().parseToUtc();
     }
-} 
+}
 
 extension StringExtensions on String {
-  // DateTime parseDate() {
-  //   DateTime parsed = DateTime.parse(this);
-  //   return new DateTime(parsed.year, parsed.month, parsed.day);
-  // }
-
   bool isNullOrEmpty(String? s) => s == null || s.isEmpty;
-  
-  
+
   /// String to UTC datetime.
   DateTime parseToUtc() {
     var parsed = DateTime.parse(this);

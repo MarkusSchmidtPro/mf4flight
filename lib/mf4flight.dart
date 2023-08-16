@@ -8,10 +8,13 @@ export 'repository/i_dto_operations.dart';
 export 'repository/i_record_provider.dart';
 export 'repository/list_operations.dart';
 export 'repository/db_operations.dart';
-export 'repository/db_record_base.dart';
 
-export "sqflite/migration_set.dart";
-export "sqflite/sqlite_store2.dart";
+export 'repository/sqflite/db_record_base.dart';
+export "repository/sqflite/migration_set.dart";
+export "repository/sqflite/sqlite_store2.dart";
+export 'repository/sqflite/sync_record.dart';
+export 'repository/sqflite/db_util.dart';
+
 export 'app_events/app_event.dart';
 export 'app_events/app_event_bus.dart';
 export 'app_events/i_app_events.dart';
@@ -20,12 +23,12 @@ export 'command/inactive_command.dart';
 export 'command/relay_command.dart';
 export 'command/relay_p_command.dart';
 
-export 'data_model/db_util.dart';
 
-export 'data_model/sync_record.dart';
+
 export 'model/model_adapter.dart';
 export 'model/i_model_adapter2.dart';
 export 'model/model_base2.dart';
+
 export 'view/bottombar_actions.dart';
 export 'view/dialog2.dart';
 export 'view/help_page.dart';

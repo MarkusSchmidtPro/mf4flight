@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../data_model/tracked_object.dart';
+import 'tracked_object.dart';
 
 /// Represents the base class for model implementations.
 ///

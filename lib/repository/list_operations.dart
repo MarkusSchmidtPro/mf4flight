@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'i_dto_operations.dart';
-import 'db_record_base.dart';
+import 'sqflite/db_record_base.dart';
 
 
 /// List based data model provider for any type of [RecordBase].

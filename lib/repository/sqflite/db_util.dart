@@ -1,4 +1,6 @@
+
 class DBUtil {
+
   static int getVersionFromNow() =>
       DateTime.now().toUtc().millisecondsSinceEpoch;
 
@@ -39,3 +41,4 @@ class DBUtil {
     return "($filter)";
   }
 }
+

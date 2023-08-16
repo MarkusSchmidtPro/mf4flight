@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:mf4flight/mf4flight.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../data_model/tracked_object.dart';
+import '../model/tracked_object.dart';
 
 /// SQLite data model provider implementation.
 class DBOperations<TRecord extends RecordBase> implements IDTOOperations<TRecord> {

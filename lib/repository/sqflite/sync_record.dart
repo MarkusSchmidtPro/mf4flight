@@ -1,5 +1,7 @@
-import 'package:mf4flight/mf4flight.dart';
 import 'package:uuid/uuid.dart';
+
+import 'db_util.dart';
+import 'db_record_base.dart';
 
 
 abstract class SyncRecord extends RecordBase {
