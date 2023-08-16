@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
 /// Provides functionality to manage a lists in a view model.

@@ -1,12 +1,14 @@
-import 'data_model_base.dart';
 
-/// Provides CRUD operations on a data store.
-abstract class IRecordProvider<TRecord extends DataModelBase> {
+
+
+/// Provides CRUD operations on a repository of type: database.
+/*
+abstract class IRecordProvider<TRecord extends RecordBase> implements IDTOOperations<TRecord> {
   String get entityName => throw UnimplementedError();
 
   Future<List<TRecord>> fetchAsync({String? criteria});
 
-  Future<TRecord> getAsync(int id);
+  Future<TRecord> getAsync(int id) => await super.getAsync( id.toString());
 
   /// Save a data model in its store.
   /// 
@@ -22,5 +24,6 @@ abstract class IRecordProvider<TRecord extends DataModelBase> {
   /// The function returns the [record.id] which is not null!
   Future<int> saveAsync(TRecord currentRecord);
 
+  @override
   Future deleteSoftAsync(TRecord currentRecord);
-}
+}*/

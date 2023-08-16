@@ -10,7 +10,7 @@ class RecordState {
 
 /// Represents the base class from which all data models inherit.
 ///
-/// Classes that inherit from [DataModelBase] must be @JsonSerializable()
+/// Classes that inherit from [RecordBase] must be @JsonSerializable()
 /// and override [toJson()]. Otherwise an [UnimplementedError] is thrown.
 ///
 /// ```dart
@@ -19,7 +19,7 @@ class RecordState {
 ///
 /// /// In-Memory and serializable data representation.
 /// @JsonSerializable()
-/// class ContactRecord extends DataModelBase {
+/// class ContactRecord extends RecordBase {
 ///   String? name;
 ///   String? email;
 ///
@@ -30,7 +30,7 @@ class RecordState {
 ///   Map<String, dynamic> toJson() => _$ContactRecordToJson(this);
 /// }
 /// ```
-abstract class DataModelBase {
+abstract class RecordBase {
   /// The DataModel's unique id.
   ///
   /// This id is null until the DataModel is saved.
@@ -51,7 +51,7 @@ abstract class DataModelBase {
   /// [recordCreatedDateUtc] = utcNow()
   /// [recordLastUpdateUtc] = utcNow()
   @protected
-  DataModelBase() {
+  RecordBase() {
     recordCreatedDateUtc = Util.utcNow();
     recordLastUpdateUtc = recordCreatedDateUtc;
   }
@@ -59,6 +59,5 @@ abstract class DataModelBase {
   /// Serialize the current object to JSON (Map).
   ///
   /// JSON serialization must be overridden by inheriting class.
-  @protected
   Map<String, dynamic> toJson();
 }

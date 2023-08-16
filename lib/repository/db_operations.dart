@@ -5,11 +5,11 @@ import 'package:sqflite/sqflite.dart';
 import '../data_model/tracked_object.dart';
 
 /// SQLite data model provider implementation.
-class SQLiteProvider<TRecord extends DataModelBase> implements IRecordProvider<TRecord> {
+class DBOperations<TRecord extends RecordBase> implements IDTOOperations<TRecord> {
   final Database db;
 
   /// Create a new SQLite provider for table=[entityName]
-  SQLiteProvider(this.db, this.entityName, this.fromJsonFactory);
+  DBOperations(this.db, this.entityName, this.fromJsonFactory);
 
   @override
   final String entityName;
@@ -52,7 +52,12 @@ class SQLiteProvider<TRecord extends DataModelBase> implements IRecordProvider<T
   /// If [currentRecord.id] is null a new record is inserted into the DB.
   /// Otherwise, the existing record is updated, when the provided [currentRecord] is different from the record in the DB.
   @override
-  Future<int> saveAsync(TRecord currentRecord, {bool updateRecordVersion = true}) async {
+  Future<String> saveAsync(TRecord currentRecord) async {
+    int recordId = await saveAsyncDB(currentRecord);
+    return recordId.toString();
+  }
+
+  Future<int> saveAsyncDB(TRecord currentRecord, {bool updateRecordVersion = true}) async {
     // Check if the provided record matches the object in the database.
     if (currentRecord.id != null && _equals(currentRecord, await _getAsync(currentRecord.id!)))
       return currentRecord.id!;
@@ -67,7 +72,7 @@ class SQLiteProvider<TRecord extends DataModelBase> implements IRecordProvider<T
       int id = await db.insert(entityName, currentRecord.toJson());
       currentRecord.id = id;
     } else {
-      await db.update(entityName, (currentRecord).toJson(), where: 'id=${currentRecord.id}');
+      await db.update(entityName, currentRecord.toJson(), where: 'id=${currentRecord.id}');
     }
 
     if (currentRecord is TrackedObject) (currentRecord as TrackedObject).acceptChanges();
@@ -78,10 +83,8 @@ class SQLiteProvider<TRecord extends DataModelBase> implements IRecordProvider<T
   bool _equals(TRecord currentRecord, Map<String, dynamic> other) =>
       DeepCollectionEquality.unordered().equals(other, currentRecord.toJson());
 
-  
   //Future _deleteHardAsync(int id) async =>  await db.delete(entityName, where: 'id=$id');
-  
-  
+
   @override
   Future deleteSoftAsync(TRecord currentRecord) async {
     currentRecord.recordState = RecordState.Deleted;
@@ -89,7 +92,10 @@ class SQLiteProvider<TRecord extends DataModelBase> implements IRecordProvider<T
   }
 
   @override
-  Future<TRecord> getAsync(int id) async => fromJsonFactory(await _getAsync(id));
+  Future<TRecord> getAsync(String id) async => await getAsyncDB(int.parse(id));
+  
+  
+  Future<TRecord> getAsyncDB(int id) async => fromJsonFactory(await _getAsync(id));
 
   Future<Map<String, Object?>> _getAsync(int id) async {
     var records = await db.rawQuery("SELECT * FROM $entityName WHERE id=$id");

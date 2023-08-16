@@ -66,6 +66,19 @@ abstract class ViewModelBase extends ChangeNotifier {
     _refreshingView = false;
   }
 
+  
+ /* /// Initializes the current ViewModel instance and 
+  /// binds it to the provided view.
+  /// 
+  /// Returns: the @ChangeNotifier widget.
+  ChangeNotifier bind( StatelessWidget view ) {
+    return ChangeNotifierProvider(
+      create: (_) => (this as DataLoaderN).init(),
+      child: view,
+    );
+  }*/
+  
+  
   /// The source which request to close the view.
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 
@@ -159,7 +172,7 @@ abstract class ViewModelBase extends ChangeNotifier {
           actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true);
 
   late ICommand showHelpCommand = new RelayPCommand((context, helpContext) async {
-    await showViewAsync(HelpPage(new HelpPageArgs(helpContext)));
+    await showViewAsync(HelpPage.show(new HelpPageArgs(helpContext)));
   });
 
   @mustCallSuper

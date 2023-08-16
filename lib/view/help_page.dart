@@ -2,7 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:stacked/stacked.dart';
+import 'package:provider/provider.dart';
 
 import '../command/i_command.dart';
 import '../view_model/help_vm.dart';
@@ -11,14 +11,15 @@ class HelpPageArgs {
   HelpPageArgs(this.helpContext, {this.values});
 
   final String helpContext;
-  final Map<String,String>? values;
+  final Map<String, String>? values;
 }
 
 class HelpIcon extends StatelessWidget {
-  HelpIcon( this._helpContext, this._command);
+  HelpIcon(this._helpContext, this._command);
+
   final String _helpContext;
   final ICommand _command;
-  
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -28,16 +29,20 @@ class HelpIcon extends StatelessWidget {
 }
 
 class HelpPage extends StatelessWidget {
-  final HelpPageArgs _viewArgs;
+  /* Private constructor to disallow ContactView instances.
+     Instead ContactView.show( args) shoudl be used to create
+     a new ContactView with a bound ViewModel.
+   */
+  HelpPage._();
 
-  HelpPage(this._viewArgs) : super(key: new Key(_viewArgs.helpContext));
+  //HelpPage(this._viewArgs) : super(key: new Key(_viewArgs.helpContext));
+
+  static StatelessWidget show(HelpPageArgs args) {
+    return ChangeNotifierProvider(create: (_) => HelpViewModel(args)..init(), child: HelpPage._());
+  }
 
   @override
-  Widget build(BuildContext context) => ViewModelBuilder<HelpViewModel>.reactive(
-        viewModelBuilder: () => new HelpViewModel(_viewArgs),
-        onViewModelReady: (pageVM) => pageVM.init(),
-        builder: (BuildContext context, HelpViewModel pageVM, _) => _buildPage(context, pageVM),
-      );
+  Widget build(BuildContext context) => _buildPage(context, context.read<HelpViewModel>());
 
   Scaffold _buildPage(BuildContext context, HelpViewModel pageVM) => Scaffold(
         appBar: AppBar(title: const Text("Help!")),
