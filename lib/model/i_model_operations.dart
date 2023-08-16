@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-abstract class IModelProvider2<TModel>{
+abstract class IModelOperations<TModel>{
   late final Logger logger;
 
   @protected
-  IModelProvider2() {
+  IModelOperations() {
     logger = new Logger('$runtimeType');
   }
   

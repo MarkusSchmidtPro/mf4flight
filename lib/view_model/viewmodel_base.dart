@@ -33,7 +33,7 @@ abstract class ViewModelBase extends ChangeNotifier {
 
   @protected
   set state(ViewModelState state) {
-    logger.finest("ViewModelState=$state");
+    logger.finest(state);
     _state = state;
   }
 
