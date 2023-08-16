@@ -197,18 +197,14 @@ abstract class ViewModelEdit extends ViewModelBase {
     assert(false, 'saveAsync: $errorMessage');
   }
 
+  String? getFieldError(String fieldKey) => _viewErrors.getFirst(fieldKey)?.errorMessage;
+  
   /// Get the error message for a specified field
   /// or null on case of no error
+  // endregion
 
   // region Commands
 
-  String? getFieldError(String fieldKey) => _viewErrors.getFirst(fieldKey)?.errorMessage;
-
-  // endregion
-  /// Request view close (navigator.maybePop()) with
-  /// [CloseViewRequestSource.saveAndCloseViewCommand].
-  ///
-  /// See [viewCanCloseAsync] if and how the view will be closed.
   late ICommand saveAndCloseViewCommand;
 
   void _createCommands() {
@@ -219,5 +215,9 @@ abstract class ViewModelEdit extends ViewModelBase {
     }/*,canExecute: () => dataLoaded && isDirtyViewModel()*/);
   }
 
-// endregion
+  // endregion
+  /// Request view close (navigator.maybePop()) with
+  /// [CloseViewRequestSource.saveAndCloseViewCommand].
+  ///
+  /// See [viewCanCloseAsync] if and how the view will be closed.
 }
