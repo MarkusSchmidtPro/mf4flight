@@ -1,7 +1,7 @@
 
 
 
-/// Provides CRUD operations on a repository of type: database.
+/// Provides CRUD operations on a models of type: database.
 /*
 abstract class IRecordProvider<TRecord extends RecordBase> implements IDTOOperations<TRecord> {
   String get entityName => throw UnimplementedError();

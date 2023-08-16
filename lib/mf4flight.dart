@@ -8,7 +8,7 @@ export 'repository/i_dto_operations.dart';
 export 'repository/i_record_provider.dart';
 export 'repository/list_operations.dart';
 export 'repository/db_operations.dart';
-
+export 'repository/db_record_base.dart';
 
 export "sqflite/migration_set.dart";
 export "sqflite/sqlite_store2.dart";
@@ -19,7 +19,7 @@ export 'command/i_command.dart';
 export 'command/inactive_command.dart';
 export 'command/relay_command.dart';
 export 'command/relay_p_command.dart';
-export 'repository/db_record_base.dart';
+
 export 'data_model/db_util.dart';
 
 export 'data_model/sync_record.dart';
