@@ -69,7 +69,7 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
   /// You can use this in the view to display a progress bar,
   /// for example, until the ViewModel is ready.
   /// ```
-  /// body: !pageVM.dataLoaded
+  /// body: pageVM.dataLoading
   ///             ? const Center(child: CircularProgressIndicator())
   ///             : _pageBody(context, pageVM),
   /// ```
