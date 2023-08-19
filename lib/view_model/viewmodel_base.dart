@@ -6,18 +6,63 @@ import 'package:logging/logging.dart';
 import '../mf4flight.dart';
 import '../view/textWithCountdown.dart';
 
+
+
 /// The base class for view models whose context does not change.
 ///
 /// The view model's context is set once (usually in the constructor).
 /// While Context's content may change and update the view (notify())
 /// the context itself is fix and never changes.
-abstract class ViewModelBase extends ChangeNotifier {
+abstract class ViewModelBase<TArgs> extends ChangeNotifier {
   late final Logger logger;
   static int _instanceID = 0;
-  int instanceID = 0;
+  final int instanceID = _instanceID++;
+
+  @protected
+  ViewModelBase() : super() {
+    logger = new Logger("$runtimeType[$instanceID]");
+    logger.finer(">CreateInstance() $state");
+  }
+
+  @protected
+  Future<void> initAsync([TArgs? args]) async {}
+
+  /// Use for detail views to init data asynchronously, only one.
+  void init({TArgs? args, ViewModelState readyState = ViewModelState.ready}) {
+    if (state == ViewModelState.ready) {
+      state = ViewModelState.loading;
+      initAsync(args).then((_) {
+        assert(state != ViewModelState.disposed,
+            "DataLoader.asyncCompletion after dispose($instanceID)");
+        state = ViewModelState.ready;
+        notifyListeners();
+      });
+    }
+  }
+
+  /// Use this method to load/update data into an existing ViewModel.
+  void update(TArgs args) {
+    if (state == ViewModelState.ready) {
+      state = ViewModelState.loading;
+      initAsync(args).then((_) {
+        assert(state != ViewModelState.disposed,
+            "DataLoader.asyncCompletion after dispose($instanceID)");
+
+        // Set this state to non-dataLoading so that the circle disappears
+        // and repaint can take place on notifyListeners()
+        state = ViewModelState.refreshAfterAsyncLoad;
+        notifyListeners();
+        // this will refresh the screen and on a list it'll call init() again
+        // this second init() will then go to
+        // the next if: state == ViewModelState.refreshAfterAsyncLoad
+      });
+    } else if (state == ViewModelState.refreshAfterAsyncLoad) {
+      state = ViewModelState.ready;
+    }
+  }
 
   // region ViewModel State
-  late ViewModelState _state;
+  ViewModelState _state = ViewModelState.ready;
 
   /// Get the ViewModel's state.
   ///
@@ -28,57 +73,18 @@ abstract class ViewModelBase extends ChangeNotifier {
   ///             ? const Center(child: CircularProgressIndicator())
   ///             : _pageBody(context, pageVM),
   /// ```
-  @protected
   ViewModelState get state => _state;
 
-  @protected
-  set state(ViewModelState state) {
-    logger.finest(state);
-    _state = state;
+  set state(ViewModelState value) {
+    if (_state == value) return;
+    _state = value;
+    logger.finer("State: $_state");
   }
 
-  bool get dataLoaded => _state != ViewModelState.loading;
+  bool get dataLoading => _state == ViewModelState.loading;
 
   // endregion
 
-  @protected
-  ViewModelBase() : super() {
-    instanceID = _instanceID++;
-    logger = new Logger('$runtimeType($instanceID)');
-    state = ViewModelState.ready;
-  }
-
-  int _lastRefreshTime = 0;
-  bool _refreshingView = false;
-
-  @protected
-  void refreshView() {
-    assert(!_refreshingView, "Recursive refreshView()");
-    _refreshingView = true;
-    final int now = DateTime.now().millisecondsSinceEpoch;
-    final int delta = now - _lastRefreshTime;
-    _lastRefreshTime = now;
-
-    if (delta < 400) 
-      logger.warning("view refresh within $delta milliseconds");
-    
-    notifyListeners();
-    _refreshingView = false;
-  }
-
-  
- /* /// Initializes the current ViewModel instance and 
-  /// binds it to the provided view.
-  /// 
-  /// Returns: the @ChangeNotifier widget.
-  ChangeNotifier bind( StatelessWidget view ) {
-    return ChangeNotifierProvider(
-      create: (_) => (this as DataLoaderN).init(),
-      child: view,
-    );
-  }*/
-  
-  
   /// The source which request to close the view.
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 
@@ -96,7 +102,7 @@ abstract class ViewModelBase extends ChangeNotifier {
   //@protected
   void showSnackBar(String message,
       {Future<void> Function()? commitFuncAsync,
-        int commitDelay = 5,
+      int commitDelay = 5,
       VoidCallback? rollbackFunc,
       String? rollbackLabel}) {
     SnackBarAction? rollbackAction;
@@ -111,7 +117,10 @@ abstract class ViewModelBase extends ChangeNotifier {
      */
     messenger
         .showSnackBar(SnackBar(
-          content: TextWithCountdown( text: message, countValue: commitDelay,),
+          content: TextWithCountdown(
+            text: message,
+            countValue: commitDelay,
+          ),
           action: rollbackAction,
           duration: Duration(seconds: commitDelay),
         ))

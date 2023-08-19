@@ -41,6 +41,10 @@ class ListOperations<TListItem extends RecordBase> implements IDTOOperations<TLi
     assert( null != items.remove( currenTListItem.id));
   }
 
+    Future deleteByIdSoftAsync(String id) async {
+    assert( null != items.remove( id));
+  }
+
   @override
   Future<TListItem> getAsync(String id) async => items[id]!;
 }

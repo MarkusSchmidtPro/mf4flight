@@ -27,12 +27,6 @@ String nz(String? s, [String defaultValue = '']) => s ?? defaultValue;
 String nzDouble(double? value, String Function(double v) toString) =>
     value == null ? "" : toString(value);
 
-// String nzDate(DateTime? value) {
-//   return value == null ? "": value.toIso8601String().substring(0, 10);
-// }
-
-String toDateString(DateTime value) => value.toIso8601String().substring(0, 10);
-
 extension CompareWithNull on String? {
   int compareToN(String? b) {
     if (this == null && b == null) return 0;

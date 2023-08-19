@@ -9,7 +9,8 @@ import '../mf4flight.dart';
 /// Protected method start with "on.." when they are called from this super/base class.
 /// on-methods should be implemented in the inheriting class but not called directly.
 /// You may place them in a "// region ViewModel implementation"
-abstract class ViewModelEdit extends ViewModelBase {
+abstract class ViewModelEdit<TArgs> extends ViewModelBase<TArgs> {
+  @protected
   ViewModelEdit() : super() {
     _createCommands();
   }
@@ -106,7 +107,7 @@ abstract class ViewModelEdit extends ViewModelBase {
   }
 
   /// Checks if the current view is dirty (contains changes).
-  bool isDirtyViewModel() => this.dataLoaded ? onIsDirty() : false;
+  bool isDirtyViewModel() => state == ViewModelState.ready ? onIsDirty() : false;
 
   @protected
   bool onIsDirty() => true;
@@ -211,7 +212,7 @@ abstract class ViewModelEdit extends ViewModelBase {
     saveAndCloseViewCommand = new RelayCommand((context) async {
       closeViewRequestSource = CloseViewRequestSource.saveAndCloseViewCommand;
       await navigator.maybePop();
-      refreshView();
+      notifyListeners();
     }/*,canExecute: () => dataLoaded && isDirtyViewModel()*/);
   }
 

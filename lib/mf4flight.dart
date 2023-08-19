@@ -30,13 +30,14 @@ export 'model/model_base2.dart';
 
 export 'view/bottombar_actions.dart';
 export 'view/dialog2.dart';
-export 'view/help_page.dart';
+export 'view/help_page/help_page.dart';
 export 'view/view_errors.dart';
-export 'view_model/help_vm.dart';
-export 'view_model/selectableList.dart';
+export 'view/help_page/help_page_vm.dart';
 export 'view_model/viewmodel_all.dart';
 export 'view_model/viewmodel_base.dart';
 export 'view_model/viewmodel_base.mixin.dart';
 export 'view_model/viewmodel_edit.dart';
+export 'view_model/boolStateList.dart';
+export 'view_model/dynamic_list_item.dart';
 
 

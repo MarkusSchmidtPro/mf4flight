@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
-import '../command/i_command.dart';
-import '../view_model/help_vm.dart';
+import '../../command/i_command.dart';
+import 'help_page_vm.dart';
 
 class HelpPageArgs {
-  HelpPageArgs(this.helpContext, {this.values});
+  const HelpPageArgs(this.helpContext, {this.values});
 
   final String helpContext;
   final Map<String, String>? values;
 }
 
 class HelpIcon extends StatelessWidget {
-  HelpIcon(this._helpContext, this._command);
+  const HelpIcon(this._helpContext, this._command);
 
   final String _helpContext;
   final ICommand _command;
@@ -30,16 +30,15 @@ class HelpIcon extends StatelessWidget {
 
 class HelpPage extends StatelessWidget {
   /* Private constructor to disallow ContactView instances.
-     Instead ContactView.show( args) shoudl be used to create
+     Instead ContactView.show( args) should be used to create
      a new ContactView with a bound ViewModel.
    */
-  HelpPage._();
+  const HelpPage._();
 
-  //HelpPage(this._viewArgs) : super(key: new Key(_viewArgs.helpContext));
-
-  static StatelessWidget show(HelpPageArgs args) {
-    return ChangeNotifierProvider(create: (_) => HelpViewModel(args)..init(), child: HelpPage._());
-  }
+  static StatelessWidget show(HelpPageArgs args) => ChangeNotifierProvider<HelpViewModel>(
+        create: (_) => HelpViewModel()..init(args: args),
+        child: const HelpPage._(),
+      );
 
   @override
   Widget build(BuildContext context) => _buildPage(context, context.read<HelpViewModel>());
