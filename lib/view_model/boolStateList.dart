@@ -1,9 +1,16 @@
 import 'dart:collection';
 
+class BoolStateItemArgs<TData> {
+  BoolStateItemArgs(this.data, [this.selected = false]);
+
+  final TData data;
+  final bool selected;
+}
+
 class BoolStateList<TKey> {
   final HashSet<TKey> _items = new HashSet();
 
-  get count => _items.length;
+  int get count => _items.length;
 
   bool set(TKey id, bool value) {
     if (value)

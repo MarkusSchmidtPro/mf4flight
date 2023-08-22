@@ -49,7 +49,7 @@ class DBOperations<TRecord extends RecordBase> implements IDTOOperations<TRecord
 
   /// Saves the [currentRecord].
   ///
-  /// If [currentRecord.id] is null a new record is inserted into the DB.
+  /// If [currentRecord.messageId] is null a new record is inserted into the DB.
   /// Otherwise, the existing record is updated, when the provided [currentRecord] is different from the record in the DB.
   @override
   Future<String> saveAsync(TRecord currentRecord) async {

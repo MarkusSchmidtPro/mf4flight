@@ -6,8 +6,6 @@ import 'package:logging/logging.dart';
 import '../mf4flight.dart';
 import '../view/textWithCountdown.dart';
 
-
-
 /// The base class for view models whose context does not change.
 ///
 /// The view model's context is set once (usually in the constructor).
@@ -21,7 +19,7 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
   @protected
   ViewModelBase() : super() {
     logger = new Logger("$runtimeType[$instanceID]");
-    logger.finer(">CreateInstance() $state");
+    logger.finest(">CreateInstance() $state");
   }
 
   @protected
@@ -45,8 +43,11 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
       initAsync(args).then((_) {
-        assert(state != ViewModelState.disposed,
-            "DataLoader.asyncCompletion after dispose($instanceID)");
+        // THIS HAPPENS!!!
+        if (state == ViewModelState.disposed) {
+          logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
+          return;
+        }
 
         // Set this state to non-dataLoading so that the circle disappears
         // and repaint can take place on notifyListeners()
@@ -78,7 +79,7 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
   set state(ViewModelState value) {
     if (_state == value) return;
     _state = value;
-    logger.finer("State: $_state");
+    logger.finest("State: $_state");
   }
 
   bool get dataLoading => _state == ViewModelState.loading;
