@@ -3,6 +3,7 @@ export 'enums.dart';
 export 'event_handler.dart';
 export 'locator.dart';
 export 'extensions.dart';
+export 'httpOverrides.dart';
 
 export 'repository/i_dto_operations.dart';
 export 'repository/i_record_provider.dart';

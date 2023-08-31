@@ -8,6 +8,16 @@ import '../../command/i_command.dart';
 import 'help_page_vm.dart';
 
 class HelpPageArgs {
+  /// Create a new HelpPage instance.
+  /// 
+  /// [helpContext] specifies the md file that is loaded from resources.
+  /// ```dart
+  /// String path = "$_resourcePath/${helpContext}_$_languageCode.md";
+  //    if (!await _resourceExists(path)) path = "$_resourcePath/${helpContext}_de.md";
+  /// ```
+  /// 
+  /// [values] is a String map to support replacement variables in the md file.
+  /// Replacement variables (ref. map key) are enclosed in curly brackets: `Version: **{version}**`.
   const HelpPageArgs(this.helpContext, {this.values});
 
   final String helpContext;
@@ -41,7 +51,7 @@ class HelpPage extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => _buildPage(context, context.read<HelpViewModel>());
+  Widget build(BuildContext context) => _buildPage(context, context.watch<HelpViewModel>());
 
   Scaffold _buildPage(BuildContext context, HelpViewModel pageVM) => Scaffold(
         appBar: AppBar(title: const Text("Help!")),

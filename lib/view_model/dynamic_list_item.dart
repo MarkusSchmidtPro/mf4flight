@@ -9,7 +9,7 @@ class DynamicListItem<TViewModel extends ViewModelBase> extends StatelessWidget 
         required this.viewModelBuilder,
         required this.view,
         super.key,
-      });
+      }) ;
 
   final StatelessWidget view;
   final Create<TViewModel> viewModelBuilder;
@@ -19,7 +19,8 @@ class DynamicListItem<TViewModel extends ViewModelBase> extends StatelessWidget 
   Widget build(BuildContext context) => ChangeNotifierProvider<TViewModel?>(
       create: viewModelBuilder,
       builder: (context, child) {
-        Provider.of<TViewModel>(context).update(argumentBuilder());
+        var args = argumentBuilder();
+        Provider.of<TViewModel>(context).update(args);
         return child!;
       },
       child: view);
