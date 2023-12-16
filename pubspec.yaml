@@ -21,7 +21,7 @@ dependencies:
   event_bus: ^2.0.0
   json_annotation: ^4.8.1
   collection: ^1.15.0
-  uuid: ^3.0.7
+  uuid: ^4.0.0
   flutter_markdown: ^0.6.12
 
   # SQLite support
@@ -31,10 +31,10 @@ dependencies:
   
     
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#  flutter_test:
+#    sdk: flutter
 
-  lints: ^2.0.0
+  lints: ^3.0.0
   # https://www.notion.so/markusschmidtpro/Build-JSON-7437222c4aca4607b54dcafb67c2c375?pvs=4
   # dart run build_runner build --delete-conflicting-outputs 
   build_runner:
