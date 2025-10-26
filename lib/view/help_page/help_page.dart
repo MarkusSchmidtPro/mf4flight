@@ -1,7 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown_widget/widget/markdown.dart';
 import 'package:provider/provider.dart';
 
 import '../../command/i_command.dart';
@@ -59,5 +59,5 @@ class HelpPage extends StatelessWidget {
       );
 
   Widget _buildPageBody(BuildContext bodyContext, HelpViewModel pageVM) =>
-      Markdown(data: pageVM.markDown);
+      MarkdownWidget(data: pageVM.markDown);
 }

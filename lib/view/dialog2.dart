@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown_widget/widget/markdown.dart';
 
 import '../mf4flight.dart';
 
@@ -97,7 +97,7 @@ class Dialog2 {
                 children: [
                   Container(
                       // decoration: BoxDecoration(border: Border.all()), DEBUG make border visible
-                      child: MarkdownBody(data: md)),
+                      child: MarkdownWidget(data: md)),
                   Dialog2.okButton // Markdown(data: md),
                 ])));
 
