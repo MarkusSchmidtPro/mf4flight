@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
@@ -33,15 +32,13 @@ class HelpViewModel extends ViewModelBase<HelpPageArgs> {
   static const String _imgPath = "(resource:$_resourcePath/img/";
   static final String _languageCode = Platform.localeName.split('_')[0];
 
-  static Map<String, dynamic>? _manifestMap;
+  static Set<String>? _manifestAssets;
 
   static Future<bool> _resourceExists(String resourcePath) async {
-    if (_manifestMap == null) {
-      // AssetManifest.json contains all data about all assets that you add in pubspec.yaml
-      final manifestContent = await rootBundle.loadString('AssetManifest.json');
-      _manifestMap = json.decode(manifestContent);
-    }
-    return _manifestMap!.containsKey(resourcePath);
+    _manifestAssets ??=
+        (await AssetManifest.loadFromAssetBundle(rootBundle)).listAssets().toSet();
+
+    return _manifestAssets!.contains(resourcePath);
   }
 
   static Future<String> _getFromResourceAsync(String helpContext) async {
