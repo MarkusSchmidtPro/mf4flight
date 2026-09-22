@@ -1,6 +1,3 @@
-
-
-
 /// Provides CRUD operations on a models of type: database.
 /*
 abstract class IRecordProvider<TRecord extends RecordBase> implements IDTOOperations<TRecord> {

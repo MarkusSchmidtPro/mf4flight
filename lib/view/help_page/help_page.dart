@@ -9,13 +9,13 @@ import 'help_page_vm.dart';
 
 class HelpPageArgs {
   /// Create a new HelpPage instance.
-  /// 
+  ///
   /// [helpContext] specifies the md file that is loaded from resources.
   /// ```dart
   /// String path = "$_resourcePath/${helpContext}_$_languageCode.md";
   //    if (!await _resourceExists(path)) path = "$_resourcePath/${helpContext}_de.md";
   /// ```
-  /// 
+  ///
   /// [values] is a String map to support replacement variables in the md file.
   /// Replacement variables (ref. map key) are enclosed in curly brackets: `Version: **{version}**`.
   const HelpPageArgs(this.helpContext, {this.values});
@@ -33,8 +33,10 @@ class HelpIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.help_outline, color: Theme.of(context).colorScheme.secondary),
-        onPressed: () async => await _command.executeAsync(context, _helpContext));
+        icon: Icon(Icons.help_outline,
+            color: Theme.of(context).colorScheme.secondary),
+        onPressed: () async =>
+            await _command.executeAsync(context, _helpContext));
   }
 }
 
@@ -45,13 +47,15 @@ class HelpPage extends StatelessWidget {
    */
   const HelpPage._();
 
-  static StatelessWidget show(HelpPageArgs args) => ChangeNotifierProvider<HelpViewModel>(
+  static StatelessWidget show(HelpPageArgs args) =>
+      ChangeNotifierProvider<HelpViewModel>(
         create: (_) => HelpViewModel()..init(args: args),
         child: const HelpPage._(),
       );
 
   @override
-  Widget build(BuildContext context) => _buildPage(context, context.watch<HelpViewModel>());
+  Widget build(BuildContext context) =>
+      _buildPage(context, context.watch<HelpViewModel>());
 
   Scaffold _buildPage(BuildContext context, HelpViewModel pageVM) => Scaffold(
         appBar: AppBar(title: const Text("Help!")),

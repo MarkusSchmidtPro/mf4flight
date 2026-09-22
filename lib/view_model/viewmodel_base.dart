@@ -30,9 +30,13 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
       initAsync(args).then((_) {
-        assert(state != ViewModelState.disposed,
-            "DataLoader.asyncCompletion after dispose($instanceID)");
-        state = ViewModelState.ready;
+        if (state == ViewModelState.disposed) {
+          logger
+              .warning("DataLoader.asyncCompletion after dispose($instanceID)");
+          return;
+        }
+
+        state = readyState;
         notifyListeners();
       });
     }
@@ -45,7 +49,8 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
       initAsync(args).then((_) {
         // THIS HAPPENS!!!
         if (state == ViewModelState.disposed) {
-          logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
+          logger
+              .warning("DataLoader.asyncCompletion after dispose($instanceID)");
           return;
         }
 
@@ -87,7 +92,8 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
   // endregion
 
   /// The source which request to close the view.
-  CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
+  CloseViewRequestSource closeViewRequestSource =
+      CloseViewRequestSource.backButton;
 
   final List<StreamSubscription> _appEventSubscriptions = [];
 
@@ -108,7 +114,8 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
       String? rollbackLabel}) {
     SnackBarAction? rollbackAction;
     if (rollbackFunc != null) {
-      rollbackAction = SnackBarAction(label: rollbackLabel ?? "", onPressed: rollbackFunc);
+      rollbackAction =
+          SnackBarAction(label: rollbackLabel ?? "", onPressed: rollbackFunc);
     }
     /*
       The ScaffoldMessengerState.showSnackBar function returns a ScaffoldFeatureController. 
@@ -137,9 +144,11 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
 
   /// Navigator to a view
   /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
-  Future<TResult?> showViewNamedAsync<TResult>(String routeName, {Object? args}) async {
+  Future<TResult?> showViewNamedAsync<TResult>(String routeName,
+      {Object? args}) async {
     logger.finest(">$routeName show");
-    TResult? result = await navigator.pushNamed<TResult?>(routeName, arguments: args);
+    TResult? result =
+        await navigator.pushNamed<TResult?>(routeName, arguments: args);
     logger.finest("<$routeName closed, result=$result");
     return result;
   }
@@ -147,7 +156,8 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
   /// Navigator to a view
   /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
   Future<TResult?> showViewAsync<TResult>(StatelessWidget view) async {
-    TResult? result = await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
+    TResult? result =
+        await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
     logger.finest("$runtimeType closed, result=$result");
     return result;
   }
@@ -176,12 +186,17 @@ abstract class ViewModelBase<TArgs> extends ChangeNotifier {
         }
       }, canExecute: canExecuteAction ?? () => true);
 
-  Future<DialogResultYesNoCancel> showDeleteDialogAsync(BuildContext context) async =>
-      await Dialog2.showQueryDialogAsync(context, "Daten unwiderruflich lÃ¶schen?",
-          "Sollen die ausgewÃ¤hlten Daten unwiderruflich gelÃ¶scht werden?",
-          actions: [Dialog2.yesButton, Dialog2.noButton], cancelButton: true);
+  Future<DialogResultYesNoCancel> showDeleteDialogAsync(
+          BuildContext context) async =>
+      await Dialog2.showQueryDialogAsync(
+          context,
+          "Daten unwiderruflich löschen?",
+          "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
+          actions: [Dialog2.yesButton, Dialog2.noButton],
+          cancelButton: true);
 
-  late ICommand showHelpCommand = new RelayPCommand((context, helpContext) async {
+  late ICommand showHelpCommand =
+      new RelayPCommand((context, helpContext) async {
     await showViewAsync(HelpPage.show(new HelpPageArgs(helpContext)));
   });
 

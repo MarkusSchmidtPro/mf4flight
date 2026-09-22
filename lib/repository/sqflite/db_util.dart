@@ -1,6 +1,4 @@
-
 class DBUtil {
-
   static int getVersionFromNow() =>
       DateTime.now().toUtc().millisecondsSinceEpoch;
 
@@ -18,8 +16,7 @@ class DBUtil {
   ///     OR lower( fieldName[1]) LIKE '%filterTags[j]%'
   ///     OR ...
   /// ) AND ... other filters
-  static String buildInLike(
-      List<String> fieldNames, List<String> filterTags) {
+  static String buildInLike(List<String> fieldNames, List<String> filterTags) {
     assert(fieldNames.length > 0);
     assert(filterTags.length > 0);
 
@@ -33,7 +30,8 @@ class DBUtil {
 
   /// Build an OR-block for all fieldNames
   /// on the current filterTag
-  static String _buildFilterTagLike(String filterTag, List<String> fieldNames, {String logic="OR"}) {
+  static String _buildFilterTagLike(String filterTag, List<String> fieldNames,
+      {String logic = "OR"}) {
     String filter = "lower( ${fieldNames[0]}) LIKE '%$filterTag%'";
     for (int i = 1; i < fieldNames.length; i++) {
       filter += " $logic lower( ${fieldNames[i]}) LIKE '%$filterTag%'";
@@ -41,4 +39,3 @@ class DBUtil {
     return "($filter)";
   }
 }
-

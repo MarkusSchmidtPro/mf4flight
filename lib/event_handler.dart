@@ -1,7 +1,5 @@
-
-
 /// A method than can handler events according to the event-handler pattern.
-/// 
+///
 /// Event-handler pattern:
 /// A class that ca raise events accepts an optional event handlers in its constructor.
 /// ```Dart
@@ -14,9 +12,10 @@
 /// ```dart
 /// onChanged?.call( this, new OnChangedEventArgs(itemData));
 /// ```
-typedef EventHandler<TArgs extends EventArgs> = void Function( Object sender, TArgs e);
-typedef EventHandlerAsync<TArgs extends EventArgs> = Future<void> Function ( Object sender, TArgs e) ;
-
+typedef EventHandler<TArgs extends EventArgs> = void Function(
+    Object sender, TArgs e);
+typedef EventHandlerAsync<TArgs extends EventArgs> = Future<void> Function(
+    Object sender, TArgs e);
 
 /// Event arguments base class.
 class EventArgs {
@@ -24,6 +23,3 @@ class EventArgs {
 
   EventArgs();
 }
-
-
-

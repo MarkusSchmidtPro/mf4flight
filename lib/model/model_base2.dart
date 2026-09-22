@@ -28,7 +28,7 @@ import 'tracked_object.dart';
 /// }
 /// ```
 abstract class ModelBase2 extends TrackedObject {
-  static int modelSeqNo=0;
+  static int modelSeqNo = 0;
   @protected
   ModelBase2();
 
@@ -40,12 +40,10 @@ abstract class ModelBase2 extends TrackedObject {
   dynamic seed;
 
   // region Generic functions: can be called for Models based on SyncRecords
-  
-  bool get syncRequired => (seed==null || (seed.syncRequired));
+
+  bool get syncRequired => (seed == null || (seed.syncRequired));
 
   bool get isSaved => (seed?.id != null);
-  
+
   // endregion
 }
-
-

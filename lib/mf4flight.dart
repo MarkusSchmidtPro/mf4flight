@@ -1,4 +1,3 @@
-
 export 'enums.dart';
 export 'event_handler.dart';
 export 'locator.dart';
@@ -24,8 +23,6 @@ export 'command/inactive_command.dart';
 export 'command/relay_command.dart';
 export 'command/relay_p_command.dart';
 
-
-
 export 'model/i_model_operations.dart';
 export 'model/model_base2.dart';
 
@@ -40,5 +37,3 @@ export 'view_model/viewmodel_edit.dart';
 export 'view_model/boolStateList.dart';
 export 'view_model/dynamic_list_item.dart';
 export 'view_model/selectableViewItem.dart';
-
-

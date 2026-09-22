@@ -11,7 +11,9 @@ class ViewResult {
 enum ViewModelState {
   /// The ViewModel is complete and ready to be used.
   ready,
-  loading, refreshAfterAsyncLoad, disposed
+  loading,
+  refreshAfterAsyncLoad,
+  disposed
 }
 
 /// Define the source which requested the view to 'close'.

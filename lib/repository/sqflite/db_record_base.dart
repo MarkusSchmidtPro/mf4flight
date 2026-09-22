@@ -1,12 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:mf4flight/mf4flight.dart';
 
-
 class RecordState {
   static const Active = 0;
   static const Deleted = 1;
 }
-
 
 /// Represents the base class from which all data models inherit.
 ///

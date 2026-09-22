@@ -1,11 +1,10 @@
-
 /// Represent a database migration step to a [targetVersion].
 /// It can contain up three SQLite script to perform the migration.
-/// 1. [updateSchemaScript] - Rename (save) existing tables, 
+/// 1. [updateSchemaScript] - Rename (save) existing tables,
 /// 1create new tables instead.
-/// 2. [migrateDataScript]  - Migrate existing data from 
+/// 2. [migrateDataScript]  - Migrate existing data from
 /// the existing (old) tables to the new tables
-/// 3. [commitScript] - Commit all updates to the database, 
+/// 3. [commitScript] - Commit all updates to the database,
 /// and drop tables if necessary.
 /// All three actions are executed in a DB transaction.
 class MigrationStep {

@@ -11,12 +11,11 @@ class HelpViewModel extends ViewModelBase<HelpPageArgs> {
   String markDown = "---";
 
   @override
-  Future<void> initAsync([HelpPageArgs? args]) async => markDown = await loadMarkdownAsync2(args!);
-
+  Future<void> initAsync([HelpPageArgs? args]) async =>
+      markDown = await loadMarkdownAsync2(args!);
 
   static Future<String> loadMarkdownAsync(String helpContext) async =>
       loadMarkdownAsync2(new HelpPageArgs(helpContext));
-
 
   static Future<String> loadMarkdownAsync2(HelpPageArgs args) async {
     String md = await _getFromResourceAsync(args.helpContext);
@@ -35,8 +34,9 @@ class HelpViewModel extends ViewModelBase<HelpPageArgs> {
   static Set<String>? _manifestAssets;
 
   static Future<bool> _resourceExists(String resourcePath) async {
-    _manifestAssets ??=
-        (await AssetManifest.loadFromAssetBundle(rootBundle)).listAssets().toSet();
+    _manifestAssets ??= (await AssetManifest.loadFromAssetBundle(rootBundle))
+        .listAssets()
+        .toSet();
 
     return _manifestAssets!.contains(resourcePath);
   }
@@ -44,7 +44,8 @@ class HelpViewModel extends ViewModelBase<HelpPageArgs> {
   static Future<String> _getFromResourceAsync(String helpContext) async {
     try {
       String path = "$_resourcePath/${helpContext}_$_languageCode.md";
-      if (!await _resourceExists(path)) path = "$_resourcePath/${helpContext}_de.md";
+      if (!await _resourceExists(path))
+        path = "$_resourcePath/${helpContext}_de.md";
 
       String md = await rootBundle.loadString(path);
       md = md.replaceAll("(img\\", _imgPath);

@@ -19,13 +19,16 @@ class Dialog2 {
   static void _close(Object result) => navigator.pop(result);
 
   static Widget get yesButton => TextButton(
-      child: Text("yes"/*S.current.btn_yes*/), onPressed: () => _close(DialogResultYesNoCancel.yes));
+      child: Text("yes" /*S.current.btn_yes*/),
+      onPressed: () => _close(DialogResultYesNoCancel.yes));
 
   static Widget get noButton => TextButton(
-      child: Text("no"/*S.current.btn_no*/), onPressed: () => _close(DialogResultYesNoCancel.no));
+      child: Text("no" /*S.current.btn_no*/),
+      onPressed: () => _close(DialogResultYesNoCancel.no));
 
-  static Widget get okButton =>
-      TextButton(child: Text("ok"/*S.current.btn_ok*/), onPressed: () => _close(DialogResultOkCancel.ok));
+  static Widget get okButton => TextButton(
+      child: Text("ok" /*S.current.btn_ok*/),
+      onPressed: () => _close(DialogResultOkCancel.ok));
 
   /// Shows a dialog to ask the uer if an item should be deleted.
 
@@ -35,7 +38,8 @@ class Dialog2 {
     //
     Widget dialogView = new AlertDialog(
         titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
         //
         title: !cancelButton
             ? Text(titleText)
@@ -51,7 +55,8 @@ class Dialog2 {
 
     DialogResultYesNoCancel? result;
     if (context != null)
-      result = await showDialog(context: context, builder: (context) => dialogView);
+      result =
+          await showDialog(context: context, builder: (context) => dialogView);
     else // for dialogs in event handlers etc. which do not have a context
       result = await _showDialogAsync(dialogView);
     // Turn dismissed (=null) into cancel
@@ -86,9 +91,11 @@ class Dialog2 {
     return result ?? DialogResultYesNoCancel.cancel;
   }*/
 
-  static Future<DialogResultOkCancel> showMarkdownAsync(BuildContext context, String md) async {
+  static Future<DialogResultOkCancel> showMarkdownAsync(
+      BuildContext context, String md) async {
     var dialogView = Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
         child: Container(
             padding: EdgeInsets.only(left: 16.0, top: 24.0, right: 16.0),
             child: Column(
@@ -124,8 +131,6 @@ class Dialog2 {
   }
 }
 
-
-
 class Dialog3Action<TResult> {
   Dialog3Action(this.widget, {required this.result, this.actionAsync});
 
@@ -133,4 +138,3 @@ class Dialog3Action<TResult> {
   TResult result;
   Future<void> Function()? actionAsync;
 }
-

@@ -49,7 +49,6 @@ class SQLiteStore {
       databasesPath = await getDatabasesPath();
     }
 
-
     _filePath = join(databasesPath, _filename);
     _log.info('Database filepath: $_filePath');
 
@@ -84,11 +83,10 @@ class SQLiteStore {
             },
             onUpgrade: (db, oldVersion, newVersion) async {
               var migrationManager = new MigrationManager(db, _migrationSets);
-              await migrationManager.upgradeDatabaseAsync(oldVersion, newVersion);
+              await migrationManager.upgradeDatabaseAsync(
+                  oldVersion, newVersion);
             },
-            onConfigure: (Database db) async {
- 
-            }));
+            onConfigure: (Database db) async {}));
 
     var v = await _database.getVersion();
     _log.info('Current Database Version $v');

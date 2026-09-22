@@ -17,8 +17,11 @@ abstract class ViewModelEdit<TArgs> extends ViewModelBase<TArgs> {
 
   Future<ViewCloseBehaviour> askSaveAsync(BuildContext context) async {
     DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
-        context, "Änderungen erkannt!", "Sollen die Änderungen gespeichert werden?",
-        actions: [Dialog2.noButton, Dialog2.yesButton], cancelButton: true);
+        context,
+        "Änderungen erkannt!",
+        "Sollen die Änderungen gespeichert werden?",
+        actions: [Dialog2.noButton, Dialog2.yesButton],
+        cancelButton: true);
 
     switch (dialogResult) {
       case DialogResultYesNoCancel.yes:
@@ -105,7 +108,8 @@ abstract class ViewModelEdit<TArgs> extends ViewModelBase<TArgs> {
   }
 
   /// Checks if the current view is dirty (contains changes).
-  bool isDirtyViewModel() => state == ViewModelState.ready ? onIsDirty() : false;
+  bool isDirtyViewModel() =>
+      state == ViewModelState.ready ? onIsDirty() : false;
 
   @protected
   bool onIsDirty() => true;
@@ -196,8 +200,9 @@ abstract class ViewModelEdit<TArgs> extends ViewModelBase<TArgs> {
     assert(false, 'saveAsync: $errorMessage');
   }
 
-  String? getFieldError(String fieldKey) => _viewErrors.getFirst(fieldKey)?.errorMessage;
-  
+  String? getFieldError(String fieldKey) =>
+      _viewErrors.getFirst(fieldKey)?.errorMessage;
+
   /// Get the error message for a specified field
   /// or null on case of no error
   // endregion
@@ -211,7 +216,7 @@ abstract class ViewModelEdit<TArgs> extends ViewModelBase<TArgs> {
       closeViewRequestSource = CloseViewRequestSource.saveAndCloseViewCommand;
       await navigator.maybePop();
       notifyListeners();
-    }/*,canExecute: () => dataLoaded && isDirtyViewModel()*/);
+    } /*,canExecute: () => dataLoaded && isDirtyViewModel()*/);
   }
 
   // endregion

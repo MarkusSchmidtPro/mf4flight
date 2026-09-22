@@ -1,15 +1,16 @@
 class Util {
-    static bool isNoE(String? s) => s == null || s.isEmpty;
-    //static bool listIsNoE(List? l) => l == null || l.isEmpty;
-    
-    /// Get a list's first element or _null_ if [list] is _null_ or empty.
-    static TListItem? firstOrNull<TListItem>(List<TListItem>? list) => (list != null && list.isNotEmpty) ? list[0] : null;
-    
-    /// UTC now without microseconds
-    static DateTime utcNow() {
-      DateTime d = DateTime.now().toUtc();
-      return d.toIso8601String().parseToUtc();
-    }
+  static bool isNoE(String? s) => s == null || s.isEmpty;
+  //static bool listIsNoE(List? l) => l == null || l.isEmpty;
+
+  /// Get a list's first element or _null_ if [list] is _null_ or empty.
+  static TListItem? firstOrNull<TListItem>(List<TListItem>? list) =>
+      (list != null && list.isNotEmpty) ? list[0] : null;
+
+  /// UTC now without microseconds
+  static DateTime utcNow() {
+    DateTime d = DateTime.now().toUtc();
+    return d.toIso8601String().parseToUtc();
+  }
 }
 
 extension StringExtensions on String {
@@ -20,10 +21,10 @@ extension StringExtensions on String {
     var parsed = DateTime.parse(this);
     return parsed.isUtc
         ? new DateTime.utc(parsed.year, parsed.month, parsed.day, parsed.hour,
-        parsed.minute, parsed.second, parsed.millisecond)
+            parsed.minute, parsed.second, parsed.millisecond)
         : new DateTime(parsed.year, parsed.month, parsed.day, parsed.hour,
-        parsed.minute, parsed.second, parsed.millisecond)
-        .toUtc();
+                parsed.minute, parsed.second, parsed.millisecond)
+            .toUtc();
   }
 }
 

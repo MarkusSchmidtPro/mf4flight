@@ -3,13 +3,14 @@ import 'package:provider/provider.dart';
 
 import 'viewmodel_base.dart';
 
-class DynamicListItem<TViewModel extends ViewModelBase> extends StatelessWidget {
+class DynamicListItem<TViewModel extends ViewModelBase>
+    extends StatelessWidget {
   DynamicListItem(
-      this.argumentBuilder, {
-        required this.viewModelBuilder,
-        required this.view,
-        super.key,
-      }) ;
+    this.argumentBuilder, {
+    required this.viewModelBuilder,
+    required this.view,
+    super.key,
+  });
 
   final StatelessWidget view;
   final Create<TViewModel> viewModelBuilder;

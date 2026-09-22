@@ -14,7 +14,7 @@ abstract class TrackedObject {
   void trackChanges() {
     //  assert(_original == null,
     //  "This data_model is already tracking changes. Call acceptChanges() or discardChanges() before you can re-activate tracking");
-    // It is acceptable that a model already tracks changes. 
+    // It is acceptable that a model already tracks changes.
     _original = toJson();
   }
 
