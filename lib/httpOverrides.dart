@@ -1,10 +1,15 @@
 import 'dart:io';
 
-class MyHttpOverrides extends HttpOverrides {
+class DEV_HttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
+        if (host == '10.0.2.2') {
+          print('⚠️ Certificate verification disabled for $host:$port');
+          return true; // Accept any certificate;
+        }
+        return false; 
+      };
   }
 }
