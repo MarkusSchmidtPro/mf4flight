@@ -5,7 +5,7 @@ class DEV_HttpOverrides extends HttpOverrides {
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        if (host == '10.0.2.2') {
+        if ( !host.endsWith('.pro') ) {
           print('⚠️ Certificate verification disabled for $host:$port');
           return true; // Accept any certificate;
         }
