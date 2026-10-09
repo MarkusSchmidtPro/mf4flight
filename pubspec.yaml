@@ -24,11 +24,6 @@ dependencies:
 #  flutter_markdown: ^0.7.4
   markdown_widget: ^2.3.2+8
   
-  # SQLite support
-  sqflite: ^2.3.0
-  sqflite_common_ffi:
-  path_provider: ^2.0.11
-
   intl: ^0.20.0
   path: ^1.9.0
   

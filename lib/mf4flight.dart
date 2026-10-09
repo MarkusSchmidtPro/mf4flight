@@ -4,17 +4,6 @@ export 'locator.dart';
 export 'extensions.dart';
 export 'httpOverrides.dart';
 
-export 'repository/i_dto_operations.dart';
-export 'repository/i_record_provider.dart';
-export 'repository/list_operations.dart';
-export 'repository/db_operations.dart';
-
-export 'repository/sqflite/db_record_base.dart';
-export "repository/sqflite/migration_set.dart";
-export "repository/sqflite/sqlite_store2.dart";
-export 'repository/sqflite/sync_record.dart';
-export 'repository/sqflite/db_util.dart';
-
 export 'app_events/app_event.dart';
 export 'app_events/app_event_bus.dart';
 export 'app_events/i_app_events.dart';
@@ -36,4 +25,3 @@ export 'view_model/viewmodel_base.dart';
 export 'view_model/viewmodel_edit.dart';
 export 'view_model/boolStateList.dart';
 export 'view_model/dynamic_list_item.dart';
-export 'view_model/selectableViewItem.dart';
