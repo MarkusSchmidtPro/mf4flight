@@ -220,8 +220,4 @@ abstract class ViewModelEdit<TArgs> extends ViewModelBase<TArgs> {
   }
 
   // endregion
-  /// Request view close (navigator.maybePop()) with
-  /// [CloseViewRequestSource.saveAndCloseViewCommand].
-  ///
-  /// See [viewCanCloseAsync] if and how the view will be closed.
 }

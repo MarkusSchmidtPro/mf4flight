@@ -1,6 +1,6 @@
 //mixin ViewModelAll {
-/// zn: Zero to Null - empty string to null.
 
+/// zn: Zero to Null - empty string to null.
 String? zn(String? s) => (s == null || s.isEmpty) ? null : s;
 
 /// Returns *null* when [s] is blank.
