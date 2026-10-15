@@ -30,7 +30,7 @@ enum CloseViewRequestSource {
 }
 
 enum ViewCloseBehaviour {
-  /// If data [ViewModelBase.isDirtyViewModel] it will be discarded and
+  /// If data [ViewModel.isDirtyViewModel] it will be discarded and
   /// the view will be closed.
   discardDataClose,
 
@@ -41,3 +41,6 @@ enum ViewCloseBehaviour {
   /// dialog remains open with an error message.
   saveDataClose
 }
+
+/// Alias for [ViewCloseBehaviour] for clean form exit decision semantics.
+typedef FormExitDecision = ViewCloseBehaviour;

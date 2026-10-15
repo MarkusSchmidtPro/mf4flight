@@ -34,6 +34,7 @@ enum BottomBarActionStyle { normal, highlighted, disabled, missing }
 
 class BottomBarAction extends StatelessWidget {
   final ICommand? _command;
+  final VoidCallback? _onPressed;
   final IconData _icon;
   final String _label;
   late final BottomBarActionStyle _style;
@@ -41,14 +42,22 @@ class BottomBarAction extends StatelessWidget {
   BottomBarAction(
       {required String label,
       required IconData icon,
-      required ICommand? command,
+      ICommand? command,
+      VoidCallback? onPressed,
+      bool isVisible = true,
+      bool isEnabled = true,
       BottomBarActionStyle style = BottomBarActionStyle.normal})
       : _label = label,
         _icon = icon,
-        _command = command {
-    if (_command == null)
+        _command = command,
+        _onPressed = onPressed {
+    if (!isVisible || (_command == null && _onPressed == null)) {
       style = BottomBarActionStyle.missing;
-    else if (!_command.canExecute()) style = BottomBarActionStyle.disabled;
+    } else if (_command != null) {
+      if (!_command.canExecute()) style = BottomBarActionStyle.disabled;
+    } else if (!isEnabled) {
+      style = BottomBarActionStyle.disabled;
+    }
     _style = style;
   }
 
@@ -98,8 +107,11 @@ class BottomBarAction extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: content)),
             onTap: () async {
-              if (_command != null && _command.canExecute())
+              if (_onPressed != null && _style != BottomBarActionStyle.disabled) {
+                _onPressed();
+              } else if (_command != null && _command.canExecute()) {
                 await _command.executeAsync(context);
+              }
             });
   }
 }

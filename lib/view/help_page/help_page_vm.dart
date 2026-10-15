@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'help_page.dart';
 import '../../view_model/viewmodel_base.dart';
 
-class HelpViewModel extends ViewModelBase<HelpPageArgs> {
+class HelpViewModel extends ViewModel<HelpPageArgs> {
   HelpViewModel() : super();
 
   String markDown = "---";

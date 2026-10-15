@@ -39,7 +39,7 @@ import 'i_app_events.dart';
 ///     whenever an event is published (including sender type) or when a new component subscribes.
 ///     
 ///   • Architectural Invariant Enforcement: Enforces debug-time assertions 
-///     (e.g., verifying ViewModelBase state) to prevent premature event 
+///     (e.g., verifying ViewModel state) to prevent premature event 
 ///     emissions during improper lifecycle phases.
 /// 
 /// #### 5. Abstraction & Adapter Layer
@@ -56,7 +56,7 @@ class AppEventBus implements IAppEvents {
     _logger.finest("${event.sender.runtimeType} fired $TEvent");
     assert(
         !((event.sender
-            is ViewModelBase) /* && (event.sender as ViewModelBase).state != ViewModelState.ready*/),
+            is ViewModel) /* && (event.sender as ViewModel).state != ViewModelState.ready*/),
         "Do not raise application events while view model is not ready, yet.");
     _eventBus.fire(event);
   }
