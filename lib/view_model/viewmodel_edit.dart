@@ -23,9 +23,9 @@ abstract class ViewModelEdit<TArgs, TModel> extends ViewModel<TArgs> {
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 
   @protected
-  ViewModelEdit({required this.repository}) : super();
+  ViewModelEdit({required this.repos}) : super();
 
-  final IRepository<TModel> repository;
+  final IRepository<TModel> repos;
 
   set model(TModel v) {
     _saved = v;
@@ -188,7 +188,7 @@ abstract class ViewModelEdit<TArgs, TModel> extends ViewModel<TArgs> {
     bool saved = false;
     try {
       _draft = viewToModel();
-      await repository.save(_draft);
+      await repos.save(_draft);
       _saved = _draft; // Baseline aktualisieren -> isDirty wird false
       saved = true;
     } finally {

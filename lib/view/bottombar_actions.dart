@@ -15,8 +15,7 @@ class BottomBarActions extends StatelessWidget {
 
     List<Widget> actionWidgets = [];
     if (extendedActions != null) actionWidgets.add(extendedActions!);
-    actionWidgets.addAll(actions
-        .where((element) => element.style != BottomBarActionStyle.missing));
+    actionWidgets.addAll(actions.where((element) => element.style != BottomBarActionStyle.missing));
 
     return BottomAppBar(
         child: Container(
@@ -34,6 +33,7 @@ enum BottomBarActionStyle { normal, highlighted, disabled, missing }
 
 class BottomBarAction extends StatelessWidget {
   final ICommand? _command;
+  final Future<void>? _action;
   final VoidCallback? _onPressed;
   final IconData _icon;
   final String _label;
@@ -43,6 +43,7 @@ class BottomBarAction extends StatelessWidget {
       {required String label,
       required IconData icon,
       ICommand? command,
+      Future<void>? action,
       VoidCallback? onPressed,
       bool isVisible = true,
       bool isEnabled = true,
@@ -50,8 +51,9 @@ class BottomBarAction extends StatelessWidget {
       : _label = label,
         _icon = icon,
         _command = command,
+        _action= action,
         _onPressed = onPressed {
-    if (!isVisible || (_command == null && _onPressed == null)) {
+    if (!isVisible || (_command==null && _action==null) || (_command == null && _onPressed == null)) {
       style = BottomBarActionStyle.missing;
     } else if (_command != null) {
       if (!_command.canExecute()) style = BottomBarActionStyle.disabled;
@@ -65,8 +67,7 @@ class BottomBarAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).buttonTheme.colorScheme ??
-        Theme.of(context).colorScheme;
+    var colorScheme = Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
     double dimFactor = 1;
 
     final List<Widget> content;
@@ -109,9 +110,7 @@ class BottomBarAction extends StatelessWidget {
             onTap: () async {
               if (_onPressed != null && _style != BottomBarActionStyle.disabled) {
                 _onPressed();
-              } else if (_command != null && _command.canExecute()) {
-                await _command.executeAsync(context);
-              }
+              } else (_action != null) ? await _action : null;
             });
   }
 }

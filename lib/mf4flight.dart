@@ -12,7 +12,7 @@ export 'command/inactive_command.dart';
 export 'command/relay_command.dart';
 export 'command/relay_p_command.dart';
 
-export 'model/model_base2.dart';
+export 'repository/i_repository.dart';
 
 export 'view/bottombar_actions.dart';
 export 'view/dialog2.dart';
