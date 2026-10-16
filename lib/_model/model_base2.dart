@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mf4flight/model/tracked_object.dart';
+import 'package:mf4flight/_model/tracked_object.dart';
 
 
 /// Represents the base class for model implementations.
@@ -27,23 +27,23 @@ import 'package:mf4flight/model/tracked_object.dart';
 ///   }
 /// }
 /// ```
-abstract class ModelBase2 extends TrackedObject {
-  static int modelSeqNo = 0;
-  @protected
-  ModelBase2();
-
-  /// The unique model id.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  final String modelId = (++modelSeqNo).toString();
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  dynamic seed;
-
-  // region Generic functions: can be called for Models based on SyncRecords
-
-  bool get syncRequired => (seed == null || (seed.syncRequired));
-
-  bool get isSaved => (seed?.id != null);
-
-  // endregion
-}
+// abstract class ModelBase2 extends TrackedObject {
+//   static int modelSeqNo = 0;
+//   @protected
+//   ModelBase2();
+//
+//   /// The unique model id.
+//   @JsonKey(includeFromJson: false, includeToJson: false)
+//   final String modelId = (++modelSeqNo).toString();
+//
+//   @JsonKey(includeFromJson: false, includeToJson: false)
+//   dynamic seed;
+//
+//   // region Generic functions: can be called for Models based on SyncRecords
+//
+//   bool get syncRequired => (seed == null || (seed.syncRequired));
+//
+//   bool get isSaved => (seed?.id != null);
+//
+//   // endregion
+// }

@@ -6,7 +6,7 @@ import 'help_page.dart';
 import '../../view_model/viewmodel_base.dart';
 
 class HelpViewModel extends ViewModel<HelpPageArgs> {
-  HelpViewModel() : super();
+  HelpViewModel(super.args) : super();
 
   String markDown = "---";
 

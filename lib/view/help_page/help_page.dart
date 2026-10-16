@@ -49,7 +49,7 @@ class HelpPage extends StatelessWidget {
 
   static StatelessWidget show(HelpPageArgs args) =>
       ChangeNotifierProvider<HelpViewModel>(
-        create: (_) => HelpViewModel()..init(args: args),
+        create: (_) => HelpViewModel( args),
         child: const HelpPage._(),
       );
 

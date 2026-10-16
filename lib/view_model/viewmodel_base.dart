@@ -9,47 +9,55 @@ import '../locator.dart';
 import 'viewmodel_feedback_mixin.dart';
 import 'viewmodel_navigation_mixin.dart';
 
+class ViewArgs{
+  ViewArgs._();
+  factory ViewArgs.empty() => ViewArgs._();
+}
+  
+
 /// The base class for view models managing observable state, lifecycle, and event subscriptions.
 ///
 /// Integrates [ViewModelNavigationMixin] and [ViewModelFeedbackMixin] to provide
 /// navigation and UI feedback capabilities while maintaining cohesive state management.
-abstract class ViewModel<TArgs> extends ChangeNotifier
+abstract class ViewModel<TViewArgs> extends ChangeNotifier
     with ViewModelNavigationMixin, ViewModelFeedbackMixin {
   @override
   late final Logger logger;
   static int _instanceID = 0;
   final int instanceID = _instanceID++;
+  TViewArgs args;
 
   @protected
-  ViewModel() : super() {
+  ViewModel(this.args) : super() {
     logger = Logger("$runtimeType[$instanceID]");
     logger.finest(">CreateInstance() $state");
+    _init();
   }
 
   @protected
-  Future<void> initAsync([TArgs? args]) async {}
+  Future<void> initAsync() async {}
 
-  /// Use for detail views to init data asynchronously, only one.
-  void init({TArgs? args, ViewModelState readyState = ViewModelState.ready}) {
-    if (state != ViewModelState.ready) return;
-
+  /// Initial fetch/setup logic.
+  /// [state] is [ViewModelState.loading] until [initAsync] will have completed.
+  /// Then [state] becomes [ViewModelState.ready].
+  void _init() {
     state = ViewModelState.loading;
-    initAsync(args).then((_) {
+    initAsync().then((_) {
       if (state == ViewModelState.disposed) {
         logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
         return;
       }
 
-      state = readyState;
+      state = ViewModelState.ready;
       notifyListeners();
     });
   }
 
   /// Use this method to load/update data into an existing ViewModel.
-  void update(TArgs args) {
+  void update() {
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
-      initAsync(args).then((_) {
+      initAsync().then((_) {
         if (state == ViewModelState.disposed) {
           logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
           return;
@@ -82,7 +90,7 @@ abstract class ViewModel<TArgs> extends ChangeNotifier
   set state(ViewModelState value) {
     if (_state == value) return;
     _state = value;
-    logger.finest("State: $_state");
+    // notify!?
   }
 
   bool get dataLoading => _state == ViewModelState.loading;
