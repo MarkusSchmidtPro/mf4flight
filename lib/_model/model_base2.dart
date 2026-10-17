@@ -1,7 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:mf4flight/_model/tracked_object.dart';
-
 
 /// Represents the base class for model implementations.
 ///
