@@ -3,8 +3,8 @@ class Util {
   //static bool listIsNoE(List? l) => l == null || l.isEmpty;
 
   /// Get a list's first element or _null_ if [list] is _null_ or empty.
-  static TListItem? firstOrNull<TListItem>(List<TListItem>? list) =>
-      (list != null && list.isNotEmpty) ? list[0] : null;
+  static TListItem? firstOrNull<TListItem>(Iterable<TListItem>? list) =>
+      (list != null && list.isNotEmpty) ? list.first : null;
 
   /// UTC now without microseconds
   static DateTime utcNow() {
