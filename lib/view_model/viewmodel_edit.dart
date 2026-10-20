@@ -32,16 +32,16 @@ abstract class ViewModelEdit<TViewArgs, TModel> extends ViewModel<TViewArgs> {
     _draft = v;
   }
 
-  late final TModel _draft; // aktueller Entwurf, wird vom UI bearbeitet
-  late TModel _saved; // zuletzt persistierter Stand (Baseline)
+  TModel? _draft; // aktueller Entwurf, wird vom UI bearbeitet
+  late TModel _saved;       // zuletzt persistierter Stand (Baseline)
   bool _isSaving = false;
 
-  TModel get draft => _draft;
+  TModel get draft => _draft!;
 
   bool get isSaving => _isSaving;
 
   /// Abgeleitet, kein eigenes Flag.
-  bool get isDirty => _draft != _saved;
+  bool get isDirty => _draft !=null && _draft != _saved;
 
   /// Darf gespeichert werden?
   bool get canSave => isDirty && !_isSaving;
@@ -188,8 +188,8 @@ abstract class ViewModelEdit<TViewArgs, TModel> extends ViewModel<TViewArgs> {
     bool saved = false;
     try {
       _draft = viewToModel();
-      await repos.save(_draft);
-      _saved = _draft; // Baseline aktualisieren -> isDirty wird false
+      await repos.save(draft);
+      _saved = draft; // Baseline aktualisieren -> isDirty wird false
       saved = true;
     } finally {
       _isSaving = false;

@@ -33,7 +33,6 @@ enum BottomBarActionStyle { normal, highlighted, disabled, missing }
 
 class BottomBarAction extends StatelessWidget {
   final ICommand? _command;
-  final Future<void>? _action;
   final VoidCallback? _onPressed;
   final IconData _icon;
   final String _label;
@@ -51,12 +50,11 @@ class BottomBarAction extends StatelessWidget {
       : _label = label,
         _icon = icon,
         _command = command,
-        _action= action,
         _onPressed = onPressed {
-    if (!isVisible || (_command==null && _action==null) || (_command == null && _onPressed == null)) {
+    if (!isVisible ||  (_command == null && _onPressed == null)) {
       style = BottomBarActionStyle.missing;
     } else if (_command != null) {
-      if (!_command.canExecute()) style = BottomBarActionStyle.disabled;
+      if (!_command.canExecute() ) style = BottomBarActionStyle.disabled;
     } else if (!isEnabled) {
       style = BottomBarActionStyle.disabled;
     }
@@ -110,7 +108,7 @@ class BottomBarAction extends StatelessWidget {
             onTap: () async {
               if (_onPressed != null && _style != BottomBarActionStyle.disabled) {
                 _onPressed();
-              } else (_action != null) ? await _action : null;
+              }
             });
   }
 }
