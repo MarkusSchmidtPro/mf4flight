@@ -11,8 +11,8 @@ class HelpViewModel extends ViewModel<HelpPageArgs> {
   String markDown = "---";
 
   @override
-  Future<void> initAsync([HelpPageArgs? args]) async =>
-      markDown = await loadMarkdownAsync2(args!);
+  Future<void> initAsync() async =>
+      markDown = await loadMarkdownAsync2(args);
 
   static Future<String> loadMarkdownAsync(String helpContext) async =>
       loadMarkdownAsync2(new HelpPageArgs(helpContext));
