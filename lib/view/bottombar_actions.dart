@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../command/i_command.dart';
 
 class BottomBarActions extends StatelessWidget {
   BottomBarActions({required this.actions, this.extendedActions});
@@ -32,7 +31,6 @@ class BottomBarActions extends StatelessWidget {
 enum BottomBarActionStyle { normal, highlighted, disabled, missing }
 
 class BottomBarAction extends StatelessWidget {
-  final ICommand? _command;
   final VoidCallback? _onPressed;
   final IconData _icon;
   final String _label;
@@ -41,7 +39,6 @@ class BottomBarAction extends StatelessWidget {
   BottomBarAction(
       {required String label,
       required IconData icon,
-      ICommand? command,
       Future<void>? action,
       VoidCallback? onPressed,
       bool isVisible = true,
@@ -49,12 +46,9 @@ class BottomBarAction extends StatelessWidget {
       BottomBarActionStyle style = BottomBarActionStyle.normal})
       : _label = label,
         _icon = icon,
-        _command = command,
         _onPressed = onPressed {
-    if (!isVisible ||  (_command == null && _onPressed == null)) {
+    if (!isVisible ||   _onPressed == null) {
       style = BottomBarActionStyle.missing;
-    } else if (_command != null) {
-      if (!_command.canExecute() ) style = BottomBarActionStyle.disabled;
     } else if (!isEnabled) {
       style = BottomBarActionStyle.disabled;
     }

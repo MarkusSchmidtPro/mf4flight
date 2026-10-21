@@ -23,43 +23,157 @@ abstract class ViewModelEdit<TViewArgs, TModel> extends ViewModel<TViewArgs> {
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 
   @protected
-  ViewModelEdit(TViewArgs args, {required this.repos}) : super( args);
+  ViewModelEdit(TViewArgs args, {required this.repos}) : super(args);
 
   final IRepository<TModel> repos;
+  bool get isSaving => _isSaving;     // ToDo: View State fromrDataLoading und Saving to Busy
 
-  set model(TModel v) {
-    _saved = v;
-    _draft = v;
-  }
-
-  TModel? _draft; // aktueller Entwurf, wird vom UI bearbeitet
-  late TModel _saved;       // zuletzt persistierter Stand (Baseline)
+  late TModel _savedModel;                  // zuletzt persistierter Stand (Baseline)
+  set model(TModel v) => _savedModel = v;
+  TModel get model => _savedModel;
+  
   bool _isSaving = false;
 
-  TModel get draft => _draft!;
+  
 
-  bool get isSaving => _isSaving;
+  /// Dynamic projection of the current form state into the domain model.
+  //TModel getDraft() => viewToModel();
+  
+  /// Compares the current view projection against the last persisted baseline.
+  bool isDirty() {
+    try {
+      return viewToModel() != _savedModel;
+    } catch (_) {
+      return true; // Form contains unparseable/divergent input
+    }
+  }
 
-  /// Abgeleitet, kein eigenes Flag.
-  bool get isDirty => _draft !=null && _draft != _saved;
-
-  /// Darf gespeichert werden?
-  bool get canSave => isDirty && !_isSaving;
+  bool get canSave => isDirty() && !_isSaving && validateControls();
 
   /// Clears any validation or view error state and discards pending form error markers.
   void discardChanges() {
-    _draft = _saved;
+    modelToView();
     _viewErrors.clear();
     notifyListeners();
   }
+ 
+  /// Validate the view controls to ensure the view's data can be saved.
+  ///
+  /// Use the [errors] collection to collect all validation errors.
+  /// ````dart
+  /// void onValidateControls(ViewErrors errors) {
+  ///    if (salutation.length < 4 || Helper.nameInvalidChars.hasMatch(salutation))
+  ///      errors.addError('salutation', 'Bitte geben sie ein...');
+  /// }
+  /// ```
+  /// In the example, the error is filed under the key 'salutation'.
+  /// You can access these errors in a [InputDecoration.errorText] property
+  /// using the [getFieldError] method.
+  /// ```dart
+  /// child: TextField(
+  ///   controller: viewModel.salutationController,
+  ///   decoration: InputDecoration(
+  ///     labelText: 'Anrede',
+  ///     errorText: viewModel.getFieldError('salutation'),
+  ///   ),
+  /// )
+  /// ```
+  @protected
+  void onValidateControls(ViewErrors errors) {}
+
+  /// Optional override for domain/business invariant checks on the materialized model.
+  @protected
+  bool onValidateModel(TModel model) => true;
+  
+  @protected
+  TModel viewToModel();
+
+  /// Pupolate the view from the model.
+  @protected
+  void modelToView();
+
+  /// Validate all controls [onValidateControls]
+  /// and save the view's data [onSaveAsync] if dirty.
+  /// Returns `true` if validation passed and data was saved (or clean),
+  /// `false` if validation failed.
+  Future<bool> saveAsync() async {
+    // Phase 1: Validate UI controls before taking them over
+    if (!validateControls()) {
+      notifyListeners(); // Refresh UI to display errorText markers
+      return false;
+    }
+
+    if (!canSave) return false;
+
+    _isSaving = true;
+    notifyListeners();
+
+    try {
+      // Phase 2: Materialize domain model from validated controls
+      final entityToSave = viewToModel();
+
+      // Optional Phase 2b: Domain-level validation hook
+      if (!onValidateModel(entityToSave!)) return false;
+
+      // Phase 3: Persist and synchronize baseline
+      await repos.save(entityToSave);
+      _savedModel = entityToSave; // Baseline updated -> isDirty becomes false
+      _viewErrors.clear();
+      return true;
+    } catch (e, stackTrace) {
+      logger.severe('Failed to save entity', e, stackTrace);
+      setViewError('Speichern fehlgeschlagen: $e');
+      return false;
+    } finally {
+      _isSaving = false;
+      notifyListeners();
+    }
+  }
+
+  // region Error messages
+
+  /// Get a list with the view model's errors.
+  final ViewErrors _viewErrors = new ViewErrors();
+
+  bool validateControls() {
+    _viewErrors.clear();
+    onValidateControls(_viewErrors);
+    return _viewErrors.isEmpty;
+  }
+
+  /// Get the view's error or null.
+  ///
+  /// The viewError contains the exception message when
+  /// saving the ViewModel (@onSaveAsync).
+  String? getViewError() => _viewErrors.getFirst('view')?.errorMessage;
+
+  void setViewError(String errorMessage) {
+    logger.severe(errorMessage);
+    _viewErrors.addError('view', errorMessage);
+    assert(false, 'saveAsync: $errorMessage');
+  }
+
+  String? getFieldError(String fieldKey) => _viewErrors.getFirst(fieldKey)?.errorMessage;
+
+  // endregion
+
+  Future<void> saveAndCloseView() async {
+    closeViewRequestSource = CloseViewRequestSource.saveAndCloseViewCommand;
+    await navigator.maybePop();
+    notifyListeners();
+  }
+
+
+
+  // region User interaction 
 
   /// Displays a save confirmation dialog.
   /// Can be overridden or invoked by views or [viewCanCloseAsync].
   Future<ViewCloseBehaviour> askSaveAsync(
-    BuildContext context, {
-    String title = "Änderungen erkannt!",
-    String message = "Sollen die Änderungen gespeichert werden?",
-  }) async {
+      BuildContext context, {
+        String title = "Änderungen erkannt!",
+        String message = "Sollen die Änderungen gespeichert werden?",
+      }) async {
     DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
         context, title, message,
         actions: [Dialog2.noButton, Dialog2.yesButton], cancelButton: true);
@@ -79,11 +193,11 @@ abstract class ViewModelEdit<TViewArgs, TModel> extends ViewModel<TViewArgs> {
   /// Intercepts back navigation or commands to prevent accidental data loss.
   /// Decoupled from hardcoded dialogs via optional [decisionIfDirtyAsync] callback.
   Future<bool> viewCanCloseAsync(
-    BuildContext? context, {
-    Future<ViewCloseBehaviour> Function()? decisionIfDirtyAsync,
-    String? title,
-    String? message,
-  }) async {
+      BuildContext? context, {
+        Future<ViewCloseBehaviour> Function()? decisionIfDirtyAsync,
+        String? title,
+        String? message,
+      }) async {
     bool canCloseView;
     switch (closeViewRequestSource) {
       case CloseViewRequestSource.cancelAndCloseViewCommand:
@@ -92,7 +206,7 @@ abstract class ViewModelEdit<TViewArgs, TModel> extends ViewModel<TViewArgs> {
         break;
 
       case CloseViewRequestSource.backButton:
-        if (isDirty) {
+        if (isDirty()) {
           // Back Button and data has changed!
           if (validateControls()) {
             // Controls are ok to be saved
@@ -148,86 +262,5 @@ abstract class ViewModelEdit<TViewArgs, TModel> extends ViewModel<TViewArgs> {
     return canCloseView;
   }
 
-  /// Validate the view controls to ensure the view's data can be saved.
-  ///
-  /// Use the [errors] collection to collect all validation errors.
-  /// ````dart
-  /// void onValidateControls(ViewErrors errors) {
-  ///    if (salutation.length < 4 || Helper.nameInvalidChars.hasMatch(salutation))
-  ///      errors.addError('salutation', 'Bitte geben sie ein...');
-  /// }
-  /// ```
-  /// In the example, the error is filed under the key 'salutation'.
-  /// You can access these errors in a [InputDecoration.errorText] property
-  /// using the [getFieldError] method.
-  /// ```dart
-  /// child: TextField(
-  ///   controller: viewModel.salutationController,
-  ///   decoration: InputDecoration(
-  ///     labelText: 'Anrede',
-  ///     errorText: viewModel.getFieldError('salutation'),
-  ///   ),
-  /// )
-  /// ```
-  @protected
-  void onValidateControls(ViewErrors errors) {}
-
-  @protected
-  TModel viewToModel();
-
-  /// Validate all controls [onValidateControls]
-  /// and save the view's data [onSaveAsync] if dirty.
-  /// Returns `true` if validation passed and data was saved (or clean),
-  /// `false` if validation failed.
-  Future<bool> saveAsync() async {
-    // letzte Absicherung, unabhängig von der UI
-    if (!validateControls() || !canSave) return false;
-
-    _isSaving = true;
-    notifyListeners();
-    bool saved = false;
-    try {
-      _draft = viewToModel();
-      await repos.save(draft);
-      _saved = draft; // Baseline aktualisieren -> isDirty wird false
-      saved = true;
-    } finally {
-      _isSaving = false;
-      notifyListeners();
-    }
-    return saved;
-  }
-
-  // region Error messages
-
-  /// Get a list with the view model's errors.
-  final ViewErrors _viewErrors = new ViewErrors();
-
-  bool validateControls() {
-    _viewErrors.clear();
-    onValidateControls(_viewErrors);
-    return _viewErrors.isEmpty;
-  }
-
-  /// Get the view's error or null.
-  ///
-  /// The viewError contains the exception message when
-  /// saving the ViewModel (@onSaveAsync).
-  String? getViewError() => _viewErrors.getFirst('view')?.errorMessage;
-
-  void setViewError(String errorMessage) {
-    logger.severe(errorMessage);
-    _viewErrors.addError('view', errorMessage);
-    assert(false, 'saveAsync: $errorMessage');
-  }
-
-  String? getFieldError(String fieldKey) => _viewErrors.getFirst(fieldKey)?.errorMessage;
-
-  // endregion
-
-  Future<void> saveAndCloseView() async {
-    closeViewRequestSource = CloseViewRequestSource.saveAndCloseViewCommand;
-    await navigator.maybePop();
-    notifyListeners();
-  }
+// endregion 
 }

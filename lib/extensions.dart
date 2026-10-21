@@ -1,7 +1,4 @@
 class Util {
-  static bool isNoE(String? s) => s == null || s.isEmpty;
-  //static bool listIsNoE(List? l) => l == null || l.isEmpty;
-
   /// Get a list's first element or _null_ if [list] is _null_ or empty.
   static TListItem? firstOrNull<TListItem>(Iterable<TListItem>? list) =>
       (list != null && list.isNotEmpty) ? list.first : null;
