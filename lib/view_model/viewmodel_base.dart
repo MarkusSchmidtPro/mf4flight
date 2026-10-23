@@ -9,9 +9,6 @@ import '../locator.dart';
 import 'viewmodel_feedback_mixin.dart';
 import 'viewmodel_navigation_mixin.dart';
 
-
-  
-
 /// The base class for view models managing observable state, lifecycle, and event subscriptions.
 ///
 /// Integrates [ViewModelNavigationMixin] and [ViewModelFeedbackMixin] to provide
@@ -102,6 +99,27 @@ abstract class ViewModel extends ChangeNotifier
   void registerAppEventHandler<T extends AppEvent>(void Function(T event) handler) {
     _appEventSubscriptions.add(appEvents.subscribe<T>(this, handler));
     logger.finest("Subscription count=${_appEventSubscriptions.length}");
+  }
+
+  void closeView<TResult>({TResult? result}) {
+    /* Guards against using a BuildContext after the widget that owns 
+        it may have been removed from the screen.
+        await pageVM.deleteFavorite.action() pauses the function while the deletion runs, 
+        which can take a moment, especially over a network. During that pause, 
+        the user could navigate away, the screen could be disposed, or the widget 
+        tree could otherwise change. If that happens, 
+        context no longer refers to a live widget in the tree.
+     */
+    if (!navigator.mounted) return;
+    /* Closes the current route, the topmost screen in the navigation stack, 
+        and returns the user to the screen beneath it.
+        
+        You can also pass a value back to the previous screen, like Navigator.of(context).pop(true), 
+        and the caller can receive it as the result of its push call. 
+        That’s useful for signaling that something changed.
+     */
+    navigator.pop(result);
+    // required notifyListeners() on the parent view!
   }
 
   @mustCallSuper

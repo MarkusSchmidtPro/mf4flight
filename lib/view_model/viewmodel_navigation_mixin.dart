@@ -24,9 +24,7 @@ mixin ViewModelNavigationMixin {
     return result;
   }
 
-  /// Close the current view and return to the previous view, returning [result].
-  void closeView<TResult>([TResult? result]) => navigator.pop(result);
 
-  /// Close the current view returning a specific [result].
-  void closeViewWithResult<TResult>(TResult? result) => navigator.pop(result);
+  // Must be implemented by the class that uses this mixin -> ViewModel
+  void closeView<TResult>({TResult? result}) ;
 }

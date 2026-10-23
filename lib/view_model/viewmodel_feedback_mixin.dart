@@ -71,10 +71,10 @@ mixin ViewModelFeedbackMixin on ViewModelNavigationMixin {
             break;
           case DialogResultYesNoCancel.yes:
             await deleteActionAsync();
-            closeViewWithResult(ViewResult.Delete);
+            closeView(result: ViewResult.Delete);
             break;
           case DialogResultYesNoCancel.no:
-            closeViewWithResult(ViewResult.None);
+            closeView(result: ViewResult.None);
             break;
         }
       }, canExecute: canExecuteAction ?? () => true);
