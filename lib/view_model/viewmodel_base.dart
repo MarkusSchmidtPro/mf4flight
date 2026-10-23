@@ -9,26 +9,22 @@ import '../locator.dart';
 import 'viewmodel_feedback_mixin.dart';
 import 'viewmodel_navigation_mixin.dart';
 
-class ViewArgs{
-  ViewArgs._();
-  factory ViewArgs.empty() => ViewArgs._();
-}
+
   
 
 /// The base class for view models managing observable state, lifecycle, and event subscriptions.
 ///
 /// Integrates [ViewModelNavigationMixin] and [ViewModelFeedbackMixin] to provide
 /// navigation and UI feedback capabilities while maintaining cohesive state management.
-abstract class ViewModel<TViewArgs> extends ChangeNotifier
+abstract class ViewModel extends ChangeNotifier
     with ViewModelNavigationMixin, ViewModelFeedbackMixin {
   @override
   late final Logger logger;
   static int _instanceID = 0;
   final int instanceID = _instanceID++;
-  TViewArgs args;
 
   @protected
-  ViewModel(this.args) : super() {
+  ViewModel() : super() {
     logger = Logger("$runtimeType[$instanceID]");
     logger.finest(">CreateInstance() $state");
     _init();

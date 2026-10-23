@@ -18,12 +18,12 @@ import 'viewmodel_base.dart';
 /// Solves high-impact form problems: centralizes dirty checking, unifies
 /// validation rules, prevents accidental data loss during navigation,
 /// and standardizes save, discard, and close lifecycles across the application.
-abstract class ViewModelEdit<TViewArgs, TModel> extends ViewModel<TViewArgs> {
+abstract class ViewModelEdit< TModel> extends ViewModel {
   /// The source which requests to close the view.
   CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
 
   @protected
-  ViewModelEdit(TViewArgs args, {required this.repos}) : super(args);
+  ViewModelEdit( {required this.repos}) : super();
 
   final IRepository<TModel> repos;
   bool get isSaving => _isSaving;     // ToDo: View State fromrDataLoading und Saving to Busy
