@@ -9,16 +9,17 @@ class BottomBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ColorScheme _colors =
-    //     Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
+    final ColorScheme _colors =
+         Theme.of(context).buttonTheme.colorScheme ?? Theme.of(context).colorScheme;
 
     List<Widget> actionWidgets = [];
     if (extendedActions != null) actionWidgets.add(extendedActions!);
     actionWidgets.addAll(actions.where((element) => element.style != BottomBarActionStyle.missing));
 
     return BottomAppBar(
+         
         child: Container(
-      //color: _colors.surface,
+      color: _colors.surface,
       //padding: EdgeInsets.only(top: 4, bottom: 4),  // 8 caused overflow on Pixel 5
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
