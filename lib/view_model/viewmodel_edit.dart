@@ -48,7 +48,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
     }
   }
 
-  bool get canSave => isDirty() && !_isSaving && validateControls();
 
   /// Clears any validation or view error state and discards pending form error markers.
   void discardChanges() {
@@ -97,13 +96,13 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   /// Returns `true` if validation passed and data was saved (or clean),
   /// `false` if validation failed.
   Future<bool> saveAsync() async {
+    if (!isDirty()) return true;
+    
     // Phase 1: Validate UI controls before taking them over
     if (!validateControls()) {
       notifyListeners(); // Refresh UI to display errorText markers
       return false;
     }
-
-    if (!canSave) return false;
 
     _isSaving = true;
     notifyListeners();
