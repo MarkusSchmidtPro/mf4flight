@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import 'viewmodel_base.dart';
+import 'viewmodel.dart';
 
 class DynamicListItem<TViewModel extends ViewModel> extends StatelessWidget {
   DynamicListItem({required this.viewModelBuilder, required this.view});

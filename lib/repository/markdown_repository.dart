@@ -1,41 +1,25 @@
-import 'dart:core';
 import 'dart:io';
+import 'package:flutter/services.dart' ;
 
-import 'package:flutter/services.dart';
-import 'help_page.dart';
-import '../../view_model/viewmodel_base.dart';
-
-class HelpViewModel extends ViewModel {
-  HelpViewModel(this.args);
-
-  String markDown = "---";
-  final HelpPageArgs args;
-
-  @override
-  Future<void> initAsync() async => markDown = await loadMarkdownAsync2(args);
-
-  static Future<String> loadMarkdownAsync(String helpContext) async =>
-      loadMarkdownAsync2(new HelpPageArgs(helpContext));
-
-  static Future<String> loadMarkdownAsync2(HelpPageArgs args) async {
-    String md = await _getFromResourceAsync(args.helpContext);
-    if (args.values != null && args.values!.isNotEmpty) {
-      for (MapEntry<String, String> item in args.values!.entries) {
-        md = md.replaceAll("{${item.key}}", item.value);
-      }
-    }
-    return md;
-  }
-
+class MarkdownRepository {
   static const String _resourcePath = "assets/help";
   static const String _imgPath = "(resource:$_resourcePath/img/";
   static final String _languageCode = Platform.localeName.split('_')[0];
 
   static Set<String>? _manifestAssets;
 
+  Future<String> fromResource(String resourceKey, {Map<String, String>? values}) async {
+    String markDown = await _getFromResourceAsync(resourceKey);
+    if (values != null && values.isNotEmpty) {
+      for (MapEntry<String, String> item in values.entries) {
+        markDown = markDown.replaceAll("{${item.key}}", item.value);
+      }
+    }
+    return markDown;
+  }
+
   static Future<bool> _resourceExists(String resourcePath) async {
     _manifestAssets ??= (await AssetManifest.loadFromAssetBundle(rootBundle)).listAssets().toSet();
-
     return _manifestAssets!.contains(resourcePath);
   }
 

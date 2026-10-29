@@ -15,10 +15,13 @@ import 'viewmodel_navigation_mixin.dart';
 /// navigation and UI feedback capabilities while maintaining cohesive state management.
 abstract class ViewModel extends ChangeNotifier
     with ViewModelNavigationMixin, ViewModelFeedbackMixin {
-  @override
-  late final Logger logger;
+
   static int _instanceID = 0;
   final int instanceID = _instanceID++;
+
+  @protected
+  late final Logger logger;
+
 
   @protected
   ViewModel() : super() {

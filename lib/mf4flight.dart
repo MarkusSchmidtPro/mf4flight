@@ -15,13 +15,16 @@ export 'command/relay_p_command.dart';
 export 'repository/i_repository.dart';
 
 export 'view/dialog2.dart';
-export 'view/help_page/help_page.dart';
+export 'view/help_page.dart';
+export 'view/help_page_vm.dart';
+export 'view/bottom_action_bar.dart';
+
 export 'view/view_errors.dart';
-export 'view/help_page/help_page_vm.dart';
 export 'view_model/viewmodel_all.dart';
-export 'view_model/viewmodel_base.dart';
+export 'view_model/viewmodel.dart';
 export 'view_model/viewmodel_edit.dart';
 export 'view_model/viewmodel_navigation_mixin.dart';
 export 'view_model/viewmodel_feedback_mixin.dart';
 export 'view_model/boolStateList.dart';
 export 'view_model/dynamic_list_item.dart';
+export 'view_model/view_command.dart';

@@ -7,7 +7,7 @@ import '../enums.dart';
 import '../locator.dart';
 import '../view/dialog2.dart';
 import '../view/view_errors.dart';
-import 'viewmodel_base.dart';
+import 'viewmodel.dart';
 
 /// A [ViewModel] implementation that supports editable data and form workflows.
 ///
@@ -27,7 +27,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   final IRepository<TModel> repos;
 
-  bool get isSaving => _isSaving; // ToDo: View State fromrDataLoading und Saving to Busy
+  bool get isSaving => _isSaving;
 
   late TModel _savedModel; // zuletzt persistierter Stand (Baseline)
   set model(TModel v) => _savedModel = v;
@@ -47,7 +47,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
       return true; // Form contains unparseable/divergent input
     }
   }
-
 
   /// Clears any validation or view error state and discards pending form error markers.
   void discardChanges() {
@@ -84,12 +83,10 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   @protected
   bool onValidateModel(TModel model) => true;
 
-  @protected
-  TModel viewToModel();
-
   /// Pupolate the view from the model.
-  @protected
-  void modelToView();
+  void modelToView() {}
+
+  TModel viewToModel();
 
   /// Validate all controls [onValidateControls]
   /// and save the view's data [onSaveAsync] if dirty.
@@ -97,7 +94,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   /// `false` if validation failed.
   Future<bool> saveAsync() async {
     if (!isDirty()) return true;
-    
+
     // Phase 1: Validate UI controls before taking them over
     if (!validateControls()) {
       notifyListeners(); // Refresh UI to display errorText markers
@@ -172,8 +169,12 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
     String message = "Sollen die Änderungen gespeichert werden?",
   }) async {
     DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
-        context, title, message,
-        actions: [Dialog2.noButton, Dialog2.yesButton], cancelButton: true);
+      context,
+      title,
+      message,
+      actions: [Dialog2.noButton, Dialog2.yesButton],
+      cancelButton: true,
+    );
 
     switch (dialogResult) {
       case DialogResultYesNoCancel.yes:
@@ -211,7 +212,8 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
             ViewCloseBehaviour decision;
             if (decisionIfDirtyAsync != null) {
               decision = await decisionIfDirtyAsync();
-            } else /*if (context != null)*/ {
+            } else
+            /*if (context != null)*/ {
               decision = await askSaveAsync(
                 context,
                 title: title ?? "Änderungen erkannt!",
@@ -259,5 +261,5 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
     return canCloseView;
   }
 
-// endregion
+  // endregion
 }

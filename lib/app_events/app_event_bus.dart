@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:logging/logging.dart';
 
-import '../view_model/viewmodel_base.dart';
+import '../view_model/viewmodel.dart';
 import 'app_event.dart';
 import 'i_app_events.dart';
 

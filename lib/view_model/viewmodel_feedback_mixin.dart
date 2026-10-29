@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../command/i_command.dart';
 import '../command/relay_command.dart';
-import '../command/relay_p_command.dart';
 import '../enums.dart';
 import '../locator.dart';
 import '../view/dialog2.dart';
-import '../view/help_page/help_page.dart';
 import '../view/textWithCountdown.dart';
 import 'viewmodel_navigation_mixin.dart';
 
@@ -79,8 +77,4 @@ mixin ViewModelFeedbackMixin on ViewModelNavigationMixin {
         }
       }, canExecute: canExecuteAction ?? () => true);
 
-  /// Command to navigate to the context help page.
-  late ICommand showHelpCommand = RelayPCommand((context, helpContext) async {
-    await showViewAsync(HelpPage.show(HelpPageArgs(helpContext)));
-  });
 }
