@@ -36,8 +36,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   bool _isSaving = false;
 
-  /// Dynamic projection of the current form state into the domain model.
-  //TModel getDraft() => viewToModel();
 
   /// Compares the current view projection against the last persisted baseline.
   bool isDirty() {
