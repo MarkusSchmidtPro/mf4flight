@@ -17,7 +17,9 @@ export 'repository/i_repository.dart';
 export 'view/dialog2.dart';
 export 'view/help_page.dart';
 export 'view/help_page_vm.dart';
-export 'view/bottom_action_bar.dart';
+
+export 'widgets/bottom_action_bar.dart';
+export 'widgets/command_buttons.dart';
 
 export 'view/view_errors.dart';
 export 'view_model/viewmodel_all.dart';
@@ -27,4 +29,4 @@ export 'view_model/viewmodel_navigation_mixin.dart';
 export 'view_model/viewmodel_feedback_mixin.dart';
 export 'view_model/boolStateList.dart';
 export 'view_model/dynamic_list_item.dart';
-export 'view_model/view_command.dart';
+export 'widgets/command.dart';

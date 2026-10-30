@@ -57,7 +57,7 @@ mixin ViewModelFeedbackMixin on ViewModelNavigationMixin {
       );
 
   /// Creates a command that prompts for deletion confirmation and closes the view on result.
-  ICommand deleteCloseViewCommand({
+  ICommand deleteCloseCommand({
     required Future<void> Function() deleteActionAsync,
     bool Function()? canExecuteAction,
     String title = "Daten unwiderruflich löschen?",

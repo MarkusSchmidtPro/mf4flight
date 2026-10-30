@@ -4,19 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:markdown_widget/widget/markdown.dart';
 import 'package:provider/provider.dart';
 
-import '../locator.dart';
-import '../view_model/view_command.dart';
-import 'bottom_action_bar.dart';
+import '/locator.dart';
+import '../widgets/command.dart';
+import '../widgets/command_buttons.dart';
 import 'help_page_vm.dart';
 
-// class HelpCommand extends ButtonCommand {
-// }
-
-class HelpIcon extends CommandIcon {
+class HelpIcon extends CommandButton {
   
   HelpIcon(String _helpContext, ) : super( 
     icon: Icons.help_outline,
-    command: ViewCommand( action: () async => await showViewAsync(HelpPage.show(_helpContext))),
+    command: Command( action: () async => await showViewAsync(HelpPage.show(_helpContext))),
   );
 
   static Future<void> showViewAsync<TResult>(StatelessWidget view) async => 

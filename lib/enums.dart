@@ -23,8 +23,8 @@ enum ViewModelState {
 enum CloseViewRequestSource {
   notDefined,
   backButton,
-  saveAndCloseViewCommand,
-  cancelAndCloseViewCommand,
+  saveAndCloseCommand,
+  cancelAndCloseCommand,
   // Nav Push requests to leave the view.
   pushView
 }

@@ -1,12 +1,17 @@
+import 'dart:async' show FutureOr;
+
 import 'package:flutter/material.dart';
 
-/// A [ViewCommand] represents a ViewModel that performs actions
+/// A [Command] represents a ViewModel that performs actions
 /// on elements that can be enabled or disabled [enabled].
 ///
+/// Encapsulates an invokable action bound to UI capability without 
+/// implying it is itself a visual widget.
+/// 
 /// IMPORTANT: Changing [enabled] or [isVisible] does not refresh the view,
 /// and you need to call [notifyListeners].
 ///
-/// The [ViewCommand] should do teh action on the view model and the domain models.
+/// The [Command] should do teh action on the view model and the domain models.
 /// If the parent view needs to be updated, the command calls [notifyListeners],
 /// which is then executed, when the [onPressed] action (from below) returns.
 /// The command should *not* perform and view related (context) action - that is why
@@ -24,19 +29,24 @@ import 'package:flutter/material.dart';
 ///       Navigator.of(context).pop();
 ///     }
 /// ```
-class ViewCommand {
-  const ViewCommand({required this.action, this.enabled = true, this.visible = true});
+typedef CommandAction = FutureOr<void> Function();
 
-  /// Define a command which is not supported to execute.
-  ///
-  /// Use this in base view models and override
-  /// in inheriting view models to provide specific implementation.
+class Command {
+  const Command({
+    required this.action,
+    this.enabled = true,
+    this.visible = true,
+  });
+
   /// A command that is not supported to execute.
-  const ViewCommand.notSupported() : action = _notSupported, enabled = false, visible = false;
+  const Command.notSupported()
+      : action = _notSupported,
+        enabled = false,
+        visible = false;
 
   final bool enabled;
   final bool visible;
-  final Future<void> Function() action;
+  final CommandAction action;
 
   static Future<void> _notSupported() async => throw Exception('Command not supported');
 }

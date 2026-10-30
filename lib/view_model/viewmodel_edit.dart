@@ -152,7 +152,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   // endregion
 
   Future<void> saveAndCloseView() async {
-    closeViewRequestSource = CloseViewRequestSource.saveAndCloseViewCommand;
+    closeViewRequestSource = CloseViewRequestSource.saveAndCloseCommand;
     await navigator.maybePop();
     notifyListeners();
   }
@@ -196,7 +196,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   }) async {
     bool canCloseView;
     switch (closeViewRequestSource) {
-      case CloseViewRequestSource.cancelAndCloseViewCommand:
+      case CloseViewRequestSource.cancelAndCloseCommand:
         discardChanges();
         canCloseView = true;
         break;
@@ -244,7 +244,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
         break;
 
       case CloseViewRequestSource.pushView:
-      case CloseViewRequestSource.saveAndCloseViewCommand:
+      case CloseViewRequestSource.saveAndCloseCommand:
         canCloseView = await saveAsync();
         break;
       default:
