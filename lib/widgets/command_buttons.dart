@@ -39,7 +39,7 @@ class CommandButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
+    return Padding( padding: EdgeInsets.all(16), child:TextButton(
       onPressed: _command.enabled ? _command.action : null,
       style: TextButton.styleFrom(
         foregroundColor: _highlighted ? Theme.of(context).colorScheme.primary : null,
@@ -49,7 +49,7 @@ class CommandButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [Icon(_icon), if (_label != null) Text(_label)],
       ),
-    );
+    ));
   }
 }
 
@@ -85,7 +85,7 @@ class CommandIconButton extends StatelessWidget {
 
     return Opacity(
       opacity: _command.enabled ? 1.0 : 0.38,
-      child: IconButton(
+      child:  IconButton(
         icon: Icon(_icon, color: _color, size: _size),
         tooltip: _tooltip,
         onPressed: _command.enabled ? _command.action : null,

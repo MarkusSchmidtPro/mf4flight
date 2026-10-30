@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 /// A [Command] represents a ViewModel that performs actions
 /// on elements that can be enabled or disabled [enabled].
 ///
-/// Encapsulates an invokable action bound to UI capability without 
+/// Encapsulates an invokable action bound to UI capability without
 /// implying it is itself a visual widget.
-/// 
+///
 /// IMPORTANT: Changing [enabled] or [isVisible] does not refresh the view,
 /// and you need to call [notifyListeners].
 ///
@@ -32,17 +32,10 @@ import 'package:flutter/material.dart';
 typedef CommandAction = FutureOr<void> Function();
 
 class Command {
-  const Command({
-    required this.action,
-    this.enabled = true,
-    this.visible = true,
-  });
+  const Command({required this.action, this.enabled = true, this.visible = true});
 
   /// A command that is not supported to execute.
-  const Command.notSupported()
-      : action = _notSupported,
-        enabled = false,
-        visible = false;
+  factory Command.notSupported() => Command(action: _notSupported, enabled: false, visible: false);
 
   final bool enabled;
   final bool visible;

@@ -16,6 +16,15 @@ class BottomActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final visibleActions = actions.where((c) => c.visible).toList();
     if (visibleActions.isEmpty) return const SizedBox.shrink();
-    return Row(mainAxisAlignment: mainAxisAlignment, children: visibleActions);
+    return 
+        Container(
+          color: Colors.white,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: mainAxisAlignment,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: visibleActions,
+          ),
+    );
   }
 }
