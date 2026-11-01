@@ -1,3 +1,5 @@
+import 'dart:async' show FutureOr;
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -18,7 +20,7 @@ mixin ViewModelNavigationMixin {
 
   /// Navigate to a widget view directly.
   /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
-  Future<TResult?> showViewAsync<TResult>(StatelessWidget view) async {
+  FutureOr<TResult?> showView<TResult>(StatelessWidget view) async {
     final TResult? result = await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
     logger.finest("$runtimeType closed, result=$result");
     return result;
