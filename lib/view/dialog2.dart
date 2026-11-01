@@ -33,9 +33,10 @@ class Dialog2 {
   /// Shows a dialog to ask the uer if an item should be deleted.
 
   static Future<DialogResultYesNoCancel> showQueryDialogAsync(
-      BuildContext? context, String titleText, String message,
+      String titleText, String message,
       {List<Widget>? actions, bool cancelButton = false}) async {
     //
+    
     Widget dialogView = new AlertDialog(
         titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
         shape: RoundedRectangleBorder(
@@ -54,6 +55,8 @@ class Dialog2 {
         actions: actions ?? [yesButton, noButton]);
 
     DialogResultYesNoCancel? result;
+    // Retrieve current context safely from the global navigatorKey if dialogs are needed
+    final context = navigatorKey.currentContext;
     if (context != null)
       result =
           await showDialog(context: context, builder: (context) => dialogView);

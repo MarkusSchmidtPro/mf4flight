@@ -167,7 +167,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
     String message = "Sollen die Änderungen gespeichert werden?",
   }) async {
     DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
-      context,
       title,
       message,
       actions: [Dialog2.noButton, Dialog2.yesButton],

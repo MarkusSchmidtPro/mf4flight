@@ -44,12 +44,11 @@ mixin ViewModelFeedbackMixin on ViewModelNavigationMixin {
 
   /// Prompts a confirmation dialog before deleting data.
   Future<DialogResultYesNoCancel> showDeleteDialogAsync(
-    BuildContext context, {
+    {
     String title = "Daten unwiderruflich löschen?",
     String message = "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
   }) async =>
       await Dialog2.showQueryDialogAsync(
-        context,
         title,
         message,
         actions: [Dialog2.yesButton, Dialog2.noButton],
@@ -64,7 +63,7 @@ mixin ViewModelFeedbackMixin on ViewModelNavigationMixin {
     String message = "Sollen die ausgewählten Daten unwiderruflich gelöscht werden?",
   }) =>
       RelayCommand((context) async {
-        switch (await showDeleteDialogAsync(context, title: title, message: message)) {
+        switch (await showDeleteDialogAsync( title: title, message: message)) {
           case DialogResultYesNoCancel.cancel:
             break;
           case DialogResultYesNoCancel.yes:
