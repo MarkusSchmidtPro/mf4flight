@@ -13,6 +13,7 @@ class HelpIcon extends CommandButton {
   
   HelpIcon(String _helpContext, ) : super( 
     icon: Icons.help_outline,
+    highlighted: true,
     command: Command( action: () async => await showViewAsync(HelpPage.show(_helpContext))),
   );
 

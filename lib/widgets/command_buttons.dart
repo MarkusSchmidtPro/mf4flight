@@ -39,7 +39,8 @@ class CommandButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding( padding: EdgeInsets.all(16), child:TextButton(
+    // 16 : Overflow on HelpIcon!
+    return Padding( padding: EdgeInsets.all(4), child:TextButton(
       onPressed: _command.enabled ? _command.action : null,
       style: TextButton.styleFrom(
         foregroundColor: _highlighted ? Theme.of(context).colorScheme.primary : null,
@@ -120,10 +121,10 @@ class CommandNavButton extends StatelessWidget {
       opacity: _command.enabled ? 1.0 : 0.38,
       child: FilledButton.tonalIcon(
         onPressed: _command.enabled ? _command.action : null,
-        icon: Icon(_icon, size: 18),
+        icon: Icon(_icon, size: 16),
         label: Text(_label),
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(44), // fill the width it's given
+          minimumSize: const Size.fromHeight(32), // fill the width it's given
           shape: const StadiumBorder(),
         ),
       ),
