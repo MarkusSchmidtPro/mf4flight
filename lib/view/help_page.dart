@@ -9,16 +9,21 @@ import '../widgets/command.dart';
 import '../widgets/command_buttons.dart';
 import 'help_page_vm.dart';
 
-class HelpIcon extends CommandButton {
-  
-  HelpIcon(String _helpContext, ) : super( 
-    icon: Icons.help_outline,
-    highlighted: true,
-    command: Command( action: () async => await showViewAsync(HelpPage.show(_helpContext))),
-  );
+class HelpIcon extends StatelessWidget {
+  const HelpIcon({required this._helpContext, super.key});
 
-  static Future<void> showViewAsync<TResult>(StatelessWidget view) async => 
-      await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
+  final String _helpContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return CommandIconButton(
+      command: Command(
+        action: () async =>
+        await navigator.push(MaterialPageRoute(builder: (_) => HelpPage.show(_helpContext))),
+      ),size: 24,
+      icon: Icons.help,
+    );
+  }
 }
 
 class HelpPage extends StatelessWidget {
