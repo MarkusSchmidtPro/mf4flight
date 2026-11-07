@@ -7,10 +7,6 @@ export 'httpOverrides.dart';
 export 'app_events/app_event.dart';
 export 'app_events/app_event_bus.dart';
 export 'app_events/i_app_events.dart';
-export 'command/i_command.dart';
-export 'command/inactive_command.dart';
-export 'command/relay_command.dart';
-export 'command/relay_p_command.dart';
 
 export 'repository/i_repository.dart';
 

@@ -2,57 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../view_model/command.dart';
 
-/*
-	FilledButton.tonalIcon	TextButton
-  Background	      Filled (secondaryContainer)	    None (transparent)
-  Text/icon color	  onSecondaryContainer	          primary
-  Emphasis	        Medium: clearly looks like a button
-                                                    Low: looks like a link until pressed
-  Press feedback	  Ripple over the fill	          Ripple/highlight on empty background
-  Typical use	      Nav tiles, secondary actions	  Toolbars, dialogs, inline actions
- */
+// see 'buttons.md'
 
-/// IconButton behavior.
-/*class CommandIconButton extends StatelessWidget {
-  const CommandIconButton({
-    required this._command,
-    required this._icon,
-    this._color,
-    this._size,
-    this._tooltip,
-    super.key,
-  });
-
-  CommandIconButton.action({
-    required CommandAction action,
-    required this._icon,
-    this._color,
-    this._size,
-    this._tooltip,
-    super.key,
-  }) : _command = Command(action: action);
-
-  final Command _command;
-  final IconData _icon;
-  final Color? _color;
-  final double? _size;
-  final String? _tooltip;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_command.isVisible) return const SizedBox.shrink();
-
-    return Opacity(
-      opacity: _command.enabled ? 1.0 : 0.38,
-      child:  IconButton(
-        icon: Icon(_icon, color: _color, size: _size),
-        tooltip: _tooltip,
-        onPressed: _command.enabled ? _command.action : null,
-      ),
-    );
-  }
-}
-*/
 
 /// The visual representation of a [Command].
 ///
@@ -82,10 +33,10 @@ class CommandButton extends StatelessWidget {
     : _command = command,
       _child = FilledButton.tonalIcon(
         onPressed: command.state == VisualState.enabled ? command.action : null,
-        icon: Icon(icon), // size: 16
+        icon: Icon(icon, size: 24),
         label: Text(label ),
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(32), // fill the width it's given
+          minimumSize: const Size.fromHeight(48), // fill the width it's given
           shape: const StadiumBorder(),
         ),
       );

@@ -3,28 +3,18 @@ import 'package:flutter/material.dart';
 import 'command_buttons.dart';
 
 class BottomActionBar extends StatelessWidget {
-  const BottomActionBar({
-    super.key,
-    required this.actions,
-    this.mainAxisAlignment = MainAxisAlignment.spaceAround,
-  });
+  const BottomActionBar({required this.actions, super.key});
 
   final List<CommandButton> actions;
-  final MainAxisAlignment mainAxisAlignment;
 
   @override
-  Widget build(BuildContext context) {
-    // final visibleActions = actions.where((c) => c.visible).toList();
-    // if (visibleActions.isEmpty) return const SizedBox.shrink();
-    return 
-        Container(
-          color: Colors.white,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: mainAxisAlignment,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: actions,
-          ),
-    );
-  }
+  Widget build(BuildContext context) => Container(
+    color: Colors.white,
+    child: Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: actions,
+    ),
+  );
 }

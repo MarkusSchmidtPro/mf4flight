@@ -7,14 +7,13 @@ import '../app_events/app_event.dart';
 import '../enums.dart';
 import '../locator.dart';
 import 'viewmodel_feedback_mixin.dart';
-import 'viewmodel_navigation_mixin.dart';
 
 /// The base class for view models managing observable state, lifecycle, and event subscriptions.
 ///
 /// Integrates [ViewModelNavigationMixin] and [ViewModelFeedbackMixin] to provide
 /// navigation and UI feedback capabilities while maintaining cohesive state management.
 abstract class ViewModel extends ChangeNotifier
-    with ViewModelNavigationMixin, ViewModelFeedbackMixin {
+    with  ViewModelFeedbackMixin {
 
   static int _instanceID = 0;
   final int instanceID = _instanceID++;
@@ -103,6 +102,16 @@ abstract class ViewModel extends ChangeNotifier
     _appEventSubscriptions.add(appEvents.subscribe<T>(this, handler));
     logger.finest("Subscription count=${_appEventSubscriptions.length}");
   }
+
+  /// Navigate to a named view.
+  /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
+  Future<TResult?> showViewNamed<TResult>({required String routeName, Object? args}) async =>
+      await navigator.pushNamed<TResult?>(routeName, arguments: args);
+
+  /// Navigate to a widget view directly.
+  /// Pattern: https://www.notion.so/markusschmidtpro/Open-View-Navigate-to-page-93709bb5d0df47158387a97b1c41bd79#132f061dad8644b5a0c8de840275694b
+  FutureOr<TResult?> showView<TResult>(StatelessWidget view) async =>
+      await navigator.push<TResult>(MaterialPageRoute(builder: (_) => view));
 
   void closeView<TResult>({TResult? result}) {
     /* Guards against using a BuildContext after the widget that owns 
