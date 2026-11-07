@@ -36,7 +36,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   bool _isSaving = false;
 
-
   /// Compares the current view projection against the last persisted baseline.
   bool isDirty() {
     try {
@@ -159,10 +158,13 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   // region User interaction
 
+  Future<void> closeViewAsk() async {
+    if (await canCloseView()) closeView();
+  }
+
   /// Displays a save confirmation dialog.
   /// Can be overridden or invoked by views or [canCloseView].
-  Future<ViewCloseBehaviour> askSaveAsync(
-    BuildContext context, {
+  Future<ViewCloseBehaviour> askSaveAsync({
     String title = "Änderungen erkannt!",
     String message = "Sollen die Änderungen gespeichert werden?",
   }) async {
@@ -187,8 +189,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   ///
   /// Intercepts back navigation or commands to prevent accidental data loss.
   /// Decoupled from hardcoded dialogs via optional [decisionIfDirtyAsync] callback.
-  Future<bool> canCloseView(
-    BuildContext context, {
+  Future<bool> canCloseView({
     Future<ViewCloseBehaviour> Function()? decisionIfDirtyAsync,
     String? title,
     String? message,
@@ -212,7 +213,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
             } else
             /*if (context != null)*/ {
               decision = await askSaveAsync(
-                context,
                 title: title ?? "Änderungen erkannt!",
                 message: message ?? "Sollen die Änderungen gespeichert werden?",
               );

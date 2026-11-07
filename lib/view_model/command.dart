@@ -29,17 +29,26 @@ import 'package:flutter/material.dart';
 ///       Navigator.of(context).pop();
 ///     }
 /// ```
-typedef CommandAction = FutureOr<void> Function();
+typedef CommandAction = FutureOr Function();
 
+enum VisualState { enabled, disabled, invisible }
+
+/// Represents a [CommandAction] with a [VisualState].
 class Command {
-  const Command({required this.action, this.enabled = true, this.visible = true});
+  @protected
+  const Command(this._action, {this.state = VisualState.enabled});
 
-  /// A command that is not supported to execute.
-  factory Command.notSupported() => Command(action: _notSupported, enabled: false, visible: false);
+  factory Command.withState(CommandAction action, {required bool enabled}) =>
+      Command(action, state: enabled ? VisualState.enabled : VisualState.disabled);
 
-  final bool enabled;
-  final bool visible;
-  final CommandAction action;
+  factory Command.notSupported() =>
+      Command(() => throw Exception('Command not supported'), state: VisualState.disabled);
 
-  static Future<void> _notSupported() async => throw Exception('Command not supported');
+  final CommandAction _action;
+  final VisualState state;
+
+  /// The action that is executed when the command is triggered.
+  ///
+  /// Returns _null_ when [state] is not [VisualState.enabled].
+  CommandAction? get action => state == VisualState.enabled ? _action : null;
 }

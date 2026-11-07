@@ -5,7 +5,7 @@ import 'package:markdown_widget/widget/markdown.dart';
 import 'package:provider/provider.dart';
 
 import '/locator.dart';
-import '../widgets/command.dart';
+import '../view_model/command.dart';
 import '../widgets/command_buttons.dart';
 import 'help_page_vm.dart';
 
@@ -15,15 +15,14 @@ class HelpIcon extends StatelessWidget {
   final String _helpContext;
 
   @override
-  Widget build(BuildContext context) {
-    return CommandIconButton(
-      command: Command(
-        action: () async =>
-        await navigator.push(MaterialPageRoute(builder: (_) => HelpPage.show(_helpContext))),
-      ),size: 24,
+  Widget build(BuildContext context) => CommandButton.iconLabel(
       icon: Icons.help,
+      command: Command(
+        () async =>
+        await navigator.push(MaterialPageRoute(builder: (_) => HelpPage.show(_helpContext))),
+      ),
+
     );
-  }
 }
 
 class HelpPage extends StatelessWidget {

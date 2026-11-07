@@ -29,4 +29,4 @@ export 'view_model/viewmodel_navigation_mixin.dart';
 export 'view_model/viewmodel_feedback_mixin.dart';
 export 'view_model/boolStateList.dart';
 export 'view_model/dynamic_list_item.dart';
-export 'widgets/command.dart';
+export 'view_model/command.dart';

@@ -14,8 +14,8 @@ class BottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final visibleActions = actions.where((c) => c.visible).toList();
-    if (visibleActions.isEmpty) return const SizedBox.shrink();
+    // final visibleActions = actions.where((c) => c.visible).toList();
+    // if (visibleActions.isEmpty) return const SizedBox.shrink();
     return 
         Container(
           color: Colors.white,
@@ -23,7 +23,7 @@ class BottomActionBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: mainAxisAlignment,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: visibleActions,
+            children: actions,
           ),
     );
   }
