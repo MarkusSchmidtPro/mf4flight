@@ -75,7 +75,7 @@ class IconLabelButton extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [Icon(_icon), if (_label != null) Text(_label)],
+        children: [Icon(_icon, size: 24), if (_label != null) Text(_label)],
       ),
     ),
   );

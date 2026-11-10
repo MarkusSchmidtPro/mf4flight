@@ -17,6 +17,7 @@ class HelpIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CommandButton.iconLabel(
       icon: Icons.help,
+      iconColor: Theme.of(context).colorScheme.onPrimary,
       command: Command(
         () async =>
         await navigator.push(MaterialPageRoute(builder: (_) => HelpPage.show(_helpContext))),
