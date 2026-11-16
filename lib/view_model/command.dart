@@ -47,7 +47,7 @@ class Command {
       Command(action, state: enabled ? VisualState.enabled : VisualState.disabled);
 
   factory Command.notSupported() =>
-      Command(() => throw Exception('Command not supported'), state: VisualState.disabled);
+      Command(() => throw Exception('Command not supported'), state: VisualState.invisible);
 
   final CommandAction _action;
   final VisualState state;
