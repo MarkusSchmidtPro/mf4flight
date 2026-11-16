@@ -34,10 +34,15 @@ typedef CommandAction = FutureOr Function();
 enum VisualState { enabled, disabled, invisible }
 
 /// Represents a [CommandAction] with a [VisualState].
+///
+/// A Command is a backend component (biew-model) onyl without any visual representation.
+/// A Command is basically the state of an action and an action to be executed.
 class Command {
   @protected
   const Command(this._action, {this.state = VisualState.enabled});
 
+  /// Represents a [CommandAction] which is always visble
+  /// and an enabled or disabled state..
   factory Command.withState(CommandAction action, {required bool enabled}) =>
       Command(action, state: enabled ? VisualState.enabled : VisualState.disabled);
 

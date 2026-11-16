@@ -15,15 +15,18 @@ class HelpIcon extends StatelessWidget {
   final String _helpContext;
 
   @override
-  Widget build(BuildContext context) => CommandButton.iconLabel(
-      icon: Icons.help,
-      iconColor: Theme.of(context).colorScheme.onPrimary,
+  Widget build(BuildContext context) {
+    final cs= Theme.of(context).colorScheme;
+    return CommandButton.iconLabel(
+      icon: Icons.help_outline,
+      iconColor: cs.primary,
       command: Command(
         () async =>
         await navigator.push(MaterialPageRoute(builder: (_) => HelpPage.show(_helpContext))),
       ),
 
     );
+  }
 }
 
 class HelpPage extends StatelessWidget {
