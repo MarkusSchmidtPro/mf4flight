@@ -2,9 +2,15 @@ import 'dart:async';
 
 import 'app_event.dart';
 
+typedef EventHandler<TEvent> = void Function(TEvent event);
+
 abstract class IAppEvents {
-  StreamSubscription subscribe<T extends AppEvent>(
-      Object subscriber, void Function(T event) handler);
+  StreamSubscription subscribe<TEvent extends AppEvent>(
+    Object subscriber,
+    EventHandler<TEvent> handler,
+  );
+
   void unsubscribe(StreamSubscription subscription);
+
   void raise<TEvent extends AppEvent>(TEvent event);
 }

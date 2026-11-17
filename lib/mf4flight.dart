@@ -6,7 +6,6 @@ export 'httpOverrides.dart';
 
 export 'app_events/app_event.dart';
 export 'app_events/app_event_bus.dart';
-export 'app_events/i_app_events.dart';
 
 export 'repository/i_repository.dart';
 
@@ -16,6 +15,7 @@ export 'view/help_page_vm.dart';
 
 export 'widgets/bottom_action_bar.dart';
 export 'widgets/command_buttons.dart';
+export 'widgets/bordered-container.dart';
 
 export 'view/view_errors.dart';
 export 'view_model/viewmodel_all.dart';
