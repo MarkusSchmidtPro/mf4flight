@@ -26,7 +26,7 @@ class CommandButton extends StatelessWidget {
          iconColor: iconColor,
        );
 
-  static Color highlightColor(context) => Theme.of(context).colorScheme.primary;
+  static Color highlightColor(context) => Theme.of(context).colorScheme.secondaryContainer;
 
   CommandButton.nav({required IconData icon, required String label, required Command command})
     : command = command,
