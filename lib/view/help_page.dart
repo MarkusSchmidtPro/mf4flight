@@ -31,7 +31,10 @@ class HelpPage extends StatelessWidget {
    */
   HelpPage._();
 
-  static StatelessWidget content(String helpKey, {Map<String, String>? values}) =>
+  // static Future<void> show(String helpKey,{Map<String, String>? values}) async =>
+  //     await showView(HelpPage.content(helpKey, values));
+
+  static StatelessWidget content(String helpKey, [Map<String, String>? values]) =>
       ChangeNotifierProvider(create: (_) => HelpViewModel(helpKey, values), child: HelpPage._());
 
   @override
@@ -65,29 +68,25 @@ class MyPage<TViewModel extends ViewModel> extends StatelessWidget {
   @protected
   MyPage({
     required this._contentBuilder,
-    String? title,
-    AppBar? appBar,
-    this._bottomNavigationBar,
+    this._appBarBuilder,
+    this._bottomBarBuilder,
+    this._title,
     super.key,
-  }) : _appBar = appBar ?? AppBar(title: Text(title!));
+  }) : assert( _title != null || _appBarBuilder != null);
 
-  // @protected
-  // static StatelessWidget content<TViewModel extends ChangeNotifier?>({
-  //   required TViewModel Function() viewModelBuilder,
-  // }) => ChangeNotifierProvider<TViewModel>(create: (_) => viewModelBuilder(), child: );
-
-  final AppBar? _appBar;
-  final Widget? _bottomNavigationBar;
-
+  final AppBar Function(BuildContext context, TViewModel vm)? _appBarBuilder;
+  final Widget Function(BuildContext context, TViewModel vm)? _bottomBarBuilder;
   final Widget Function(BuildContext context, TViewModel vm) _contentBuilder;
+  final String? _title;
+
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<TViewModel>();
     return Scaffold(
-      appBar: _appBar,
+      appBar: _appBarBuilder != null ? _appBarBuilder(context, vm) : AppBar(title: Text(_title!)),
       body: Padding(padding: const EdgeInsets.all(16), child: _contentBuilder(context, vm)),
-      bottomNavigationBar: _bottomNavigationBar,
+      bottomNavigationBar: _bottomBarBuilder != null ? _bottomBarBuilder(context, vm) : null,
     );
   }
 }
