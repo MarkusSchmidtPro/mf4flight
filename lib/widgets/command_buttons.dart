@@ -26,9 +26,9 @@ class CommandButton extends StatelessWidget {
          iconColor: iconColor,
        );
 
-  static Color highlightColor(context) => Theme.of(context).colorScheme.secondaryContainer;
+  static Color highlightColor(context) => Theme.of(context).colorScheme.secondary;
 
-  CommandButton.nav({required IconData icon, required String label, required Command command})
+  CommandButton.navBar({required IconData icon, required String label, required Command command})
     : command = command,
       _child = FilledButton.tonalIcon(
         onPressed: command.state == VisualState.enabled ? command.action : null,

@@ -7,17 +7,16 @@ import '../repository/markdown_repository.dart';
 
 
 class HelpViewModel extends ViewModel {
-  HelpViewModel(this.resourceKey, {this.values});
+  HelpViewModel(this._resourceKey, this._values);
 
-  final String resourceKey;
-  final Map<String, String>? values;
+  final String _resourceKey;
+  final Map<String, String>? _values;
 
-  late final MarkdownRepository repos;
   String markDown = "---";
 
   @override
   Future<void> initAsync() async {
-    repos = serviceProvider<MarkdownRepository>();
-    markDown = await repos.fromResource(resourceKey, values:values);
+    final repos = serviceProvider<MarkdownRepository>();
+    markDown = await repos.fromResource(_resourceKey, values:_values);
   }
 }

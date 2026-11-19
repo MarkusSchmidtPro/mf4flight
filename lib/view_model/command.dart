@@ -29,7 +29,7 @@ import 'package:flutter/material.dart';
 ///       Navigator.of(context).pop();
 ///     }
 /// ```
-typedef CommandAction = FutureOr Function();
+typedef CommandAction<TResult> = FutureOr<TResult?> Function();
 
 enum VisualState { enabled, disabled, invisible }
 
@@ -37,19 +37,19 @@ enum VisualState { enabled, disabled, invisible }
 ///
 /// A Command is a backend component (biew-model) onyl without any visual representation.
 /// A Command is basically the state of an action and an action to be executed.
-class Command {
+class Command<TResult> {
   @protected
   const Command(this._action, {this.state = VisualState.enabled});
 
   /// Represents a [CommandAction] which is always visble
   /// and an enabled or disabled state..
-  factory Command.withState(CommandAction action, {required bool enabled}) =>
+  factory Command.withState(CommandAction<TResult> action, {required bool enabled}) =>
       Command(action, state: enabled ? VisualState.enabled : VisualState.disabled);
 
   factory Command.notSupported() =>
       Command(() => throw Exception('Command not supported'), state: VisualState.invisible);
 
-  final CommandAction _action;
+  final CommandAction<TResult> _action;
   final VisualState state;
 
   /// The action that is executed when the command is triggered.
