@@ -8,10 +8,9 @@ export 'app_events/app_event.dart';
 export 'app_events/app_event_bus.dart';
 
 export 'repository/i_repository.dart';
+export 'repository/markdown_repository.dart';
 
 export 'view/dialog2.dart';
-export 'view/help_page.dart';
-export 'view/help_page_vm.dart';
 
 export 'widgets/bottom_action_bar.dart';
 export 'widgets/command_buttons.dart';

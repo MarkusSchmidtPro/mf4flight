@@ -50,6 +50,7 @@ abstract class ViewModel extends ChangeNotifier with ViewModelFeedbackMixin {
   void update() {
     if (state == ViewModelState.ready) {
       state = ViewModelState.loading;
+      notifyListeners();
       initAsync().then((_) {
         if (state == ViewModelState.disposed) {
           logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
@@ -63,6 +64,7 @@ abstract class ViewModel extends ChangeNotifier with ViewModelFeedbackMixin {
       });
     } else if (state == ViewModelState.refreshAfterAsyncLoad) {
       state = ViewModelState.ready;
+      notifyListeners();
     }
   }
 
