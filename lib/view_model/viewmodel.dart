@@ -17,56 +17,77 @@ abstract class ViewModel extends ChangeNotifier with ViewModelFeedbackMixin {
   static int _instanceID = 0;
   final int instanceID = _instanceID++;
 
-  @protected
   late final Logger logger;
 
+  /// Create a new instance.
+  ///
+  /// [doNotInit] is there to prevent automatic [initAsync] execution.
   @protected
   ViewModel() : super() {
     logger = Logger("$runtimeType[$instanceID]");
     logger.finest(">CreateInstance() $state");
-    _init();
+    triggerInitAsync();
   }
 
+  /// Initial async fetch/setup logic.
+  ///
+  /// This is triggerd once and automatically when a new instance is created.
+  ///
   @protected
   Future<void> initAsync() async {}
 
-  /// Initial fetch/setup logic.
-  /// [state] is [ViewModelState.loading] until [initAsync] will have completed.
-  /// Then [state] becomes [ViewModelState.ready].
-  void _init() {
+  /// Trigger the asynchronous initialization process [initAsync],
+  /// and update the [state] of the view model accordingly.
+  ///
+  /// [state] becomes [ViewModelState.loading] until [initAsync] will have completed.
+  /// Then [state] becomes [ViewModelState.ready]. Once initialization has been
+  /// completed [notifyListeners] is called.
+  void triggerInitAsync({bool initialLoad = true}) {
+
     state = ViewModelState.loading;
     initAsync().then((_) {
       if (state == ViewModelState.disposed) {
+        // This may happen, when the async loader completes
+        // after the view model's widgets has been disposed. For example,
+        // on scrolling lists, a list widget might be disposed while
+        // the view model is still laoding. THIS IS OK!
         logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
         return;
       }
 
       state = ViewModelState.ready;
+      // Notification is not required - not even allowed - on reload
+      // because re-load is executed in a Widget's build.
       notifyListeners();
     });
   }
 
-  /// Use this method to load/update data into an existing ViewModel.
-  void update() {
-    if (state == ViewModelState.ready) {
-      state = ViewModelState.loading;
-      notifyListeners();
-      initAsync().then((_) {
-        if (state == ViewModelState.disposed) {
-          logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
-          return;
-        }
+  /* Wann muss eine DataLoad ausgelöst werden, und woher weiß das einzelne Element das?*/
 
-        // Set this state to non-dataLoading so that the circle disappears
-        // and repaint can take place on notifyListeners()
-        state = ViewModelState.refreshAfterAsyncLoad;
-        notifyListeners();
-      });
-    } else if (state == ViewModelState.refreshAfterAsyncLoad) {
-      state = ViewModelState.ready;
-      notifyListeners();
-    }
-  }
+  /// Use this method to load/update data into an existing ViewModel.
+  // void update() {
+  //   if (state == ViewModelState.ready) {
+  //     Logger("X").info("update($instanceID): $state");
+  //     state = ViewModelState.reloading; // avoid dataLoading circle
+  //     initAsync().then((_) {
+  //       if (state == ViewModelState.disposed) {
+  //         logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
+  //         return;
+  //       }
+  //
+  //       // Set this state to non-dataLoading so that the circle disappears
+  //       // and repaint can take place on notifyListeners()
+  //       state = ViewModelState.refreshAfterAsyncLoad;
+  //       // Trigger rebuild and update() once more
+  //       // with dataLoading == false
+  //       notifyListeners();
+  //     });
+  //   } else if (state == ViewModelState.refreshAfterAsyncLoad) {
+  //     state = ViewModelState.ready;
+  //     // No need to notify because the last state refreshAfterAsyncLoad
+  //     // already ended the circle: dataLoading == false!
+  //   }
+  // }
 
   // region ViewModel State
   ViewModelState _state = ViewModelState.ready;
@@ -85,7 +106,6 @@ abstract class ViewModel extends ChangeNotifier with ViewModelFeedbackMixin {
   set state(ViewModelState value) {
     if (_state == value) return;
     _state = value;
-    // notify!?
   }
 
   bool get dataLoading => _state == ViewModelState.loading;
@@ -121,7 +141,7 @@ abstract class ViewModel extends ChangeNotifier with ViewModelFeedbackMixin {
 /// Represents a command to navigate to another [targetView]
 class NavigateCommand extends Command {
   NavigateCommand({required StatelessWidget targetView, VisualState state = VisualState.enabled})
-      : super(() async => await showView(targetView), state: state);
+    : super(() async => await showView(targetView), state: state);
 }
 
 /// Navigate to a named view.

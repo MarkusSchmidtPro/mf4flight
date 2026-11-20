@@ -12,6 +12,7 @@ enum ViewModelState {
   /// The ViewModel is complete and ready to be used.
   ready,
   loading,
+  reloading,
   refreshAfterAsyncLoad,
   disposed
 }

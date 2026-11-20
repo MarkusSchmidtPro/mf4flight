@@ -1,12 +1,14 @@
 import 'dart:collection';
 
-class BoolStateItemArgs<TData> {
-  BoolStateItemArgs(this.data, [this.selected = false]);
+// class BoolStateItemArgs<TData> {
+//   BoolStateItemArgs(this.data, [this.selected = false]);
+//
+//   final TData data;
+//   final bool selected;
+// }
 
-  final TData data;
-  final bool selected;
-}
-
+/// Represent a list where items (by id) can be
+/// in or out - selected or not.
 class BoolStateList<TKey> {
   final HashSet<TKey> _items = new HashSet();
 
@@ -17,7 +19,6 @@ class BoolStateList<TKey> {
       _items.add(id);
     else
       _items.remove(id);
-
     return value;
   }
 
