@@ -1,6 +1,6 @@
 import 'dart:async' show FutureOr;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A [Command] represents a ViewModel that performs actions
 /// on elements that can be enabled or disabled [enabled].
