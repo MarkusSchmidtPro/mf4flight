@@ -32,10 +32,10 @@ class CommandButton extends StatelessWidget {
     : command = command,
       _child = FilledButton.tonalIcon(
         onPressed: command.state == VisualState.enabled ? command.action : null,
-        icon: Icon(icon, size: 24),
+        icon: Icon(icon),
         label: Text(label),
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(48), // fill the width it's given
+          //minimumSize: const Size.fromHeight(48), // fill the width it's given
           shape: const StadiumBorder(),
         ),
       );
@@ -59,7 +59,6 @@ class IconLabelButton extends StatelessWidget {
   final Function()? _onPressed;
   final IconData _icon;
   final String? _label;
-
   final Color? _iconColor;
 
   @override
@@ -71,7 +70,8 @@ class IconLabelButton extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [Icon(_icon, size: 24), if (_label != null) Text(_label)],
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [Icon(_icon), if (_label != null) Text(_label, textAlign: TextAlign.center, )],
       ),
     ),
   );
