@@ -32,11 +32,11 @@ class CommandButton extends StatelessWidget {
     Color? iconColor,
     String? tooltip,
   }) : command = command,
-        _child = IconButton(
-          icon: Icon(icon, color: iconColor),
-          tooltip: tooltip,
-          onPressed: command.state == VisualState.enabled ? command.action : null,
-        );
+       _child = IconButton(
+         icon: Icon(icon, color: iconColor),
+         tooltip: tooltip,
+         onPressed: command.state == VisualState.enabled ? command.action : null,
+       );
 
   static Color highlightColor(context) => Theme.of(context).colorScheme.secondary;
 
@@ -74,17 +74,19 @@ class IconLabelButton extends StatelessWidget {
   final Color? _iconColor;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.all(4),
-    child: TextButton(
-      onPressed: _onPressed,
-      style: TextButton.styleFrom(foregroundColor: _iconColor, iconColor: _iconColor),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Icon(_icon), if (_label != null) Text(_label, textAlign: TextAlign.center, )],
-      ),
+  Widget build(BuildContext context) => TextButton(
+
+    onPressed: _onPressed,
+    style: TextButton.styleFrom(foregroundColor: _iconColor, iconColor: _iconColor),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(_icon),
+        if (_label != null)
+          Text(_label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10.0)),
+      ],
     ),
   );
 }
