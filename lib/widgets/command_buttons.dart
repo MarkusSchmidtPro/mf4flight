@@ -26,6 +26,18 @@ class CommandButton extends StatelessWidget {
          iconColor: iconColor,
        );
 
+  CommandButton.icon({
+    required IconData icon,
+    required Command command,
+    Color? iconColor,
+    String? tooltip,
+  }) : command = command,
+        _child = IconButton(
+          icon: Icon(icon, color: iconColor),
+          tooltip: tooltip,
+          onPressed: command.state == VisualState.enabled ? command.action : null,
+        );
+
   static Color highlightColor(context) => Theme.of(context).colorScheme.secondary;
 
   CommandButton.navBar({required IconData icon, required String label, required Command command})
