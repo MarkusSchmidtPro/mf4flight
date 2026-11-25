@@ -57,3 +57,4 @@ class Command<TResult> {
   /// Returns _null_ when [state] is not [VisualState.enabled].
   CommandAction? get action => state == VisualState.enabled ? _action : null;
 }
+

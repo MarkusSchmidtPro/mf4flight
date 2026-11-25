@@ -19,22 +19,17 @@ import 'viewmodel.dart';
 /// validation rules, prevents accidental data loss during navigation,
 /// and standardizes save, discard, and close lifecycles across the application.
 abstract class ViewModelEdit<TModel> extends ViewModel {
-  /// The source which requests to close the view.
-  CloseViewRequestSource closeViewRequestSource = CloseViewRequestSource.backButton;
-
   @protected
   ViewModelEdit({required this.repos}) : super();
 
   final IRepository<TModel> repos;
 
-  bool get isSaving => _isSaving;
 
   late TModel _savedModel; // zuletzt persistierter Stand (Baseline)
   set model(TModel v) => _savedModel = v;
 
   TModel get model => _savedModel;
 
-  bool _isSaving = false;
 
   /// Compares the current view projection against the last persisted baseline.
   bool isDirty() {
@@ -85,7 +80,8 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   TModel viewToModel();
 
-  /// Validate all controls [onValidateControls]
+  /// If [isDirty]
+  /// Validate all controls [_validateControls]
   /// and save the view's data [onSaveAsync] if dirty.
   /// Returns `true` if validation passed and data was saved (or clean),
   /// `false` if validation failed.
@@ -93,15 +89,16 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
     if (!isDirty()) return true;
 
     // Phase 1: Validate UI controls before taking them over
-    if (!validateControls()) {
+    if (!_validateControls()) {
       notifyListeners(); // Refresh UI to display errorText markers
       return false;
     }
 
-    _isSaving = true;
-    notifyListeners();
 
     try {
+      state = ViewModelState.saving;
+      notifyListeners();
+
       // Phase 2: Materialize domain model from validated controls
       final entityToSave = viewToModel();
 
@@ -118,7 +115,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
       setViewError('Speichern fehlgeschlagen: $e');
       return false;
     } finally {
-      _isSaving = false;
+      state = ViewModelState.ready;
       notifyListeners();
     }
   }
@@ -128,21 +125,19 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   /// Get a list with the view model's errors.
   final ViewErrors _viewErrors = new ViewErrors();
 
-  bool validateControls() {
+
+  bool _validateControls() {
     _viewErrors.clear();
     onValidateControls(_viewErrors);
     return _viewErrors.isEmpty;
   }
 
-  /// Get the view's error or null.
-  ///
-  /// The viewError contains the exception message when
-  /// saving the ViewModel (@onSaveAsync).
   String? getViewError() => _viewErrors.getFirst('view')?.errorMessage;
 
   void setViewError(String errorMessage) {
     logger.severe(errorMessage);
     _viewErrors.addError('view', errorMessage);
+    notifyListeners();
     assert(false, 'saveAsync: $errorMessage');
   }
 
@@ -151,52 +146,23 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   // endregion
 
   Future<void> saveAndCloseView() async {
-    closeViewRequestSource = CloseViewRequestSource.saveAndCloseCommand;
     await navigator.maybePop();
     notifyListeners();
   }
 
   // region User interaction
 
-  Future<void> closeViewAsk() async {
-    if (await canCloseView()) closeView();
+  Future<void> closeViewAsk(CloseViewRequestSource source) async {
+    if (await _canCloseView(source)) closeView();
   }
 
-  /// Displays a save confirmation dialog.
-  /// Can be overridden or invoked by views or [canCloseView].
-  Future<ViewCloseBehaviour> askSaveAsync({
-    String title = "Änderungen erkannt!",
-    String message = "Sollen die Änderungen gespeichert werden?",
-  }) async {
-    DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
-      title,
-      message,
-      actions: [Dialog2.noButton, Dialog2.yesButton],
-      cancelButton: true,
-    );
-
-    switch (dialogResult) {
-      case DialogResultYesNoCancel.yes:
-        return ViewCloseBehaviour.saveDataClose;
-      case DialogResultYesNoCancel.no:
-        return ViewCloseBehaviour.discardDataClose;
-      case DialogResultYesNoCancel.cancel:
-        return ViewCloseBehaviour.cancelClose;
-    }
-  }
 
   /// Check whether the current view can be closed.
-  ///
-  /// Intercepts back navigation or commands to prevent accidental data loss.
-  /// Decoupled from hardcoded dialogs via optional [decisionIfDirtyAsync] callback.
-  Future<bool> canCloseView({
-    Future<ViewCloseBehaviour> Function()? decisionIfDirtyAsync,
-    String? title,
-    String? message,
-  }) async {
+  Future<bool> _canCloseView(CloseViewRequestSource source) async {
     bool canCloseView;
-    switch (closeViewRequestSource) {
-      case CloseViewRequestSource.cancelAndCloseCommand:
+
+    switch (source) {
+      case CloseViewRequestSource.cancel:
         discardChanges();
         canCloseView = true;
         break;
@@ -204,30 +170,25 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
       case CloseViewRequestSource.backButton:
         if (isDirty()) {
           // Back Button and data has changed!
-          if (validateControls()) {
-            // Controls are ok to be saved
-            // Data is dirty, the user has to make a decision
-            ViewCloseBehaviour decision;
-            if (decisionIfDirtyAsync != null) {
-              decision = await decisionIfDirtyAsync();
-            } else
-            /*if (context != null)*/ {
-              decision = await askSaveAsync(
-                title: title ?? "Änderungen erkannt!",
-                message: message ?? "Sollen die Änderungen gespeichert werden?",
-              );
-            }
-            //else { decision = ViewCloseBehaviour.discardDataClose;            }
-            switch (decision) {
-              case ViewCloseBehaviour.discardDataClose:
+          if (_validateControls()) {
+
+            DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
+              "Änderungen erkannt!",
+              "Sollen die Änderungen gespeichert werden?",
+              actions: [Dialog2.noButton, Dialog2.yesButton],
+              cancelButton: true,
+            );
+
+            switch (dialogResult) {
+              case DialogResultYesNoCancel.yes:
+                canCloseView = await saveAsync();
+                break;
+              case DialogResultYesNoCancel.no:
                 discardChanges();
                 canCloseView = true;
                 break;
-              case ViewCloseBehaviour.cancelClose:
+              case DialogResultYesNoCancel.cancel:
                 canCloseView = false;
-                break;
-              case ViewCloseBehaviour.saveDataClose:
-                canCloseView = await saveAsync();
                 break;
             }
           } else {
@@ -242,21 +203,12 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
         }
         break;
 
-      case CloseViewRequestSource.pushView:
-      case CloseViewRequestSource.saveAndCloseCommand:
+      case CloseViewRequestSource.save:
         canCloseView = await saveAsync();
-        break;
-      default:
-        canCloseView = true;
         break;
     }
 
-    // Important: After the close request has been evaluated,
-    // we must reset the source for subsequent calls.
-    closeViewRequestSource = CloseViewRequestSource.backButton;
-    notifyListeners();
+    if( !canCloseView) notifyListeners();
     return canCloseView;
   }
-
-  // endregion
 }

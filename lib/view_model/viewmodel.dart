@@ -62,32 +62,6 @@ abstract class ViewModel extends ChangeNotifier with ViewModelFeedbackMixin {
     });
   }
 
-  /* Wann muss eine DataLoad ausgelöst werden, und woher weiß das einzelne Element das?*/
-
-  /// Use this method to load/update data into an existing ViewModel.
-  // void update() {
-  //   if (state == ViewModelState.ready) {
-  //     Logger("X").info("update($instanceID): $state");
-  //     state = ViewModelState.reloading; // avoid dataLoading circle
-  //     initAsync().then((_) {
-  //       if (state == ViewModelState.disposed) {
-  //         logger.warning("DataLoader.asyncCompletion after dispose($instanceID)");
-  //         return;
-  //       }
-  //
-  //       // Set this state to non-dataLoading so that the circle disappears
-  //       // and repaint can take place on notifyListeners()
-  //       state = ViewModelState.refreshAfterAsyncLoad;
-  //       // Trigger rebuild and update() once more
-  //       // with dataLoading == false
-  //       notifyListeners();
-  //     });
-  //   } else if (state == ViewModelState.refreshAfterAsyncLoad) {
-  //     state = ViewModelState.ready;
-  //     // No need to notify because the last state refreshAfterAsyncLoad
-  //     // already ended the circle: dataLoading == false!
-  //   }
-  // }
 
   // region ViewModel State
   ViewModelState _state = ViewModelState.ready;

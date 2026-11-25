@@ -1,11 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
-import 'command_buttons.dart';
-
 class BottomActionBar extends StatelessWidget {
   const BottomActionBar({required this.actions, super.key});
 
-  final List<CommandButton> actions;
+  final List<Widget> actions;
 
   @override
   Widget build(BuildContext context) {
