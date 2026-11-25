@@ -158,6 +158,8 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
 
   /// Check whether the current view can be closed.
+  ///
+  /// If view cannot be closed a [notifyListeners] is called.
   Future<bool> _canCloseView(CloseViewRequestSource source) async {
     bool canCloseView;
 
