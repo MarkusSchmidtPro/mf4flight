@@ -36,6 +36,13 @@ abstract class ViewModel extends ChangeNotifier with ViewModelFeedbackMixin {
   @protected
   Future<void> initAsync() async {}
 
+
+  /// [initAsync] with listener notification!
+  Future<void> reload() async {
+    await initAsync();
+    notifyListeners();
+  }
+
   /// Trigger the asynchronous initialization process [initAsync],
   /// and update the [state] of the view model accordingly.
   ///

@@ -4,7 +4,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:mf4flight/repository/i_repository.dart';
 
 import '../enums.dart';
-import '../locator.dart';
 import '../view/dialog2.dart';
 import '../view/view_errors.dart';
 import 'viewmodel.dart';
@@ -24,12 +23,10 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   final IRepository<TModel> repos;
 
-
   late TModel _savedModel; // zuletzt persistierter Stand (Baseline)
   set model(TModel v) => _savedModel = v;
 
   TModel get model => _savedModel;
-
 
   /// Compares the current view projection against the last persisted baseline.
   bool isDirty() {
@@ -38,13 +35,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
     } catch (_) {
       return true; // Form contains unparseable/divergent input
     }
-  }
-
-  /// Clears any validation or view error state and discards pending form error markers.
-  void discardChanges() {
-    modelToView();
-    _viewErrors.clear();
-    notifyListeners();
   }
 
   /// Validate the view controls to ensure the view's data can be saved.
@@ -81,10 +71,13 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
   TModel viewToModel();
 
   /// If [isDirty]
-  /// Validate all controls [_validateControls]
-  /// and save the view's data [onSaveAsync] if dirty.
-  /// Returns `true` if validation passed and data was saved (or clean),
-  /// `false` if validation failed.
+  /// 1. Validate all controls [_validateControls]
+  /// 2. get a temp entity with [viewToModel]
+  /// 3. [onValidateModel]
+  /// 4. Save the entity to the [IRepository] provided in the constructor
+  /// 5.  Make the saved entity the current entity and clear view errors.
+  ///
+  /// Returns[true] if saved otherwise [false].
   Future<bool> saveAsync() async {
     if (!isDirty()) return true;
 
@@ -93,7 +86,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
       notifyListeners(); // Refresh UI to display errorText markers
       return false;
     }
-
 
     try {
       state = ViewModelState.saving;
@@ -107,6 +99,7 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
       // Phase 3: Persist and synchronize baseline
       await repos.save(entityToSave);
+      logger.fine( "Entity $TModel saved!");
       _savedModel = entityToSave; // Baseline updated -> isDirty becomes false
       _viewErrors.clear();
       return true;
@@ -124,7 +117,6 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   /// Get a list with the view model's errors.
   final ViewErrors _viewErrors = new ViewErrors();
-
 
   bool _validateControls() {
     _viewErrors.clear();
@@ -145,72 +137,33 @@ abstract class ViewModelEdit<TModel> extends ViewModel {
 
   // endregion
 
-  Future<void> saveAndCloseView() async {
-    await navigator.maybePop();
-    notifyListeners();
-  }
+  Future<void> trySaveCloseView() async
+  => await saveAsync() ? closeView() : notifyListeners();
 
-  // region User interaction
-
-  Future<void> closeViewAsk(CloseViewRequestSource source) async {
-    if (await _canCloseView(source)) closeView();
-  }
-
-
-  /// Check whether the current view can be closed.
-  ///
-  /// If view cannot be closed a [notifyListeners] is called.
-  Future<bool> _canCloseView(CloseViewRequestSource source) async {
-    bool canCloseView;
-
-    switch (source) {
-      case CloseViewRequestSource.cancel:
-        discardChanges();
-        canCloseView = true;
-        break;
-
-      case CloseViewRequestSource.backButton:
-        if (isDirty()) {
-          // Back Button and data has changed!
-          if (_validateControls()) {
-
-            DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
-              "Änderungen erkannt!",
-              "Sollen die Änderungen gespeichert werden?",
-              actions: [Dialog2.noButton, Dialog2.yesButton],
-              cancelButton: true,
-            );
-
-            switch (dialogResult) {
-              case DialogResultYesNoCancel.yes:
-                canCloseView = await saveAsync();
-                break;
-              case DialogResultYesNoCancel.no:
-                discardChanges();
-                canCloseView = true;
-                break;
-              case DialogResultYesNoCancel.cancel:
-                canCloseView = false;
-                break;
-            }
-          } else {
-            // Back Button and Controls are not ok
-            // Expect user wants to discard edits
-            discardChanges();
-            canCloseView = true;
-          }
-        } else {
-          // Data not dirty and we can close the view
-          canCloseView = true;
-        }
-        break;
-
-      case CloseViewRequestSource.save:
-        canCloseView = await saveAsync();
-        break;
+  FutureOr<void> askCloseView() async {
+    if (!isDirty()) {
+      closeView();
+      return;
     }
 
-    if( !canCloseView) notifyListeners();
-    return canCloseView;
+    DialogResultYesNoCancel dialogResult = await Dialog2.showQueryDialogAsync(
+      "Änderungen erkannt!",
+      "Sollen die Änderungen gespeichert werden?",
+      actions: [Dialog2.noButton, Dialog2.yesButton],
+      cancelButton: true,
+    );
+
+    logger.fine("Close View($dialogResult)");
+    switch (dialogResult) {
+      case DialogResultYesNoCancel.yes:
+        await trySaveCloseView();
+        break;
+      case DialogResultYesNoCancel.no:
+        closeView();
+        break;
+      case DialogResultYesNoCancel.cancel:
+        notifyListeners();
+        break;
+    }
   }
 }

@@ -1,7 +1,6 @@
 export 'enums.dart';
 export 'event_handler.dart';
 export 'locator.dart';
-export 'extensions.dart';
 export 'httpOverrides.dart';
 
 export 'app_events/app_event.dart';
