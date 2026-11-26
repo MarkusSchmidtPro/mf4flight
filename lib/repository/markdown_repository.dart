@@ -1,11 +1,12 @@
-import 'dart:io';
-import 'package:flutter/services.dart' ;
+import 'package:flutter/services.dart';
 
 class MarkdownRepository {
   static const String _resourcePath = "assets/help";
   static const String _imgPath = "(resource:$_resourcePath/img/";
-  static final String _languageCode = Platform.localeName.split('_')[0];
 
+  MarkdownRepository(this._languageCode);
+
+  final String _languageCode;
   static Set<String>? _manifestAssets;
 
   Future<String> fromResource(String resourceKey, {Map<String, String>? values}) async {
@@ -23,7 +24,7 @@ class MarkdownRepository {
     return _manifestAssets!.contains(resourcePath);
   }
 
-  static Future<String> _getFromResourceAsync(String helpContext) async {
+  Future<String> _getFromResourceAsync(String helpContext) async {
     try {
       String path = "$_resourcePath/${helpContext}_$_languageCode.md";
       if (!await _resourceExists(path)) path = "$_resourcePath/${helpContext}_de.md";

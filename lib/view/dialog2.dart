@@ -38,7 +38,7 @@ class Dialog2 {
     //
     
     Widget dialogView = new AlertDialog(
-        titlePadding: EdgeInsets.only(left: 24.0, top: 24.0, right: 10.0),
+        titlePadding: EdgeInsets.only(left: 16.0, top: 16.0, right: 10.0),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0))),
         //
